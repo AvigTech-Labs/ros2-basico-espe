@@ -34,30 +34,26 @@ ROS 2 está basado en una arquitectura distribuida sobre DDS (**Data Distributio
 
 ---
 
-## Plumbing vs Capabilities
+## Plumbing & Capabilities
 
 - **Plumbing:** Comunicación de bajo nivel — nodos, topics, services, actions.
 - **Capabilities:** Habilidades de más alto nivel construidas sobre lo anterior:
-  - **Nav2:** Sistema de navegación autónoma para robots móviles
-  - **SLAM Toolbox:** Localización y mapeo simultáneo
-  - **MoveIt 2:** Planificación y control de brazos robóticos
-  - **Percepción:** Procesamiento de imágenes y datos de sensores
+- **Nav2:** Sistema de navegación autónoma para robots móviles
+- **SLAM Toolbox:** Localización y mapeo simultáneo
+- **MoveIt 2:** Planificación y control de brazos robóticos
+- **Percepción:** Procesamiento de imágenes y datos de sensores
 
 ---
 
-## Video recomendado
 
-Para una introducción visual a ROS 2 en español:
-
-🔗 [¿Qué es ROS 2? - Introducción (YouTube)](https://www.youtube.com/watch?v=v3dcy6UEN7g)
-
----
-
-## ROS 2 te permite:
+ROS 2 te permite:
 
 - Desarrollar robots modernos con comunicación robusta y segura
 - Reutilizar componentes y colaborar en proyectos a gran escala
 - Simular, planificar y controlar hardware real
 - Integrarse con microcontroladores, sistemas distribuidos y la nube
 
-> ROS 2 es el presente y futuro de la robótica moderna. Si te interesa la robótica profesional o educativa, aprender ROS 2 es esencial.
+Para una introducción visual a ROS 2 en Español:
+
+🔗 [¿Qué es ROS 2? - Introducción (YouTube)](https://www.youtube.com/watch?v=v3dcy6UEN7g)
+

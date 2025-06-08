@@ -7,8 +7,8 @@
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = 'ros2_espe'
-copyright = '2025, andres_villamarin'
-author = 'andres_villamarin'
+copyright = '2025, AvigTech'
+author = 'AvigTech'
 release = '0.1'
 
 # -- General configuration ---------------------------------------------------

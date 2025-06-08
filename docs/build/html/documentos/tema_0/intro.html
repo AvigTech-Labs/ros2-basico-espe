@@ -1,0 +1,190 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="es" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>¿Qué es ROS2? &mdash; documentación de ros2_espe - 0.1</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=9c9b61ad"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../_static/translations.js?v=f85f4cfb"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Índice" href="../../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../../search.html" />
+    <link rel="next" title="Instalacion de Ubuntu" href="../tema_1/instalacion.html" />
+    <link rel="prev" title="ROS2 HUMBLE" href="../../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            ros2_espe
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Buscar documentos" aria-label="Buscar documentos" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">ROS2 Humble</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">¿Qué es ROS2?</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#ecosistema-ros-2">Ecosistema ROS 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#arquitectura-de-ros-2">Arquitectura de ROS 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#plumbing-capabilities">Plumbing &amp; Capabilities</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Instalación</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tema_1/instalacion.html">Instalacion de Ubuntu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tema_1/instalacion.html#instalacion-de-ros2-humble">Instalacion de ROS2 - HUMBLE</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Conceptos Básicos</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tema_2/conceptos_basicos.html">Paquetes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tema_2/conceptos_basicos.html#nodos">Nodos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tema_2/conceptos_basicos.html#temas">Temas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tema_2/conceptos_basicos.html#servicios">Servicios</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tema_2/conceptos_basicos.html#acciones">Acciones</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Conexión con dispositivos</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tema_3/dispositivos.html">Conexión con dispositivos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tema_3/dispositivos.html#arduino-id">Arduino ID</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tema_3/dispositivos.html#conexion-serial">Conexión Serial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tema_3/dispositivos.html#conexion-mqtt">Conexión MQTT</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">ros2_espe</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">¿Qué es ROS2?</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/documentos/tema_0/intro.md.txt" rel="nofollow"> Ver código fuente de la página</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="que-es-ros2">
+<h1>¿Qué es ROS2?<a class="headerlink" href="#que-es-ros2" title="Link to this heading"></a></h1>
+<p>ROS 2 (<strong>Robot Operating System 2</strong>) es la evolución del sistema original ROS. Aporta mejoras clave en seguridad, rendimiento, escalabilidad y soporte para sistemas distribuidos. ROS 2 está diseñado para producción en entornos industriales y robótica avanzada.</p>
+<p>Aunque su nombre sugiere que es un sistema operativo, <strong>ROS 2 no es un sistema operativo tradicional</strong>, sino una capa de software que corre sobre uno (como Ubuntu Linux), utilizando el middleware DDS como base para la comunicación entre procesos.</p>
+<hr class="docutils" />
+<section id="ecosistema-ros-2">
+<h2>Ecosistema ROS 2<a class="headerlink" href="#ecosistema-ros-2" title="Link to this heading"></a></h2>
+<p>El ecosistema de ROS 2 incluye:</p>
+<ul class="simple">
+<li><p><strong>Paquetes (packages):</strong> Componentes de software reutilizables que contienen nodos, configuraciones, interfaces, etc.</p></li>
+<li><p><strong>Nodos (nodes):</strong> Programas individuales que se comunican entre sí.</p></li>
+<li><p><strong>Topics:</strong> Canales para mensajes unidireccionales y asíncronos.</p></li>
+<li><p><strong>Services:</strong> Para llamadas sincrónicas tipo request-response.</p></li>
+<li><p><strong>Actions:</strong> Para tareas que pueden tomar tiempo y requieren feedback (como mover un brazo).</p></li>
+<li><p><strong>Launch files (Python):</strong> Permiten iniciar múltiples nodos con configuraciones específicas.</p></li>
+<li><p><strong>Rosbags (ros2 bag):</strong> Graba y reproduce datos de topics para pruebas y análisis.</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="arquitectura-de-ros-2">
+<h2>Arquitectura de ROS 2<a class="headerlink" href="#arquitectura-de-ros-2" title="Link to this heading"></a></h2>
+<p>ROS 2 está basado en una arquitectura distribuida sobre DDS (<strong>Data Distribution Service</strong>), eliminando la dependencia del nodo maestro (<code class="docutils literal notranslate"><span class="pre">roscore</span></code> ya no existe). Componentes clave incluyen:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ros2</span> <span class="pre">run</span></code>: Ejecuta un nodo de un paquete</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ros2</span> <span class="pre">topic</span></code>: Inspecciona y publica topics</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ros2</span> <span class="pre">service</span></code>: Llama y describe servicios</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ros2</span> <span class="pre">action</span></code>: Interactúa con acciones</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ros2</span> <span class="pre">param</span></code>: Manejo de parámetros dinámicos</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ros2</span> <span class="pre">bag</span></code>: Grabación y reproducción de datos</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">colcon</span> <span class="pre">build</span></code>: Compila el workspace (sustituye a catkin_make)</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="plumbing-capabilities">
+<h2>Plumbing &amp; Capabilities<a class="headerlink" href="#plumbing-capabilities" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>Plumbing:</strong> Comunicación de bajo nivel — nodos, topics, services, actions.</p></li>
+<li><p><strong>Capabilities:</strong> Habilidades de más alto nivel construidas sobre lo anterior:</p></li>
+<li><p><strong>Nav2:</strong> Sistema de navegación autónoma para robots móviles</p></li>
+<li><p><strong>SLAM Toolbox:</strong> Localización y mapeo simultáneo</p></li>
+<li><p><strong>MoveIt 2:</strong> Planificación y control de brazos robóticos</p></li>
+<li><p><strong>Percepción:</strong> Procesamiento de imágenes y datos de sensores</p></li>
+</ul>
+<hr class="docutils" />
+<p>ROS 2 te permite:</p>
+<ul class="simple">
+<li><p>Desarrollar robots modernos con comunicación robusta y segura</p></li>
+<li><p>Reutilizar componentes y colaborar en proyectos a gran escala</p></li>
+<li><p>Simular, planificar y controlar hardware real</p></li>
+<li><p>Integrarse con microcontroladores, sistemas distribuidos y la nube</p></li>
+</ul>
+<p>Para una introducción visual a ROS 2 en Español:</p>
+<p>🔗 <a class="reference external" href="https://www.youtube.com/watch?v=v3dcy6UEN7g">¿Qué es ROS 2? - Introducción (YouTube)</a></p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Pie de página">
+        <a href="../../index.html" class="btn btn-neutral float-left" title="ROS2 HUMBLE" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Anterior</a>
+        <a href="../tema_1/instalacion.html" class="btn btn-neutral float-right" title="Instalacion de Ubuntu" accesskey="n" rel="next">Siguiente <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Derechos de autor 2025, AvigTech.</p>
+  </div>
+
+  Compilado con <a href="https://www.sphinx-doc.org/">Sphinx</a> usando un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">tema</a>
+    proporcionado por <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
