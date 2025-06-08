@@ -6,6 +6,6 @@ Este repositorio contiene material en formato Markdown generado con **Sphinx** y
 
 ---
 
-🚀 **[Ver la documentación en línea](https://avigtech-labs.github.io/ros-humble-smr/)**
+🚀 **[Ver la documentación en línea](https://avigtech-labs.github.io/ros2-basico-espe/)**
 
 ---
