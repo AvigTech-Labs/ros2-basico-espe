@@ -51,7 +51,7 @@ ROS 2 te permite:
 - Desarrollar robots modernos con comunicación robusta y segura
 - Reutilizar componentes y colaborar en proyectos a gran escala
 - Simular, planificar y controlar hardware real
-- Integrarse con microcontroladores, sistemas distribuidos y la nube
+- Integrarse con microcontroladores, sistemas distribuidos y la nube.
 
 Para una introducción visual a ROS 2 en Español:
 
