@@ -1,0 +1,157 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="es">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Conexión con dispositivos &mdash; documentación de ros2_espe - 0.1</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=5ba375e5"></script>
+      <script src="../../_static/doctools.js?v=888ff710"></script>
+      <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../_static/translations.js?v=efdbd0b9"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Índice" href="../../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../../search.html" />
+    <link rel="next" title="URDF" href="../tema_4/visualizacion_datos.html" />
+    <link rel="prev" title="Paquetes" href="../tema_2/conceptos_basicos.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            ros2_espe
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Buscar documentos" aria-label="Buscar documentos" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">ROS2 Humble</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tema_0/intro.html">¿Qué es ROS2?</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Instalación</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tema_1/instalacion.html">Instalacion de Ubuntu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tema_1/instalacion.html#instalacion-de-ros2-humble">Instalacion de ROS2 - HUMBLE</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Conceptos Básicos</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tema_2/conceptos_basicos.html">Paquetes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tema_2/conceptos_basicos.html#nodos">Nodos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tema_2/conceptos_basicos.html#temas">Temas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tema_2/conceptos_basicos.html#servicios">Servicios</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tema_2/conceptos_basicos.html#acciones">Acciones</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Conexión con dispositivos</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Conexión con dispositivos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#arduino-id">Arduino ID</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#instalacion-de-arduino-id">Instalación de Arduino ID</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#conexion-serial">Conexión Serial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#conexion-mqtt">Conexión MQTT</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Conexión con dispositivos</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tema_4/visualizacion_datos.html">URDF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tema_4/visualizacion_datos.html#gemelo-digital">Gemelo Digital</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">ros2_espe</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Conexión con dispositivos</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/documentos/tema_3/dispositivos.md.txt" rel="nofollow"> Ver código fuente de la página</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="conexion-con-dispositivos">
+<h1>Conexión con dispositivos<a class="headerlink" href="#conexion-con-dispositivos" title="Enlace permanente a este encabezado"></a></h1>
+<p>Conexión con dispositovos</p>
+</section>
+<section id="arduino-id">
+<h1>Arduino ID<a class="headerlink" href="#arduino-id" title="Enlace permanente a este encabezado"></a></h1>
+<p>Arduino ID</p>
+<section id="instalacion-de-arduino-id">
+<h2>Instalación de Arduino ID<a class="headerlink" href="#instalacion-de-arduino-id" title="Enlace permanente a este encabezado"></a></h2>
+</section>
+</section>
+<section id="conexion-serial">
+<h1>Conexión Serial<a class="headerlink" href="#conexion-serial" title="Enlace permanente a este encabezado"></a></h1>
+<p>Conexión Serial</p>
+</section>
+<section id="conexion-mqtt">
+<h1>Conexión MQTT<a class="headerlink" href="#conexion-mqtt" title="Enlace permanente a este encabezado"></a></h1>
+<p>Conexión MQTT</p>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Pie de página">
+        <a href="../tema_2/conceptos_basicos.html" class="btn btn-neutral float-left" title="Paquetes" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Anterior</a>
+        <a href="../tema_4/visualizacion_datos.html" class="btn btn-neutral float-right" title="URDF" accesskey="n" rel="next">Siguiente <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Derechos de autor 2025, AvigTech.</p>
+  </div>
+
+  Compilado con <a href="https://www.sphinx-doc.org/">Sphinx</a> usando un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">tema</a>
+    proporcionado por <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
