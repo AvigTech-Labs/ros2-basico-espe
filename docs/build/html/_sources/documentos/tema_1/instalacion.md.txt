@@ -35,7 +35,7 @@ Es necesario utilizar la ISO descargada de Ubuntu 22.04 LTS
 [Ver en YouTube](https://www.youtube.com/watch?v=_d6oT7rEoGc)
 
 - ***Opción 2: Máquina Virtual:***  
-  [Guía práctica aquí](./Maquina-Virtual.md)
+  [Guía práctica aquí](./maquina_virtual.md)
 
 ---
 
