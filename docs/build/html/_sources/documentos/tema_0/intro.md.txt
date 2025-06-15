@@ -55,5 +55,7 @@ ROS 2 te permite:
 
 Para una introducción visual a ROS 2 en Español:
 
-🔗 [¿Qué es ROS 2? - Introducción (YouTube)](https://www.youtube.com/watch?v=v3dcy6UEN7g)
+[¿ROS Aplicaciones? - (articular)](https://www.youtube.com/watch?v=3xf1fHEJ48s)
+
+[¿ROS Aplicaciones? - (movil)](https://www.youtube.com/watch?v=wrlJyO5UkaE)
 

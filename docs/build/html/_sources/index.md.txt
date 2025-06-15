@@ -17,6 +17,7 @@ documentos/tema_0/intro.md
 :maxdepth: 2
 :caption: Instalación
 documentos/tema_1/instalacion.md
+documentos/tema_1/maquina_virtual.md
 ```
 
 ```{toctree}
