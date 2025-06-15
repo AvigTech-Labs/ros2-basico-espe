@@ -212,4 +212,3 @@ git push origin main
 git pull origin main
 ```
 Tutorial de uso de Git y GitHub [tutorial](https://www.youtube.com/watch?v=mBYSUUnMt9M&t=14612s)
----
