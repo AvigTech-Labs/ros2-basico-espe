@@ -18,6 +18,7 @@ documentos/tema_0/intro.md
 :caption: Instalación
 documentos/tema_1/instalacion.md
 documentos/tema_1/maquina_virtual.md
+documentos/tema_1/instalacionROS2.md
 ```
 
 ```{toctree}
