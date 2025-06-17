@@ -8,7 +8,6 @@ Un **paquete** en ROS 2 es una carpeta estructurada que agrupa:
 - Archivos de configuración y lanzamiento
 
 Los paquetes permiten organizar y reutilizar componentes robóticos. ROS dispone de herramientas (`ros2 pkg`) para buscarlos, instalarlos y ejecutarlos.
----
 
 ## Nodos en ROS2
 
