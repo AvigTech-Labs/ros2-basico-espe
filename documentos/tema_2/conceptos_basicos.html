@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Paquetes &mdash; documentación de ros2_espe - 0.1</title>
+  <title>Conceptos Básicos &mdash; documentación de ros2_espe - 0.1</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -58,11 +58,17 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Conceptos Básicos</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Paquetes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#nodos">Nodos</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#temas">Temas</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#servicios">Servicios</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#acciones">Acciones</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Conceptos Básicos</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#paquetes-en-ros2">Paquetes en ROS2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#los-paquetes-permiten-organizar-y-reutilizar-componentes-roboticos-ros-dispone-de-herramientas-ros2-pkg-para-buscarlos-instalarlos-y-ejecutarlos">Los paquetes permiten organizar y reutilizar componentes robóticos. ROS dispone de herramientas (<code class="docutils literal notranslate"><span class="pre">ros2</span> <span class="pre">pkg</span></code>) para buscarlos, instalarlos y ejecutarlos.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#nodos-en-ros2">Nodos en ROS2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#temas">Temas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ejemplos-de-lanzamiento-y-control-de-turtlesim-en-ros-2">Ejemplos de Lanzamiento y Control de Turtlesim en ROS 2</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#remapeo-de-temas">Remapeo de temas</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Conexión con dispositivos</span></p>
 <ul>
@@ -91,7 +97,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Paquetes</li>
+      <li class="breadcrumb-item active">Conceptos Básicos</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -100,25 +106,110 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="paquetes">
-<h1>Paquetes<a class="headerlink" href="#paquetes" title="Enlace permanente a este encabezado"></a></h1>
-<p>Que son Paquetes</p>
+  <section id="conceptos-basicos">
+<h1>Conceptos Básicos<a class="headerlink" href="#conceptos-basicos" title="Enlace permanente a este encabezado"></a></h1>
+<section id="paquetes-en-ros2">
+<h2>Paquetes en ROS2<a class="headerlink" href="#paquetes-en-ros2" title="Enlace permanente a este encabezado"></a></h2>
+<p>Un <strong>paquete</strong> en ROS 2 es una carpeta estructurada que agrupa:</p>
+<ul class="simple">
+<li><p>Nodos ejecutables</p></li>
+<li><p>Mensajes y servicios personalizados</p></li>
+<li><p>Archivos de configuración y lanzamiento</p></li>
+</ul>
 </section>
-<section id="nodos">
-<h1>Nodos<a class="headerlink" href="#nodos" title="Enlace permanente a este encabezado"></a></h1>
-<p>Que son Nodos</p>
+<section id="los-paquetes-permiten-organizar-y-reutilizar-componentes-roboticos-ros-dispone-de-herramientas-ros2-pkg-para-buscarlos-instalarlos-y-ejecutarlos">
+<h2>Los paquetes permiten organizar y reutilizar componentes robóticos. ROS dispone de herramientas (<code class="docutils literal notranslate"><span class="pre">ros2</span> <span class="pre">pkg</span></code>) para buscarlos, instalarlos y ejecutarlos.<a class="headerlink" href="#los-paquetes-permiten-organizar-y-reutilizar-componentes-roboticos-ros-dispone-de-herramientas-ros2-pkg-para-buscarlos-instalarlos-y-ejecutarlos" title="Enlace permanente a este encabezado"></a></h2>
 </section>
+<section id="nodos-en-ros2">
+<h2>Nodos en ROS2<a class="headerlink" href="#nodos-en-ros2" title="Enlace permanente a este encabezado"></a></h2>
+<p>Un <strong>nodo</strong> es una entidad computacional que ejecuta una función específica, como mover una tortuga, leer sensores, o calcular trayectorias.</p>
+<p>Ejemplo:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">turtlesim_node</span></code>: renderiza la tortuga y ejecuta sus acciones.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">turtle_teleop_key</span></code>: interpreta teclas y publica comandos de velocidad.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">teleop_twist_keyboard</span></code>: interpreta teclas y publica comandos de velocidad.</p></li>
+</ul>
+<p>Listar nodos activos:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>node<span class="w"> </span>list
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
 <section id="temas">
-<h1>Temas<a class="headerlink" href="#temas" title="Enlace permanente a este encabezado"></a></h1>
-<p>Que son Temas</p>
+<h2>Temas<a class="headerlink" href="#temas" title="Enlace permanente a este encabezado"></a></h2>
+<p>Un <strong>tema</strong> es un canal por el cual los nodos publican o reciben datos. Es <strong>unidireccional y asincrónico</strong>.</p>
+<p>Ejemplo:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">/turtle1/cmd_vel</span></code>: donde se publican los comandos de velocidad lineal y angular.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">/turtle1/pose</span></code>: donde se publica la posición actual de la tortuga.</p></li>
+</ul>
+<p>Ver temas activos:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>topic<span class="w"> </span>list
+</pre></div>
+</div>
+<hr class="docutils" />
+<p><img alt="Seleccion" src="../../_images/temas.gif" /></p>
 </section>
-<section id="servicios">
-<h1>Servicios<a class="headerlink" href="#servicios" title="Enlace permanente a este encabezado"></a></h1>
-<p>Que son Servicios</p>
+<section id="ejemplos-de-lanzamiento-y-control-de-turtlesim-en-ros-2">
+<h2>Ejemplos de Lanzamiento y Control de Turtlesim en ROS 2<a class="headerlink" href="#ejemplos-de-lanzamiento-y-control-de-turtlesim-en-ros-2" title="Enlace permanente a este encabezado"></a></h2>
+<p>En este ejemplo se muestra cómo lanzar el nodo de <code class="docutils literal notranslate"><span class="pre">turtlesim</span></code> y controlar su movimiento mediante el teclado. También se explica cómo utilizar otro nodo de teleoperación genérico (<code class="docutils literal notranslate"><span class="pre">teleop_twist_keyboard</span></code>) haciendo uso de <strong>remapeo de temas</strong> en ROS 2.</p>
+<p><em><strong>Paso 1: Instalación de paquetes necesarios</strong></em></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt<span class="w"> </span>update
+sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>ros-humble-turtlesim<span class="w"> </span>ros-humble-teleop-twist-keyboard
+</pre></div>
+</div>
+<p><em><strong>Paso 2: Lanzar la ventana del simulador</strong></em></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>run<span class="w"> </span>turtlesim<span class="w"> </span>turtlesim_node
+</pre></div>
+</div>
+<p>Este comando lanza el nodo que genera la ventana de simulación con la tortuga inicial (<code class="docutils literal notranslate"><span class="pre">/turtle1</span></code>).</p>
+<p><em><strong>Paso 3: Controlar la tortuga con el teclado (teleop integrado)</strong></em></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>run<span class="w"> </span>turtlesim<span class="w"> </span>turtle_teleop_key
+</pre></div>
+</div>
+<hr class="docutils" />
+<p><em><strong>Paso 4: Control con un nodo genérico de teleoperación</strong></em></p>
+<p>En este ejemplo se usa el nodo <code class="docutils literal notranslate"><span class="pre">teleop_twist_keyboard</span></code> del paquete <code class="docutils literal notranslate"><span class="pre">teleop_twist_keyboard</span></code>. Este nodo:</p>
+<ul class="simple">
+<li><p>Lee las teclas del teclado</p></li>
+<li><p>Publica mensajes del tipo <code class="docutils literal notranslate"><span class="pre">geometry_msgs/msg/Twist</span></code></p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>run<span class="w"> </span>teleop_twist_keyboard<span class="w"> </span>teleop_twist_keyboard
+</pre></div>
+</div>
+<p>Por defecto, este nodo publica en el tema:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">cmd_vel</span>
+</pre></div>
+</div>
+<p>Sin embargo, en <code class="docutils literal notranslate"><span class="pre">turtlesim</span></code>, la tortuga escucha comandos en:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">turtle1</span><span class="o">/</span><span class="n">cmd_vel</span>
+</pre></div>
+</div>
+<hr class="docutils" />
+<p><em><strong>¿Cómo solucionar esto?</strong></em></p>
+<section id="remapeo-de-temas">
+<h3>Remapeo de temas<a class="headerlink" href="#remapeo-de-temas" title="Enlace permanente a este encabezado"></a></h3>
+<p>ROS 2 permite redirigir («remapear») los nombres de los temas <strong>sin necesidad de cambiar el código</strong> del nodo. Para hacerlo se usa:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>--ros-args<span class="w"> </span>-r<span class="w"> </span><span class="o">[</span>tema_origen<span class="o">]</span>:<span class="o">=[</span>tema_destino<span class="o">]</span>
+</pre></div>
+</div>
+<p>En este caso específico:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>run<span class="w"> </span>teleop_twist_keyboard<span class="w"> </span>teleop_twist_keyboard<span class="w"> </span>--ros-args<span class="w"> </span>-r<span class="w"> </span>cmd_vel:<span class="o">=</span>/turtle1/cmd_vel
+</pre></div>
+</div>
+<p>Esto se entiende como:</p>
+<blockquote>
+<div><p>«Cuando este nodo publique en <code class="docutils literal notranslate"><span class="pre">/cmd_vel</span></code>, en realidad envíalo a <code class="docutils literal notranslate"><span class="pre">/turtle1/cmd_vel</span></code>.»</p>
+</div></blockquote>
+<hr class="docutils" />
+<p>¿Por qué es útil el remapeo?</p>
+<ul class="simple">
+<li><p>Evita modificar el código fuente de los nodos.</p></li>
+<li><p>Permite <strong>reutilizar nodos genéricos</strong> con distintos robots o simuladores.</p></li>
+<li><p>Facilita pruebas rápidas con distintos sistemas.</p></li>
+</ul>
 </section>
-<section id="acciones">
-<h1>Acciones<a class="headerlink" href="#acciones" title="Enlace permanente a este encabezado"></a></h1>
-<p>Que son Acciones</p>
+</section>
 </section>
 
 
