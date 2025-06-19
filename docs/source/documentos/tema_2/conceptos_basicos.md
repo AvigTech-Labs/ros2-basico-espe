@@ -237,27 +237,17 @@ Un paquete es la unidad mínima de construcción en ROS 2. Contiene código fuen
 
 ***Crear un paquete Python desde cero***
 
-```bash
-cd ~/ros2_ws/src
-ros2 pkg create my_package --build-type ament_python --license Apache-2.0 --node-name my_node
-```
+Para crear un paquete usamos el comando `ros2 pkg create` y añadiños las siguientes argumentos :
 
 ***Descripción de opciones:***
 
 | Parte | Función |
 |-------|---------|
 | `my_package` | Nombre del paquete |
-| `--build-type ament_python` | Define que es un paquete en Python |
-| `--license Apache-2.0` | Agrega la licencia al package.xml |
+| `--build-type` | Define el tipo de compilador |
+| `--license` | Agrega la licencia al package.xml |
 | `--node-name` | No crea nodo por defecto, se ignora usualmente |
-
----
-
-***Construir un paquete específico***
-
-```bash
-colcon build --packages-select my_package
-```
+| `--description` | Agrega la descripción del paquete, se ignora usualmente |
 
 ---
 
@@ -279,18 +269,18 @@ ros2 pkg create py_listener_pkg \
 
 ```bash
 cd ~/ros2_ws/src
-ros2 pkg create my_package --build-type ament_python --dependencies rclpy std_msgs
+ros2 pkg create mi_pkg_python --build-type ament_python --dependencies rclpy std_msgs
 ```
 
 2. Estructura generada
 
 ```
-my_package/
-├── my_package/
+mi_pkg_python/
+├── mi_pkg_python/
 │   └── __init__.py
 ├── package.xml
 ├── resource/
-│   └── my_package
+│   └── mi_pkg_python
 ├── setup.py
 ├── setup.cfg
 └── test/
@@ -299,7 +289,7 @@ my_package/
 3. Crear el archivo del nodo publicador
 
 ```bash
-touch my_package/publisher.py
+touch mi_pkg_python/mi_pkg_python/publisher.py
 ```
 
 4. Código del nodo en `publisher.py`
@@ -343,7 +333,7 @@ if __name__ == '__main__':
 ```python
 entry_points={
     'console_scripts': [
-        'publisher_node = my_package.publisher:main',
+        'pub_prueba = mi_pkg_python.publisher:main',
     ],
 },
 ```
@@ -352,12 +342,11 @@ entry_points={
 
 ```bash
 cd ~/ros2_ws
-colcon build --packages-select my_package
-source install/setup.bash
+colcon build --packages-select mi_pkg_python
 ```
 
 7. Ejecutar el nodo
 
 ```bash
-ros2 run my_package publisher_node
+ros2 run mi_pkg_python pub_prueba
 ```
