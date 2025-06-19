@@ -416,35 +416,70 @@ ros2<span class="w"> </span>pkg<span class="w"> </span>create<span class="w"> </
 <ol class="arabic simple" start="4">
 <li><p>Código del nodo en <code class="docutils literal notranslate"><span class="pre">publisher.py</span></code></p></li>
 </ol>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">rclpy</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Importa la librería principal de ROS 2 en Python</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">rclpy</span>
+
+<span class="c1"># Importa la clase base Node, que representa un nodo en ROS 2</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">rclpy.node</span><span class="w"> </span><span class="kn">import</span> <span class="n">Node</span>
+
+<span class="c1"># Importa el tipo de mensaje estándar String del paquete std_msgs</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">std_msgs.msg</span><span class="w"> </span><span class="kn">import</span> <span class="n">String</span>
 
+<span class="c1"># Define una clase que extiende Node, representando un nodo que publica mensajes</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">MinimalPublisher</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
+
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Llama al constructor de la clase padre (Node) con el nombre del nodo</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s1">&#39;minimal_publisher&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Crea un publicador que publica mensajes del tipo String en el topic &#39;topic&#39; con una cola de 10 mensajes</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">publisher_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_publisher</span><span class="p">(</span><span class="n">String</span><span class="p">,</span> <span class="s1">&#39;topic&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+
+        <span class="c1"># Crea un temporizador que ejecuta la función `timer_callback` cada 0.5 segundos</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">timer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_timer</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">timer_callback</span><span class="p">)</span>
+
+        <span class="c1"># Contador para numerar los mensajes</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
 
+    <span class="c1"># Función que se ejecuta cada 0.5 segundos</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">timer_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Crea un mensaje tipo String</span>
         <span class="n">msg</span> <span class="o">=</span> <span class="n">String</span><span class="p">()</span>
+
+        <span class="c1"># Asigna el contenido del mensaje</span>
         <span class="n">msg</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Hello World: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span>
+
+        <span class="c1"># Publica el mensaje en el topic</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">publisher_</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="c1"># Muestra por consola el mensaje publicado</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Publishing: &quot;</span><span class="si">{</span><span class="n">msg</span><span class="o">.</span><span class="n">data</span><span class="si">}</span><span class="s1">&quot;&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Incrementa el contador</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
 
+<span class="c1"># Punto de entrada principal del programa</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="c1"># Inicializa el sistema de nodos de ROS 2</span>
     <span class="n">rclpy</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">)</span>
+
     <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Instancia el nodo y empieza a ejecutarlo</span>
         <span class="n">node</span> <span class="o">=</span> <span class="n">MinimalPublisher</span><span class="p">()</span>
+
+        <span class="c1"># Mantiene al nodo activo, escuchando eventos y timers</span>
         <span class="n">rclpy</span><span class="o">.</span><span class="n">spin</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+
     <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
+        <span class="c1"># Permite salir con Ctrl+C sin error</span>
         <span class="k">pass</span>
+
     <span class="k">finally</span><span class="p">:</span>
+        <span class="c1"># Destruye el nodo de forma limpia y apaga el sistema ROS 2</span>
         <span class="n">node</span><span class="o">.</span><span class="n">destroy_node</span><span class="p">()</span>
         <span class="n">rclpy</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
 
+<span class="c1"># Verifica si el archivo se está ejecutando directamente (no importado)</span>
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
     <span class="n">main</span><span class="p">()</span>
 </pre></div>
