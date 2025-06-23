@@ -23,7 +23,7 @@
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Índice" href="../../genindex.html" />
     <link rel="search" title="Búsqueda" href="../../search.html" />
-    <link rel="next" title="Conexión con dispositivos" href="../tema_3/dispositivos.html" />
+    <link rel="next" title="AprilTags" href="tutoriales.html" />
     <link rel="prev" title="Instalación de ROS2 Humble" href="../tema_1/instalacionROS2.html" /> 
 </head>
 
@@ -59,23 +59,26 @@
 <p class="caption" role="heading"><span class="caption-text">Conceptos Básicos</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Conceptos Básicos</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#uso-de-paquetes-en-ros2">Uso de paquetes en ROS2</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#uso-de-nodos-en-ros2">Uso de nodos en ROS2</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#uso-temas">Uso Temas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#espacio-de-trabajo">Espacio de trabajo</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#que-es-un-espacio-de-trabajo-en-ros-2">¿Qué es un espacio de trabajo en ROS 2?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#paquetes">Paquetes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#nodos">Nodos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#temas">Temas</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#ejemplos-de-lanzamiento-y-control-de-turtlesim-en-ros-2">Ejemplos de Lanzamiento y Control de Turtlesim en ROS 2</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#remapeo-de-temas">Remapeo de temas</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#creacion-de-un-espacio-de-trabajo">Creación de un espacio de trabajo</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#que-es-un-espacio-de-trabajo-en-ros-2">¿Qué es un espacio de trabajo en ROS 2?</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#creacion-paquetes">Creación Paquetes</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#ejemplo-completo-paso-a-paso">Ejemplo completo paso a paso</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#tutoriales">Tutoriales</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#creacion-de-un-espacio-de-trabajo">Creación de un espacio de trabajo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#creacion-paquetes">Creación Paquetes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#nodos-publicador-y-suscriptor">Nodos publicador y Suscriptor</a></li>
 </ul>
 </li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="tutoriales.html">AprilTags</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Conexión con dispositivos</span></p>
 <ul>
@@ -115,18 +118,169 @@
              
   <section id="conceptos-basicos">
 <h1>Conceptos Básicos<a class="headerlink" href="#conceptos-basicos" title="Link to this heading"></a></h1>
-<section id="uso-de-paquetes-en-ros2">
-<h2>Uso de paquetes en ROS2<a class="headerlink" href="#uso-de-paquetes-en-ros2" title="Link to this heading"></a></h2>
-<p>Un <strong>paquete</strong> en ROS 2 es una carpeta estructurada que agrupa:</p>
+<section id="espacio-de-trabajo">
+<h2>Espacio de trabajo<a class="headerlink" href="#espacio-de-trabajo" title="Link to this heading"></a></h2>
+<section id="que-es-un-espacio-de-trabajo-en-ros-2">
+<h3>¿Qué es un espacio de trabajo en ROS 2?<a class="headerlink" href="#que-es-un-espacio-de-trabajo-en-ros-2" title="Link to this heading"></a></h3>
+<p>Un <strong>espacio de trabajo (workspace)</strong> en ROS 2 es una carpeta estructurada que contiene paquetes ROS 2, los cuales pueden estar escritos en Python o C++. Todos los paquetes se compilan y organizan dentro del workspace.</p>
+<p><em><strong>¿Qué es colcon?</strong></em></p>
+<p><code class="docutils literal notranslate"><span class="pre">colcon</span></code> es la herramienta oficial y recomendada para <strong>construir, compilar y organizar workspaces en ROS 2</strong>.</p>
+<p>Proviene de «COmplex LOgic CONstructor» y fue diseñado para reemplazar herramientas anteriores como <code class="docutils literal notranslate"><span class="pre">catkin_make</span></code> o <code class="docutils literal notranslate"><span class="pre">ament_tools</span></code>.</p>
+<hr class="docutils" />
+<p><em><strong>Características de colcon</strong></em></p>
 <ul class="simple">
-<li><p>Nodos ejecutables</p></li>
-<li><p>Mensajes y servicios personalizados</p></li>
-<li><p>Archivos de configuración y lanzamiento</p></li>
+<li><p>Compila múltiples paquetes de forma <strong>paralela</strong>.</p></li>
+<li><p>Detecta <strong>dependencias entre paquetes</strong> y respeta el orden de compilación.</p></li>
+<li><p>Separa los archivos construidos en carpetas específicas.</p></li>
+<li><p>Es <strong>extensible</strong> mediante plugins.</p></li>
 </ul>
-<p>Los paquetes permiten organizar y reutilizar componentes robóticos. ROS dispone de herramientas (<code class="docutils literal notranslate"><span class="pre">ros2</span> <span class="pre">pkg</span></code>) para buscarlos, instalarlos y ejecutarlos.</p>
+<hr class="docutils" />
+<p>Instalación de colcon y extensiones recomendadas</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>python3-colcon-common-extensions
+</pre></div>
+</div>
+<hr class="docutils" />
+<p><em><strong>Comandos principales de colcon</strong></em></p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Comando</p></th>
+<th class="head"><p>¿Qué hace?</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">colcon</span> <span class="pre">build</span></code></p></td>
+<td><p>Compila todos los paquetes en <code class="docutils literal notranslate"><span class="pre">src/</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">colcon</span> <span class="pre">build</span> <span class="pre">--packages-select</span> <span class="pre">nombre</span></code></p></td>
+<td><p>Compila solo un paquete específico</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">colcon</span> <span class="pre">list</span></code></p></td>
+<td><p>Muestra todos los paquetes del workspace</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">colcon</span> <span class="pre">test</span></code></p></td>
+<td><p>Ejecuta pruebas definidas en los paquetes</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">colcon</span> <span class="pre">clean</span></code></p></td>
+<td><p>Limpia las carpetas <code class="docutils literal notranslate"><span class="pre">build/</span></code>, <code class="docutils literal notranslate"><span class="pre">install/</span></code> y <code class="docutils literal notranslate"><span class="pre">log/</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">colcon</span> <span class="pre">build</span> <span class="pre">--symlink-install</span></code></p></td>
+<td><p>En paquetes Python, enlaza código para no recompilar cada vez</p></td>
+</tr>
+</tbody>
+</table>
+<hr class="docutils" />
+<p><em><strong>Directorios creados por colcon al compilar</strong></em></p>
+<p>Al ejecutar <code class="docutils literal notranslate"><span class="pre">colcon</span> <span class="pre">build</span></code>, se generan 3 carpetas principales:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>ros2_ws/
+├── build/
+├── install/
+└── log/
+</pre></div>
+</div>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Carpeta</p></th>
+<th class="head"><p>¿Para qué sirve?</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">build/</span></code></p></td>
+<td><p>Archivos temporales de compilación. ROS 2 genera aquí el código intermedio.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">install/</span></code></p></td>
+<td><p>Aquí se instalan los ejecutables, scripts, bibliotecas y archivos generados. Es lo que usas con <code class="docutils literal notranslate"><span class="pre">source</span> <span class="pre">install/setup.bash</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">log/</span></code></p></td>
+<td><p>Archivos de salida, advertencias y errores de compilación. Útil para depuración.</p></td>
+</tr>
+</tbody>
+</table>
+<hr class="docutils" />
+<p><em><strong>Limpieza de la build</strong></em></p>
+<p>Si es necesario limpiar el workspace por completo:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>colcon<span class="w"> </span>build<span class="w"> </span>--packages-select<span class="w"> </span>my_package<span class="w"> </span>--cmake-clean-cache
+</pre></div>
+</div>
+<p>O para limpiar todo:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>rm<span class="w"> </span>-rf<span class="w"> </span>build/<span class="w"> </span>install/<span class="w"> </span>log/
+</pre></div>
+</div>
 </section>
-<section id="uso-de-nodos-en-ros2">
-<h2>Uso de nodos en ROS2<a class="headerlink" href="#uso-de-nodos-en-ros2" title="Link to this heading"></a></h2>
+</section>
+<hr class="docutils" />
+<section id="paquetes">
+<h2>Paquetes<a class="headerlink" href="#paquetes" title="Link to this heading"></a></h2>
+<p><em><strong>¿Qué son los paquetes?</strong></em></p>
+<p>Un paquete es la unidad mínima de construcción en ROS 2. Contiene código fuente, archivos de lanzamiento, configuraciones, y puede ser en Python o C++.</p>
+<p>¿Qué tipos de paquetes existen?</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ament_cmake</span></code> → para paquetes en C++</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ament_python</span></code> → para paquetes en Python</p></li>
+</ul>
+<p><em><strong>Diferencias entre paquetes en Python y C++</strong></em></p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Característica</p></th>
+<th class="head"><p>C++ (<code class="docutils literal notranslate"><span class="pre">ament_cmake</span></code>)</p></th>
+<th class="head"><p>Python (<code class="docutils literal notranslate"><span class="pre">ament_python</span></code>)</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Compilación</p></td>
+<td><p>Requiere CMake</p></td>
+<td><p>No necesita compilar código</p></td>
+</tr>
+<tr class="row-odd"><td><p>setup.py</p></td>
+<td><p>No usa</p></td>
+<td><p>Obligatorio</p></td>
+</tr>
+<tr class="row-even"><td><p>Velocidad</p></td>
+<td><p>Más rápida</p></td>
+<td><p>Más simple de escribir</p></td>
+</tr>
+</tbody>
+</table>
+<hr class="docutils" />
+<p><em><strong>Crear un paquete Python desde cero</strong></em></p>
+<p>Para crear un paquete usamos el comando <code class="docutils literal notranslate"><span class="pre">ros2</span> <span class="pre">pkg</span> <span class="pre">create</span></code> y añadiños las siguientes argumentos :</p>
+<p><em><strong>Descripción de opciones:</strong></em></p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parte</p></th>
+<th class="head"><p>Función</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">my_package</span></code></p></td>
+<td><p>Nombre del paquete</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">--build-type</span></code></p></td>
+<td><p>Define el tipo de compilador</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--license</span></code></p></td>
+<td><p>Agrega la licencia al package.xml</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">--node-name</span></code></p></td>
+<td><p>No crea nodo por defecto, se ignora usualmente</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--description</span></code></p></td>
+<td><p>Agrega la descripción del paquete, se ignora usualmente</p></td>
+</tr>
+</tbody>
+</table>
+<hr class="docutils" />
+<p><em><strong>Resumen para crear un paquete Python completo</strong></em></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>pkg<span class="w"> </span>create<span class="w"> </span>py_listener_pkg<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--build-type<span class="w"> </span>ament_python<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--dependencies<span class="w"> </span>rclpy<span class="w"> </span>std_msgs<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--license<span class="w"> </span><span class="s2">&quot;MIT&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--description<span class="w"> </span><span class="s2">&quot;Paquete de ejemplo en Python para suscripción ROS 2&quot;</span>
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="nodos">
+<h2>Nodos<a class="headerlink" href="#nodos" title="Link to this heading"></a></h2>
 <p>Un <strong>nodo</strong> es una entidad computacional que ejecuta una función específica, como mover una tortuga, leer sensores, o calcular trayectorias.</p>
 <p>Ejemplo:</p>
 <ul class="simple">
@@ -140,8 +294,8 @@
 </div>
 </section>
 <hr class="docutils" />
-<section id="uso-temas">
-<h2>Uso Temas<a class="headerlink" href="#uso-temas" title="Link to this heading"></a></h2>
+<section id="temas">
+<h2>Temas<a class="headerlink" href="#temas" title="Link to this heading"></a></h2>
 <p>Un <strong>tema</strong> es un canal por el cual los nodos publican o reciben datos. Es <strong>unidireccional y asincrónico</strong>.</p>
 <p>Ejemplo:</p>
 <ul class="simple">
@@ -215,57 +369,12 @@ sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> <
 </ul>
 </section>
 </section>
+</section>
+<section id="tutoriales">
+<h1>Tutoriales<a class="headerlink" href="#tutoriales" title="Link to this heading"></a></h1>
 <section id="creacion-de-un-espacio-de-trabajo">
 <h2>Creación de un espacio de trabajo<a class="headerlink" href="#creacion-de-un-espacio-de-trabajo" title="Link to this heading"></a></h2>
-<section id="que-es-un-espacio-de-trabajo-en-ros-2">
-<h3>¿Qué es un espacio de trabajo en ROS 2?<a class="headerlink" href="#que-es-un-espacio-de-trabajo-en-ros-2" title="Link to this heading"></a></h3>
-<p>Un <strong>espacio de trabajo (workspace)</strong> en ROS 2 es una carpeta estructurada que contiene paquetes ROS 2, los cuales pueden estar escritos en Python o C++. Todos los paquetes se compilan y organizan dentro del workspace.</p>
-<p><em><strong>¿Qué es colcon?</strong></em></p>
-<p><code class="docutils literal notranslate"><span class="pre">colcon</span></code> es la herramienta oficial y recomendada para <strong>construir, compilar y organizar workspaces en ROS 2</strong>.</p>
-<p>Proviene de «COmplex LOgic CONstructor» y fue diseñado para reemplazar herramientas anteriores como <code class="docutils literal notranslate"><span class="pre">catkin_make</span></code> o <code class="docutils literal notranslate"><span class="pre">ament_tools</span></code>.</p>
-<hr class="docutils" />
-<p><em><strong>Características de colcon</strong></em></p>
-<ul class="simple">
-<li><p>Compila múltiples paquetes de forma <strong>paralela</strong>.</p></li>
-<li><p>Detecta <strong>dependencias entre paquetes</strong> y respeta el orden de compilación.</p></li>
-<li><p>Separa los archivos construidos en carpetas específicas.</p></li>
-<li><p>Es <strong>extensible</strong> mediante plugins.</p></li>
-</ul>
-<hr class="docutils" />
-<p>Instalación de colcon y extensiones recomendadas</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>python3-colcon-common-extensions
-</pre></div>
-</div>
-<hr class="docutils" />
-<p><em><strong>Comandos principales de colcon</strong></em></p>
-<table class="docutils align-default">
-<thead>
-<tr class="row-odd"><th class="head"><p>Comando</p></th>
-<th class="head"><p>¿Qué hace?</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">colcon</span> <span class="pre">build</span></code></p></td>
-<td><p>Compila todos los paquetes en <code class="docutils literal notranslate"><span class="pre">src/</span></code></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">colcon</span> <span class="pre">build</span> <span class="pre">--packages-select</span> <span class="pre">nombre</span></code></p></td>
-<td><p>Compila solo un paquete específico</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">colcon</span> <span class="pre">list</span></code></p></td>
-<td><p>Muestra todos los paquetes del workspace</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">colcon</span> <span class="pre">test</span></code></p></td>
-<td><p>Ejecuta pruebas definidas en los paquetes</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">colcon</span> <span class="pre">clean</span></code></p></td>
-<td><p>Limpia las carpetas <code class="docutils literal notranslate"><span class="pre">build/</span></code>, <code class="docutils literal notranslate"><span class="pre">install/</span></code> y <code class="docutils literal notranslate"><span class="pre">log/</span></code></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">colcon</span> <span class="pre">build</span> <span class="pre">--symlink-install</span></code></p></td>
-<td><p>En paquetes Python, enlaza código para no recompilar cada vez</p></td>
-</tr>
-</tbody>
-</table>
-<hr class="docutils" />
+<p>A continuación, se realiza la creación de un espacio de trabajo denominado <code class="docutils literal notranslate"><span class="pre">ros2_ws</span></code></p>
 <p><em><strong>Creación del espacio de trabajo</strong></em></p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir<span class="w"> </span>-p<span class="w"> </span>~/ros2_ws/src
 <span class="nb">cd</span><span class="w"> </span>~/ros2_ws
@@ -274,120 +383,13 @@ colcon<span class="w"> </span>build
 <span class="nb">source</span><span class="w"> </span>~/.bashrc
 </pre></div>
 </div>
-<hr class="docutils" />
-<p><em><strong>Directorios creados por colcon al compilar</strong></em></p>
-<p>Al ejecutar <code class="docutils literal notranslate"><span class="pre">colcon</span> <span class="pre">build</span></code>, se generan 3 carpetas principales:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>ros2_ws/
-├── build/
-├── install/
-└── log/
-</pre></div>
-</div>
-<table class="docutils align-default">
-<thead>
-<tr class="row-odd"><th class="head"><p>Carpeta</p></th>
-<th class="head"><p>¿Para qué sirve?</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">build/</span></code></p></td>
-<td><p>Archivos temporales de compilación. ROS 2 genera aquí el código intermedio.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">install/</span></code></p></td>
-<td><p>Aquí se instalan los ejecutables, scripts, bibliotecas y archivos generados. Es lo que usas con <code class="docutils literal notranslate"><span class="pre">source</span> <span class="pre">install/setup.bash</span></code>.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">log/</span></code></p></td>
-<td><p>Archivos de salida, advertencias y errores de compilación. Útil para depuración.</p></td>
-</tr>
-</tbody>
-</table>
-<hr class="docutils" />
-<p><em><strong>Limpieza de la build</strong></em></p>
-<p>Si es necesario limpiar el workspace por completo:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>colcon<span class="w"> </span>build<span class="w"> </span>--packages-select<span class="w"> </span>my_package<span class="w"> </span>--cmake-clean-cache
-</pre></div>
-</div>
-<p>O para limpiar todo:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>rm<span class="w"> </span>-rf<span class="w"> </span>build/<span class="w"> </span>install/<span class="w"> </span>log/
-</pre></div>
-</div>
-</section>
 </section>
 <hr class="docutils" />
 <section id="creacion-paquetes">
 <h2>Creación Paquetes<a class="headerlink" href="#creacion-paquetes" title="Link to this heading"></a></h2>
-<p><em><strong>¿Qué son los paquetes?</strong></em></p>
-<p>Un paquete es la unidad mínima de construcción en ROS 2. Contiene código fuente, archivos de lanzamiento, configuraciones, y puede ser en Python o C++.</p>
-<p>¿Qué tipos de paquetes existen?</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">ament_cmake</span></code> → para paquetes en C++</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">ament_python</span></code> → para paquetes en Python</p></li>
-</ul>
-<p><em><strong>Diferencias entre paquetes en Python y C++</strong></em></p>
-<table class="docutils align-default">
-<thead>
-<tr class="row-odd"><th class="head"><p>Característica</p></th>
-<th class="head"><p>C++ (<code class="docutils literal notranslate"><span class="pre">ament_cmake</span></code>)</p></th>
-<th class="head"><p>Python (<code class="docutils literal notranslate"><span class="pre">ament_python</span></code>)</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p>Compilación</p></td>
-<td><p>Requiere CMake</p></td>
-<td><p>No necesita compilar código</p></td>
-</tr>
-<tr class="row-odd"><td><p>setup.py</p></td>
-<td><p>No usa</p></td>
-<td><p>Obligatorio</p></td>
-</tr>
-<tr class="row-even"><td><p>Velocidad</p></td>
-<td><p>Más rápida</p></td>
-<td><p>Más simple de escribir</p></td>
-</tr>
-</tbody>
-</table>
-<hr class="docutils" />
-<p><em><strong>Crear un paquete Python desde cero</strong></em></p>
-<p>Para crear un paquete usamos el comando <code class="docutils literal notranslate"><span class="pre">ros2</span> <span class="pre">pkg</span> <span class="pre">create</span></code> y añadiños las siguientes argumentos :</p>
-<p><em><strong>Descripción de opciones:</strong></em></p>
-<table class="docutils align-default">
-<thead>
-<tr class="row-odd"><th class="head"><p>Parte</p></th>
-<th class="head"><p>Función</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">my_package</span></code></p></td>
-<td><p>Nombre del paquete</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">--build-type</span></code></p></td>
-<td><p>Define el tipo de compilador</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--license</span></code></p></td>
-<td><p>Agrega la licencia al package.xml</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">--node-name</span></code></p></td>
-<td><p>No crea nodo por defecto, se ignora usualmente</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--description</span></code></p></td>
-<td><p>Agrega la descripción del paquete, se ignora usualmente</p></td>
-</tr>
-</tbody>
-</table>
-<hr class="docutils" />
-<p><em><strong>Resumen para crear un paquete Python completo</strong></em></p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>pkg<span class="w"> </span>create<span class="w"> </span>py_listener_pkg<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--build-type<span class="w"> </span>ament_python<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--dependencies<span class="w"> </span>rclpy<span class="w"> </span>std_msgs<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--license<span class="w"> </span><span class="s2">&quot;MIT&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--description<span class="w"> </span><span class="s2">&quot;Paquete de ejemplo en Python para suscripción ROS 2&quot;</span>
-</pre></div>
-</div>
-<hr class="docutils" />
-<section id="ejemplo-completo-paso-a-paso">
-<h3>Ejemplo completo paso a paso<a class="headerlink" href="#ejemplo-completo-paso-a-paso" title="Link to this heading"></a></h3>
+<p>Una vez construido el espacio de trabajo, se debe realizar la construcción de un paquete de ROS2, en este caso se utilizará un paquete compatible con python, y tendrá las dependencias de <code class="docutils literal notranslate"><span class="pre">std_msgs</span></code></p>
 <ol class="arabic simple">
-<li><p>Crear el paquete Python</p></li>
+<li><p>Crear el paquete</p></li>
 </ol>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>~/ros2_ws/src
 ros2<span class="w"> </span>pkg<span class="w"> </span>create<span class="w"> </span>mi_pkg_python<span class="w"> </span>--build-type<span class="w"> </span>ament_python<span class="w"> </span>--dependencies<span class="w"> </span>rclpy<span class="w"> </span>std_msgs
@@ -408,13 +410,24 @@ ros2<span class="w"> </span>pkg<span class="w"> </span>create<span class="w"> </
 </pre></div>
 </div>
 <ol class="arabic simple" start="3">
-<li><p>Crear el archivo del nodo publicador</p></li>
+<li><p>Compilar el paquete</p></li>
 </ol>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>touch<span class="w"> </span>mi_pkg_python/mi_pkg_python/publisher.py
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>~/ros2_ws
+colcon<span class="w"> </span>build<span class="w"> </span>--packages-select<span class="w"> </span>mi_pkg_python
 </pre></div>
 </div>
-<ol class="arabic simple" start="4">
-<li><p>Código del nodo en <code class="docutils literal notranslate"><span class="pre">publisher.py</span></code></p></li>
+</section>
+<section id="nodos-publicador-y-suscriptor">
+<h2>Nodos publicador y Suscriptor<a class="headerlink" href="#nodos-publicador-y-suscriptor" title="Link to this heading"></a></h2>
+<p>Una vez compilado el paquete, se realiza la creación de los nodos publicador y suscriptor.</p>
+<ol class="arabic simple">
+<li><p>Crear el archivo del nodo publicador</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>touch<span class="w"> </span>mi_pkg_python/mi_pkg_python/publicador.py
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>Código del nodo en <code class="docutils literal notranslate"><span class="pre">publicador.py</span></code></p></li>
 </ol>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Importa la librería principal de ROS 2 en Python</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">rclpy</span>
@@ -484,30 +497,91 @@ ros2<span class="w"> </span>pkg<span class="w"> </span>create<span class="w"> </
     <span class="n">main</span><span class="p">()</span>
 </pre></div>
 </div>
-<ol class="arabic simple" start="5">
-<li><p>Registrar el nodo en <code class="docutils literal notranslate"><span class="pre">setup.py</span></code></p></li>
+<ol class="arabic simple" start="3">
+<li><p>Crear el nodo <code class="docutils literal notranslate"><span class="pre">suscriptor.py</span></code> en la misma dirección donde se encuentra el nodo publicador.py</p></li>
+</ol>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
+<span class="c1"># Importa la librería principal de ROS 2 para Python</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">rclpy</span>
+
+<span class="c1"># Importa la clase base para crear nodos en ROS 2</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rclpy.node</span><span class="w"> </span><span class="kn">import</span> <span class="n">Node</span>
+
+<span class="c1"># Importa el tipo de mensaje estándar String desde std_msgs</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">std_msgs.msg</span><span class="w"> </span><span class="kn">import</span> <span class="n">String</span>
+
+<span class="c1"># Define una clase que hereda de Node, representa el nodo suscriptor</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MinimalSubscriber</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
+
+    <span class="c1"># Método constructor de la clase</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Inicializa el nodo con el nombre &#39;minimal_subscriber&#39;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s1">&#39;minimal_subscriber&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Crea una suscripción al tópico &#39;topic&#39;</span>
+        <span class="c1"># Tipo de mensaje: String</span>
+        <span class="c1"># Función de callback: self.listener_callback</span>
+        <span class="c1"># Tamaño de la cola: 10 mensajes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subscription</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_subscription</span><span class="p">(</span>
+            <span class="n">String</span><span class="p">,</span>
+            <span class="s1">&#39;topic&#39;</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">listener_callback</span><span class="p">,</span>
+            <span class="mi">10</span><span class="p">)</span>
+
+        <span class="c1"># Esta línea asegura que la variable no sea optimizada por el compilador (aunque no es obligatorio en Python)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subscription</span>
+
+    <span class="c1"># Función que se llama cada vez que se recibe un mensaje en el tópico</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">listener_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+        <span class="c1"># Imprime en consola el contenido del mensaje recibido</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;I heard: &quot;</span><span class="si">%s</span><span class="s1">&quot;&#39;</span> <span class="o">%</span> <span class="n">msg</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+
+<span class="c1"># Función principal que lanza el nodo</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="c1"># Inicializa el sistema de ROS 2</span>
+    <span class="n">rclpy</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">)</span>
+
+    <span class="c1"># Crea una instancia del nodo suscriptor</span>
+    <span class="n">minimal_subscriber</span> <span class="o">=</span> <span class="n">MinimalSubscriber</span><span class="p">()</span>
+
+    <span class="c1"># Mantiene el nodo corriendo escuchando datos (callback se ejecutará cuando lleguen mensajes)</span>
+    <span class="n">rclpy</span><span class="o">.</span><span class="n">spin</span><span class="p">(</span><span class="n">minimal_subscriber</span><span class="p">)</span>
+
+    <span class="c1"># Cuando se detiene (Ctrl+C o cierre), se destruye el nodo explícitamente (opcional)</span>
+    <span class="n">minimal_subscriber</span><span class="o">.</span><span class="n">destroy_node</span><span class="p">()</span>
+
+    <span class="c1"># Finaliza la ejecución del sistema ROS 2</span>
+    <span class="n">rclpy</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
+
+<span class="c1"># Esta verificación permite que el nodo se ejecute solo si el script se corre directamente</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="4">
+<li><p>Registrar los nodos en <code class="docutils literal notranslate"><span class="pre">setup.py</span></code></p></li>
 </ol>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">entry_points</span><span class="o">=</span><span class="p">{</span>
     <span class="s1">&#39;console_scripts&#39;</span><span class="p">:</span> <span class="p">[</span>
-        <span class="s1">&#39;pub_prueba = mi_pkg_python.publisher:main&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;publicador1 = mi_pkg_python.publicador:main&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;suscriptor1 = mi_pkg_python.suscriptor:main&#39;</span><span class="p">,</span>
     <span class="p">],</span>
 <span class="p">},</span>
 </pre></div>
 </div>
-<ol class="arabic simple" start="6">
+<ol class="arabic simple" start="5">
 <li><p>Compilar el paquete</p></li>
 </ol>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>~/ros2_ws
 colcon<span class="w"> </span>build<span class="w"> </span>--packages-select<span class="w"> </span>mi_pkg_python
 </pre></div>
 </div>
-<ol class="arabic simple" start="7">
+<ol class="arabic simple" start="6">
 <li><p>Ejecutar el nodo</p></li>
 </ol>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>run<span class="w"> </span>mi_pkg_python<span class="w"> </span>pub_prueba
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>run<span class="w"> </span>mi_pkg_python<span class="w"> </span>publicador1
 </pre></div>
 </div>
-</section>
 </section>
 </section>
 
@@ -516,7 +590,7 @@ colcon<span class="w"> </span>build<span class="w"> </span>--packages-select<spa
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Pie de página">
         <a href="../tema_1/instalacionROS2.html" class="btn btn-neutral float-left" title="Instalación de ROS2 Humble" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Anterior</a>
-        <a href="../tema_3/dispositivos.html" class="btn btn-neutral float-right" title="Conexión con dispositivos" accesskey="n" rel="next">Siguiente <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="tutoriales.html" class="btn btn-neutral float-right" title="AprilTags" accesskey="n" rel="next">Siguiente <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
