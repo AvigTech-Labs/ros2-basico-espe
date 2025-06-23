@@ -25,6 +25,7 @@ documentos/tema_1/instalacionROS2.md
 :maxdepth: 2
 :caption: Conceptos Básicos
 documentos/tema_2/conceptos_basicos.md
+documentos/tema_2/tutoriales.md
 ```
 
 ```{toctree}
