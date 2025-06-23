@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AprilTags &mdash; documentación de ros2_espe - 0.1</title>
+  <title>Tutoriales &mdash; documentación de ros2_espe - 0.1</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -59,8 +59,14 @@
 <p class="caption" role="heading"><span class="caption-text">Conceptos Básicos</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="conceptos_basicos.html">Conceptos Básicos</a></li>
-<li class="toctree-l1"><a class="reference internal" href="conceptos_basicos.html#tutoriales">Tutoriales</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">AprilTags</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Tutoriales</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#creacion-de-un-espacio-de-trabajo">Creación de un espacio de trabajo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#creacion-paquetes">Creación Paquetes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#nodos-publicador-y-suscriptor">Nodos publicador y Suscriptor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#creacion-de-un-paquete-de-mensajes-personalizados-en-ros-2-ament-cmake">Creación de un Paquete de Mensajes Personalizados en ROS 2 (<code class="docutils literal notranslate"><span class="pre">ament_cmake</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#april-tags">April-Tags</a></li>
+</ul>
+</li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Conexión con dispositivos</span></p>
 <ul>
@@ -89,7 +95,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">AprilTags</li>
+      <li class="breadcrumb-item active">Tutoriales</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -98,9 +104,620 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="apriltags">
-<h1>AprilTags<a class="headerlink" href="#apriltags" title="Enlace permanente a este encabezado"></a></h1>
-<p>Uso de apriltags</p>
+  <section id="tutoriales">
+<h1>Tutoriales<a class="headerlink" href="#tutoriales" title="Enlace permanente a este encabezado"></a></h1>
+<section id="creacion-de-un-espacio-de-trabajo">
+<h2>Creación de un espacio de trabajo<a class="headerlink" href="#creacion-de-un-espacio-de-trabajo" title="Enlace permanente a este encabezado"></a></h2>
+<p>A continuación, se realiza la creación de un espacio de trabajo denominado <code class="docutils literal notranslate"><span class="pre">ros2_ws</span></code></p>
+<p><em><strong>Creación del espacio de trabajo</strong></em></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir<span class="w"> </span>-p<span class="w"> </span>~/ros2_ws/src
+<span class="nb">cd</span><span class="w"> </span>~/ros2_ws
+colcon<span class="w"> </span>build
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;source ~/ros2_ws/install/setup.bash&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>~/.bashrc
+<span class="nb">source</span><span class="w"> </span>~/.bashrc
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="creacion-paquetes">
+<h2>Creación Paquetes<a class="headerlink" href="#creacion-paquetes" title="Enlace permanente a este encabezado"></a></h2>
+<p>Una vez construido el espacio de trabajo, se debe realizar la construcción de un paquete de ROS2, en este caso se utilizará un paquete compatible con python, y tendrá las dependencias de <code class="docutils literal notranslate"><span class="pre">std_msgs</span></code></p>
+<ol class="arabic simple">
+<li><p>Crear el paquete</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>~/ros2_ws/src
+ros2<span class="w"> </span>pkg<span class="w"> </span>create<span class="w"> </span>mi_pkg_python<span class="w"> </span>--build-type<span class="w"> </span>ament_python<span class="w"> </span>--dependencies<span class="w"> </span>rclpy<span class="w"> </span>std_msgs
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>Estructura generada</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>mi_pkg_python/
+├── mi_pkg_python/
+│   └── __init__.py
+├── package.xml
+├── resource/
+│   └── mi_pkg_python
+├── setup.py
+├── setup.cfg
+└── test/
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>Compilar el paquete</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>~/ros2_ws
+colcon<span class="w"> </span>build<span class="w"> </span>--packages-select<span class="w"> </span>mi_pkg_python
+</pre></div>
+</div>
+</section>
+<section id="nodos-publicador-y-suscriptor">
+<h2>Nodos publicador y Suscriptor<a class="headerlink" href="#nodos-publicador-y-suscriptor" title="Enlace permanente a este encabezado"></a></h2>
+<p>Una vez compilado el paquete, se realiza la creación de los nodos publicador y suscriptor.</p>
+<ol class="arabic simple">
+<li><p>Crear el archivo del nodo publicador</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>touch<span class="w"> </span>mi_pkg_python/mi_pkg_python/publicador.py
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>Código del nodo en <code class="docutils literal notranslate"><span class="pre">publicador.py</span></code></p></li>
+</ol>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Importa la librería principal de ROS 2 en Python</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">rclpy</span>
+
+<span class="c1"># Importa la clase base Node, que representa un nodo en ROS 2</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rclpy.node</span><span class="w"> </span><span class="kn">import</span> <span class="n">Node</span>
+
+<span class="c1"># Importa el tipo de mensaje estándar String del paquete std_msgs</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">std_msgs.msg</span><span class="w"> </span><span class="kn">import</span> <span class="n">String</span>
+
+<span class="c1"># Define una clase que extiende Node, representando un nodo que publica mensajes</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MinimalPublisher</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Llama al constructor de la clase padre (Node) con el nombre del nodo</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s1">&#39;minimal_publisher&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Crea un publicador que publica mensajes del tipo String en el topic &#39;topic&#39; con una cola de 10 mensajes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">publisher_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_publisher</span><span class="p">(</span><span class="n">String</span><span class="p">,</span> <span class="s1">&#39;topic&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+
+        <span class="c1"># Crea un temporizador que ejecuta la función `timer_callback` cada 0.5 segundos</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">timer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_timer</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">timer_callback</span><span class="p">)</span>
+
+        <span class="c1"># Contador para numerar los mensajes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="c1"># Función que se ejecuta cada 0.5 segundos</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">timer_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Crea un mensaje tipo String</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="n">String</span><span class="p">()</span>
+
+        <span class="c1"># Asigna el contenido del mensaje</span>
+        <span class="n">msg</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Hello World: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span>
+
+        <span class="c1"># Publica el mensaje en el topic</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">publisher_</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="c1"># Muestra por consola el mensaje publicado</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Publishing: &quot;</span><span class="si">{</span><span class="n">msg</span><span class="o">.</span><span class="n">data</span><span class="si">}</span><span class="s1">&quot;&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Incrementa el contador</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+
+<span class="c1"># Punto de entrada principal del programa</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="c1"># Inicializa el sistema de nodos de ROS 2</span>
+    <span class="n">rclpy</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Instancia el nodo y empieza a ejecutarlo</span>
+        <span class="n">node</span> <span class="o">=</span> <span class="n">MinimalPublisher</span><span class="p">()</span>
+
+        <span class="c1"># Mantiene al nodo activo, escuchando eventos y timers</span>
+        <span class="n">rclpy</span><span class="o">.</span><span class="n">spin</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+
+    <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
+        <span class="c1"># Permite salir con Ctrl+C sin error</span>
+        <span class="k">pass</span>
+
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="c1"># Destruye el nodo de forma limpia y apaga el sistema ROS 2</span>
+        <span class="n">node</span><span class="o">.</span><span class="n">destroy_node</span><span class="p">()</span>
+        <span class="n">rclpy</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
+
+<span class="c1"># Verifica si el archivo se está ejecutando directamente (no importado)</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>Crear el nodo <code class="docutils literal notranslate"><span class="pre">suscriptor.py</span></code> en la misma dirección donde se encuentra el nodo publicador.py</p></li>
+</ol>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
+<span class="c1"># Importa la librería principal de ROS 2 para Python</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">rclpy</span>
+
+<span class="c1"># Importa la clase base para crear nodos en ROS 2</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rclpy.node</span><span class="w"> </span><span class="kn">import</span> <span class="n">Node</span>
+
+<span class="c1"># Importa el tipo de mensaje estándar String desde std_msgs</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">std_msgs.msg</span><span class="w"> </span><span class="kn">import</span> <span class="n">String</span>
+
+<span class="c1"># Define una clase que hereda de Node, representa el nodo suscriptor</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MinimalSubscriber</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
+
+    <span class="c1"># Método constructor de la clase</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Inicializa el nodo con el nombre &#39;minimal_subscriber&#39;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s1">&#39;minimal_subscriber&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Crea una suscripción al tópico &#39;topic&#39;</span>
+        <span class="c1"># Tipo de mensaje: String</span>
+        <span class="c1"># Función de callback: self.listener_callback</span>
+        <span class="c1"># Tamaño de la cola: 10 mensajes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subscription</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_subscription</span><span class="p">(</span>
+            <span class="n">String</span><span class="p">,</span>
+            <span class="s1">&#39;topic&#39;</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">listener_callback</span><span class="p">,</span>
+            <span class="mi">10</span><span class="p">)</span>
+
+        <span class="c1"># Esta línea asegura que la variable no sea optimizada por el compilador (aunque no es obligatorio en Python)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subscription</span>
+
+    <span class="c1"># Función que se llama cada vez que se recibe un mensaje en el tópico</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">listener_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+        <span class="c1"># Imprime en consola el contenido del mensaje recibido</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;I heard: &quot;</span><span class="si">%s</span><span class="s1">&quot;&#39;</span> <span class="o">%</span> <span class="n">msg</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+
+<span class="c1"># Función principal que lanza el nodo</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="c1"># Inicializa el sistema de ROS 2</span>
+    <span class="n">rclpy</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">)</span>
+
+    <span class="c1"># Crea una instancia del nodo suscriptor</span>
+    <span class="n">minimal_subscriber</span> <span class="o">=</span> <span class="n">MinimalSubscriber</span><span class="p">()</span>
+
+    <span class="c1"># Mantiene el nodo corriendo escuchando datos (callback se ejecutará cuando lleguen mensajes)</span>
+    <span class="n">rclpy</span><span class="o">.</span><span class="n">spin</span><span class="p">(</span><span class="n">minimal_subscriber</span><span class="p">)</span>
+
+    <span class="c1"># Cuando se detiene (Ctrl+C o cierre), se destruye el nodo explícitamente (opcional)</span>
+    <span class="n">minimal_subscriber</span><span class="o">.</span><span class="n">destroy_node</span><span class="p">()</span>
+
+    <span class="c1"># Finaliza la ejecución del sistema ROS 2</span>
+    <span class="n">rclpy</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
+
+<span class="c1"># Esta verificación permite que el nodo se ejecute solo si el script se corre directamente</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="4">
+<li><p>Registrar los nodos en <code class="docutils literal notranslate"><span class="pre">setup.py</span></code></p></li>
+</ol>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">entry_points</span><span class="o">=</span><span class="p">{</span>
+    <span class="s1">&#39;console_scripts&#39;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s1">&#39;publicador1 = mi_pkg_python.publicador:main&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;suscriptor1 = mi_pkg_python.suscriptor:main&#39;</span><span class="p">,</span>
+    <span class="p">],</span>
+<span class="p">},</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="5">
+<li><p>Compilar el paquete</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>~/ros2_ws
+colcon<span class="w"> </span>build<span class="w"> </span>--packages-select<span class="w"> </span>mi_pkg_python
+</pre></div>
+</div>
+<ol class="arabic simple" start="6">
+<li><p>Ejecutar el nodo</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>run<span class="w"> </span>mi_pkg_python<span class="w"> </span>publicador1
+</pre></div>
+</div>
+</section>
+<section id="creacion-de-un-paquete-de-mensajes-personalizados-en-ros-2-ament-cmake">
+<h2>Creación de un Paquete de Mensajes Personalizados en ROS 2 (<code class="docutils literal notranslate"><span class="pre">ament_cmake</span></code>)<a class="headerlink" href="#creacion-de-un-paquete-de-mensajes-personalizados-en-ros-2-ament-cmake" title="Enlace permanente a este encabezado"></a></h2>
+<p>Los mensajes personalizados permiten crear un paquete exclusivo para generar estructuras personales de mensajes en ROS2 usando <code class="docutils literal notranslate"><span class="pre">ament_cmake</span></code>, ademas de poder integrarlos a otros paquetes.</p>
+<p>Antes de continuar con la generación de mensajes es necesario revisar, que tipos de mensajes están disponibles:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>interface<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>msg
+</pre></div>
+</div>
+<p>y la revisión de los parámetros del mensaje se realiza mediante el comand:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span><span class="o">[</span>tipo<span class="w"> </span>de<span class="w"> </span>mensaje<span class="o">]</span>
+</pre></div>
+</div>
+<hr class="docutils" />
+<p>Ahora, se va a crear un paquete llamado <code class="docutils literal notranslate"><span class="pre">avig_msg</span></code> que defina un mensaje personalizado <code class="docutils literal notranslate"><span class="pre">AprilTagPixel.msg</span></code> con los siguientes campos:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">string</span> <span class="nb">id</span>
+<span class="n">int32</span> <span class="n">posx</span>
+<span class="n">int32</span> <span class="n">posy</span>
+</pre></div>
+</div>
+<hr class="docutils" />
+<ol class="arabic simple">
+<li><p>Crear el paquete</p></li>
+</ol>
+<p>Desde la carpeta <code class="docutils literal notranslate"><span class="pre">src</span></code> del workspace:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>pkg<span class="w"> </span>create<span class="w"> </span>avig_msg<span class="w"> </span>--build-type<span class="w"> </span>ament_cmake
+</pre></div>
+</div>
+<p>Este comando genera la estructura básica del paquete <code class="docutils literal notranslate"><span class="pre">avig_msg</span></code>.</p>
+<hr class="docutils" />
+<ol class="arabic simple" start="2">
+<li><p>Crear el mensaje personalizado</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>avig_msg
+mkdir<span class="w"> </span>msg
+gedit<span class="w"> </span>msg/AprilTagPixel.msg
+</pre></div>
+</div>
+<p>Contenido:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">string</span> <span class="nb">id</span>
+<span class="n">int32</span> <span class="n">posx</span>
+<span class="n">int32</span> <span class="n">posy</span>
+</pre></div>
+</div>
+<p>Este archivo define un mensaje simple para enviar datos de detección de un tag.</p>
+<hr class="docutils" />
+<ol class="arabic simple" start="3">
+<li><p>Editar <code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></p></li>
+</ol>
+<p>Editar <code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code> para incluir soporte de mensajes:</p>
+<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">cmake_minimum_required</span><span class="p">(</span><span class="s">VERSION</span><span class="w"> </span><span class="s">3.8</span><span class="p">)</span>
+<span class="nb">project</span><span class="p">(</span><span class="s">avig_msg</span><span class="p">)</span>
+
+<span class="nb">find_package</span><span class="p">(</span><span class="s">ament_cmake</span><span class="w"> </span><span class="s">REQUIRED</span><span class="p">)</span>
+<span class="nb">find_package</span><span class="p">(</span><span class="s">rosidl_default_generators</span><span class="w"> </span><span class="s">REQUIRED</span><span class="p">)</span>
+<span class="nb">find_package</span><span class="p">(</span><span class="s">builtin_interfaces</span><span class="w"> </span><span class="s">REQUIRED</span><span class="p">)</span>
+
+<span class="nb">rosidl_generate_interfaces</span><span class="p">(</span><span class="o">${</span><span class="nv">PROJECT_NAME</span><span class="o">}</span>
+<span class="w">  </span><span class="s2">&quot;msg/AprilTagPixel.msg&quot;</span>
+<span class="w">  </span><span class="s">DEPENDENCIES</span><span class="w"> </span><span class="s">builtin_interfaces</span>
+<span class="p">)</span>
+
+<span class="nb">ament_export_dependencies</span><span class="p">(</span><span class="s">rosidl_default_runtime</span><span class="p">)</span>
+<span class="nb">ament_package</span><span class="p">()</span>
+</pre></div>
+</div>
+<p><em><strong>¿Por qué?</strong></em></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">rosidl_default_generators</span></code> genera los bindings del mensaje.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">builtin_interfaces</span></code> es requerido si se usan tipos nativos como <code class="docutils literal notranslate"><span class="pre">string</span></code>, <code class="docutils literal notranslate"><span class="pre">int32</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ament_export_dependencies</span></code> permite que otros paquetes importen estos mensajes.</p></li>
+</ul>
+<hr class="docutils" />
+<ol class="arabic simple" start="4">
+<li><p>Editar <code class="docutils literal notranslate"><span class="pre">package.xml</span></code></p></li>
+</ol>
+<p>Agregar las dependencias necesarias:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;buildtool_depend&gt;</span>ament_cmake<span class="nt">&lt;/buildtool_depend&gt;</span>
+<span class="nt">&lt;build_depend&gt;</span>rosidl_default_generators<span class="nt">&lt;/build_depend&gt;</span>
+<span class="nt">&lt;exec_depend&gt;</span>rosidl_default_runtime<span class="nt">&lt;/exec_depend&gt;</span>
+<span class="nt">&lt;member_of_group&gt;</span>rosidl_interface_packages<span class="nt">&lt;/member_of_group&gt;</span>
+</pre></div>
+</div>
+<p><em><strong>¿Por qué?</strong></em>
+Estas etiquetas aseguran que el sistema de compilación de ROS 2 reconozca este paquete como generador de interfaces.</p>
+<hr class="docutils" />
+<ol class="arabic simple" start="5">
+<li><p>Compilar e instalar</p></li>
+</ol>
+<p>Desde la raíz del workspace:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>~/ros2_ws
+colcon<span class="w"> </span>build<span class="w"> </span>--packages-select<span class="w"> </span>avig_msg
+<span class="nb">source</span><span class="w"> </span>install/setup.bash
+</pre></div>
+</div>
+<hr class="docutils" />
+<ol class="arabic simple" start="6">
+<li><p>Verificar el mensaje</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>avig_msg/msg/AprilTagPixel
+</pre></div>
+</div>
+<hr class="docutils" />
+<ol class="arabic simple" start="7">
+<li><p>Usar el mensaje en otro paquete</p></li>
+</ol>
+<p>En el paquete creado anteriormente de Python  <code class="docutils literal notranslate"><span class="pre">mi_pkg_python</span></code>:</p>
+<ol class="arabic simple">
+<li><p>En <code class="docutils literal notranslate"><span class="pre">package.xml</span></code>:</p></li>
+</ol>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;exec_depend&gt;</span>avig_msg<span class="nt">&lt;/exec_depend&gt;</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>En el código Python:</p></li>
+</ol>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">avig_msg.msg</span><span class="w"> </span><span class="kn">import</span> <span class="n">AprilTagPixel</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>Usarlo en un publicador o suscriptor como cualquier otro mensaje.</p></li>
+</ol>
+</section>
+<hr class="docutils" />
+<section id="april-tags">
+<h2>April-Tags<a class="headerlink" href="#april-tags" title="Enlace permanente a este encabezado"></a></h2>
+<p>Un <strong>AprilTag</strong> es un tipo de marcador visual 2D diseñado para permitir la detección robusta, precisa y rápida en entornos de visión por computadora y robótica. Fue desarrollado en el Laboratorio de Robótica de la Universidad de Michigan.</p>
+<p><strong>Características principales:</strong></p>
+<ul class="simple">
+<li><p>🔳 Patrón en blanco y negro con bordes codificados.</p></li>
+<li><p>📍 Cada tag tiene un <strong>ID único</strong>.</p></li>
+<li><p>🎯 Puede ser detectado desde distintos ángulos y con iluminación variable.</p></li>
+<li><p>⚡ Su detección es <strong>más rápida y robusta</strong> que QR o ARTags para propósitos robóticos.</p></li>
+</ul>
+<hr class="docutils" />
+<p><strong>Usos comunes de AprilTags en Robótica</strong></p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Aplicación</p></th>
+<th class="head"><p>Descripción</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>📍 Localización absoluta</p></td>
+<td><p>Identificar una posición fija en el mapa mediante un tag conocido.</p></td>
+</tr>
+<tr class="row-odd"><td><p>🤖 Seguimiento de objetos</p></td>
+<td><p>Seguir la posición de un tag en tiempo real (e.g. manipulación, drones).</p></td>
+</tr>
+<tr class="row-even"><td><p>🎯 Calibración de cámaras</p></td>
+<td><p>Calibrar parámetros intrínsecos y extrínsecos de una cámara.</p></td>
+</tr>
+<tr class="row-odd"><td><p>🗺️ SLAM / Navegación</p></td>
+<td><p>Complementar sensores como LiDAR o IMU en mapeo y navegación autónoma.</p></td>
+</tr>
+<tr class="row-even"><td><p>🤝 Interacción humano-robot</p></td>
+<td><p>Identificar objetos, posiciones, o áreas accesibles visualmente.</p></td>
+</tr>
+</tbody>
+</table>
+<hr class="docutils" />
+<p><strong>Librería usada</strong></p>
+<p>Usamos la librería <code class="docutils literal notranslate"><span class="pre">pupil_apriltags</span></code>, una implementación rápida del detector.<br />
+Es eficiente, moderna, y puede ser utilizada en aplicaciones en tiempo real.</p>
+<p>Instalación:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>pupil-apriltags<span class="w"> </span>opencv-python
+</pre></div>
+</div>
+<hr class="docutils" />
+<p><em><strong>Detección en Python puro (sin ROS)</strong></em></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">cv2</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pupil_apriltags</span><span class="w"> </span><span class="kn">import</span> <span class="n">Detector</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="c1"># Abre la cámara (0 = cámara predeterminada)</span>
+    <span class="n">cap</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">VideoCapture</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">cap</span><span class="o">.</span><span class="n">isOpened</span><span class="p">():</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No se pudo acceder a la cámara.&quot;</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="c1"># Configurar el detector de AprilTags</span>
+    <span class="n">at_detector</span> <span class="o">=</span> <span class="n">Detector</span><span class="p">(</span>
+        <span class="n">families</span><span class="o">=</span><span class="s1">&#39;tag36h11&#39;</span><span class="p">,</span>
+        <span class="n">nthreads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">quad_decimate</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+        <span class="n">quad_sigma</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">refine_edges</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">decode_sharpening</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span>
+        <span class="n">debug</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Nombre de la ventana</span>
+    <span class="n">window_name</span> <span class="o">=</span> <span class="s1">&#39;AprilTag Detector - tag36h11&#39;</span>
+
+    <span class="c1"># Hacer la ventana redimensionable</span>
+    <span class="n">cv2</span><span class="o">.</span><span class="n">namedWindow</span><span class="p">(</span><span class="n">window_name</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">WINDOW_NORMAL</span><span class="p">)</span>
+    <span class="n">cv2</span><span class="o">.</span><span class="n">resizeWindow</span><span class="p">(</span><span class="n">window_name</span><span class="p">,</span> <span class="mi">800</span><span class="p">,</span> <span class="mi">600</span><span class="p">)</span>  <span class="c1"># Ancho x Alto en píxeles</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Cámara activa. Presiona &#39;q&#39; para salir.&quot;</span><span class="p">)</span>
+
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">ret</span><span class="p">,</span> <span class="n">frame</span> <span class="o">=</span> <span class="n">cap</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">ret</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No se pudo leer el frame.&quot;</span><span class="p">)</span>
+            <span class="k">break</span>
+
+        <span class="c1"># Convertir imagen a escala de grises</span>
+        <span class="n">gray</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">cvtColor</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">COLOR_BGR2GRAY</span><span class="p">)</span>
+
+        <span class="c1"># Detectar etiquetas AprilTag</span>
+        <span class="n">detections</span> <span class="o">=</span> <span class="n">at_detector</span><span class="o">.</span><span class="n">detect</span><span class="p">(</span><span class="n">gray</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">detection</span> <span class="ow">in</span> <span class="n">detections</span><span class="p">:</span>
+            <span class="n">tag_id</span> <span class="o">=</span> <span class="n">detection</span><span class="o">.</span><span class="n">tag_id</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Tag detectado: </span><span class="si">{</span><span class="n">tag_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="c1"># Dibujar un círculo en el centro del tag</span>
+            <span class="n">center</span> <span class="o">=</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">detection</span><span class="o">.</span><span class="n">center</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="nb">int</span><span class="p">(</span><span class="n">detection</span><span class="o">.</span><span class="n">center</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+            <span class="n">cv2</span><span class="o">.</span><span class="n">circle</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">center</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
+
+        <span class="c1"># Mostrar imagen con detecciones</span>
+        <span class="n">cv2</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">window_name</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
+
+        <span class="c1"># Salir si se presiona la tecla &#39;q&#39;</span>
+        <span class="k">if</span> <span class="n">cv2</span><span class="o">.</span><span class="n">waitKey</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xFF</span> <span class="o">==</span> <span class="nb">ord</span><span class="p">(</span><span class="s1">&#39;q&#39;</span><span class="p">):</span>
+            <span class="k">break</span>
+
+    <span class="c1"># Liberar recursos</span>
+    <span class="n">cap</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
+    <span class="n">cv2</span><span class="o">.</span><span class="n">destroyAllWindows</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Cámara cerrada.&quot;</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Para el uso de april-tags, es importante tener en cuenta las características de la cámara.</p>
+<p><em><strong>Nodo ROS 2 que publica detección de AprilTags</strong></em></p>
+<p>Este nodo se ejecuta en ROS 2 y <strong>publica los datos detectados</strong> (ID y posición en píxeles) en un tópico llamado <code class="docutils literal notranslate"><span class="pre">/apriltag_pixels</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">cv2</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pupil_apriltags</span><span class="w"> </span><span class="kn">import</span> <span class="n">Detector</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">rclpy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rclpy.node</span><span class="w"> </span><span class="kn">import</span> <span class="n">Node</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">std_msgs.msg</span><span class="w"> </span><span class="kn">import</span> <span class="n">String</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">AprilTagPixelPublisher</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s1">&#39;apriltag_pixel_publisher&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">publisher_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_publisher</span><span class="p">(</span><span class="n">String</span><span class="p">,</span> <span class="s1">&#39;apriltag_pixels&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">cap</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">VideoCapture</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cap</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">cv2</span><span class="o">.</span><span class="n">CAP_PROP_FRAME_WIDTH</span><span class="p">,</span> <span class="mi">640</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cap</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">cv2</span><span class="o">.</span><span class="n">CAP_PROP_FRAME_HEIGHT</span><span class="p">,</span> <span class="mi">480</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cap</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">cv2</span><span class="o">.</span><span class="n">CAP_PROP_FPS</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">cap</span><span class="o">.</span><span class="n">isOpened</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;No se pudo acceder a la cámara.&quot;</span><span class="p">)</span>
+            <span class="n">exit</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">at_detector</span> <span class="o">=</span> <span class="n">Detector</span><span class="p">(</span><span class="n">families</span><span class="o">=</span><span class="s1">&#39;tag36h11&#39;</span><span class="p">,</span> <span class="n">nthreads</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+        <span class="c1"># Crear ventana redimensionable (solo si se usa visualización)</span>
+        <span class="n">cv2</span><span class="o">.</span><span class="n">namedWindow</span><span class="p">(</span><span class="s2">&quot;AprilTag View&quot;</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">WINDOW_NORMAL</span><span class="p">)</span>
+        <span class="n">cv2</span><span class="o">.</span><span class="n">resizeWindow</span><span class="p">(</span><span class="s2">&quot;AprilTag View&quot;</span><span class="p">,</span> <span class="mi">800</span><span class="p">,</span> <span class="mi">600</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">timer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_timer</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="mf">30.0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">timer_callback</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;📷 Nodo AprilTag iniciado.&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">timer_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">ret</span><span class="p">,</span> <span class="n">frame</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cap</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">ret</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;⚠️ No se pudo leer el frame.&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="n">gray</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">cvtColor</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">COLOR_BGR2GRAY</span><span class="p">)</span>
+        <span class="n">detections</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">at_detector</span><span class="o">.</span><span class="n">detect</span><span class="p">(</span><span class="n">gray</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">det</span> <span class="ow">in</span> <span class="n">detections</span><span class="p">:</span>
+            <span class="n">tag_id</span> <span class="o">=</span> <span class="n">det</span><span class="o">.</span><span class="n">tag_id</span>
+            <span class="n">center_px</span> <span class="o">=</span> <span class="n">det</span><span class="o">.</span><span class="n">center</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="n">String</span><span class="p">()</span>
+            <span class="n">msg</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;ID: </span><span class="si">{</span><span class="n">tag_id</span><span class="si">}</span><span class="s2"> | x=</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">center_px</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="si">}</span><span class="s2">, y=</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">center_px</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">publisher_data</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="c1">#  Visualizacion</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">visualizar_detecciones</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">detections</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">visualizar_detecciones</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frame</span><span class="p">,</span> <span class="n">detections</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Muestra la imagen con círculos e ID de tags detectados.&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">det</span> <span class="ow">in</span> <span class="n">detections</span><span class="p">:</span>
+            <span class="n">center</span> <span class="o">=</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">det</span><span class="o">.</span><span class="n">center</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="nb">int</span><span class="p">(</span><span class="n">det</span><span class="o">.</span><span class="n">center</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+            <span class="n">cv2</span><span class="o">.</span><span class="n">circle</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">center</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="n">cv2</span><span class="o">.</span><span class="n">putText</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;ID:</span><span class="si">{</span><span class="n">det</span><span class="o">.</span><span class="n">tag_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">center</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">10</span><span class="p">,</span> <span class="n">center</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">10</span><span class="p">),</span>
+                        <span class="n">cv2</span><span class="o">.</span><span class="n">FONT_HERSHEY_SIMPLEX</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
+
+        <span class="n">cv2</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="s2">&quot;AprilTag View&quot;</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">cv2</span><span class="o">.</span><span class="n">waitKey</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xFF</span> <span class="o">==</span> <span class="nb">ord</span><span class="p">(</span><span class="s1">&#39;q&#39;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot; &#39;q&#39; presionado. Saliendo.&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cap</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
+            <span class="n">cv2</span><span class="o">.</span><span class="n">destroyAllWindows</span><span class="p">()</span>
+            <span class="n">rclpy</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">destroy_node</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cap</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
+        <span class="n">cv2</span><span class="o">.</span><span class="n">destroyAllWindows</span><span class="p">()</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">destroy_node</span><span class="p">()</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">rclpy</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">)</span>
+    <span class="n">node</span> <span class="o">=</span> <span class="n">AprilTagPixelPublisher</span><span class="p">()</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">rclpy</span><span class="o">.</span><span class="n">spin</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
+        <span class="n">node</span><span class="o">.</span><span class="n">destroy_node</span><span class="p">()</span>
+        <span class="n">rclpy</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+
+</pre></div>
+</div>
+<p>Se puede utilizar diferentes variaciones para uso de apriltags con ROS2, para poder usar un formato compatible con las imágenes de ROS se debe utilizar el tipo de mensaje <code class="docutils literal notranslate"><span class="pre">sensor_msgs</span></code> y agregar esta dependencia en el paquete creado.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">cv2</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pupil_apriltags</span><span class="w"> </span><span class="kn">import</span> <span class="n">Detector</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">rclpy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rclpy.node</span><span class="w"> </span><span class="kn">import</span> <span class="n">Node</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">std_msgs.msg</span><span class="w"> </span><span class="kn">import</span> <span class="n">String</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sensor_msgs.msg</span><span class="w"> </span><span class="kn">import</span> <span class="n">Image</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cv_bridge</span><span class="w"> </span><span class="kn">import</span> <span class="n">CvBridge</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">AprilTagPixelPublisher</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s1">&#39;apriltag_pixel_publisher&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Publicador para ID y coordenadas en píxeles (bruto)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">publisher_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_publisher</span><span class="p">(</span><span class="n">String</span><span class="p">,</span> <span class="s1">&#39;apriltag_pixels&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+        <span class="c1"># Publicador para imagen tipo image_raw</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">publisher_image</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_publisher</span><span class="p">(</span><span class="n">Image</span><span class="p">,</span> <span class="s1">&#39;image_raw&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bridge</span> <span class="o">=</span> <span class="n">CvBridge</span><span class="p">()</span>
+
+        <span class="c1"># Configurar cámara</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cap</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">VideoCapture</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cap</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">cv2</span><span class="o">.</span><span class="n">CAP_PROP_FRAME_WIDTH</span><span class="p">,</span> <span class="mi">1280</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cap</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">cv2</span><span class="o">.</span><span class="n">CAP_PROP_FRAME_HEIGHT</span><span class="p">,</span> <span class="mi">720</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cap</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">cv2</span><span class="o">.</span><span class="n">CAP_PROP_FPS</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">cap</span><span class="o">.</span><span class="n">isOpened</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;❌ No se pudo acceder a la cámara.&quot;</span><span class="p">)</span>
+            <span class="n">exit</span><span class="p">()</span>
+
+        <span class="c1"># Configurar detector de AprilTags</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">at_detector</span> <span class="o">=</span> <span class="n">Detector</span><span class="p">(</span><span class="n">families</span><span class="o">=</span><span class="s1">&#39;tag36h11&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Temporizador a 30 Hz</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">timer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_timer</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="mf">30.0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">timer_callback</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;📷 Nodo de detección AprilTag iniciado (modo simple sin calibración).&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">timer_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">ret</span><span class="p">,</span> <span class="n">frame</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cap</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">ret</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;⚠️ No se pudo leer el frame.&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="n">gray</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">cvtColor</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">COLOR_BGR2GRAY</span><span class="p">)</span>
+        <span class="n">detections</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">at_detector</span><span class="o">.</span><span class="n">detect</span><span class="p">(</span><span class="n">gray</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">det</span> <span class="ow">in</span> <span class="n">detections</span><span class="p">:</span>
+            <span class="n">tag_id</span> <span class="o">=</span> <span class="n">det</span><span class="o">.</span><span class="n">tag_id</span>
+            <span class="n">center_px</span> <span class="o">=</span> <span class="n">det</span><span class="o">.</span><span class="n">center</span>  <span class="c1"># coordenadas (x, y) en píxeles</span>
+
+            <span class="n">msg</span> <span class="o">=</span> <span class="n">String</span><span class="p">()</span>
+            <span class="n">msg</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;ID: </span><span class="si">{</span><span class="n">tag_id</span><span class="si">}</span><span class="s2"> | x=</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">center_px</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="si">}</span><span class="s2">, y=</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">center_px</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">publisher_data</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;📤 </span><span class="si">{</span><span class="n">msg</span><span class="o">.</span><span class="n">data</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Publicar la imagen como sensor_msgs/Image</span>
+        <span class="n">img_msg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bridge</span><span class="o">.</span><span class="n">cv2_to_imgmsg</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;bgr8&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">publisher_image</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">img_msg</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">destroy_node</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cap</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">destroy_node</span><span class="p">()</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">rclpy</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">)</span>
+    <span class="n">node</span> <span class="o">=</span> <span class="n">AprilTagPixelPublisher</span><span class="p">()</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">rclpy</span><span class="o">.</span><span class="n">spin</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
+        <span class="n">node</span><span class="o">.</span><span class="n">destroy_node</span><span class="p">()</span>
+        <span class="n">rclpy</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>El resto de aplicaciones de AprilTag se puede revisar en los siguintes repositorios:</p>
+<p><a class="reference external" href="https://ftc-docs.firstinspires.org/en/latest/apriltag/vision_portal/apriltag_intro/apriltag-intro.html">April-Tags</a>
+<a class="reference external" href="https://github.com/rgov/apriltag-pdfs/tree/main/tag36h11/us_letter/100mm">Git-hub-Tags</a></p>
+</section>
 </section>
 
 

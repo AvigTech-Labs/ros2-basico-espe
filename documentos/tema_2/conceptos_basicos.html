@@ -23,7 +23,7 @@
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Índice" href="../../genindex.html" />
     <link rel="search" title="Búsqueda" href="../../search.html" />
-    <link rel="next" title="AprilTags" href="tutoriales.html" />
+    <link rel="next" title="Tutoriales" href="tutoriales.html" />
     <link rel="prev" title="Instalación de ROS2 Humble" href="../tema_1/instalacionROS2.html" /> 
 </head>
 
@@ -72,13 +72,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="#tutoriales">Tutoriales</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#creacion-de-un-espacio-de-trabajo">Creación de un espacio de trabajo</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#creacion-paquetes">Creación Paquetes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#nodos-publicador-y-suscriptor">Nodos publicador y Suscriptor</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="tutoriales.html">AprilTags</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutoriales.html">Tutoriales</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Conexión con dispositivos</span></p>
 <ul>
@@ -370,227 +364,13 @@ sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> <
 </section>
 </section>
 </section>
-<section id="tutoriales">
-<h1>Tutoriales<a class="headerlink" href="#tutoriales" title="Enlace permanente a este encabezado"></a></h1>
-<section id="creacion-de-un-espacio-de-trabajo">
-<h2>Creación de un espacio de trabajo<a class="headerlink" href="#creacion-de-un-espacio-de-trabajo" title="Enlace permanente a este encabezado"></a></h2>
-<p>A continuación, se realiza la creación de un espacio de trabajo denominado <code class="docutils literal notranslate"><span class="pre">ros2_ws</span></code></p>
-<p><em><strong>Creación del espacio de trabajo</strong></em></p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir<span class="w"> </span>-p<span class="w"> </span>~/ros2_ws/src
-<span class="nb">cd</span><span class="w"> </span>~/ros2_ws
-colcon<span class="w"> </span>build
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;source ~/ros2_ws/install/setup.bash&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>~/.bashrc
-<span class="nb">source</span><span class="w"> </span>~/.bashrc
-</pre></div>
-</div>
-</section>
-<hr class="docutils" />
-<section id="creacion-paquetes">
-<h2>Creación Paquetes<a class="headerlink" href="#creacion-paquetes" title="Enlace permanente a este encabezado"></a></h2>
-<p>Una vez construido el espacio de trabajo, se debe realizar la construcción de un paquete de ROS2, en este caso se utilizará un paquete compatible con python, y tendrá las dependencias de <code class="docutils literal notranslate"><span class="pre">std_msgs</span></code></p>
-<ol class="arabic simple">
-<li><p>Crear el paquete</p></li>
-</ol>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>~/ros2_ws/src
-ros2<span class="w"> </span>pkg<span class="w"> </span>create<span class="w"> </span>mi_pkg_python<span class="w"> </span>--build-type<span class="w"> </span>ament_python<span class="w"> </span>--dependencies<span class="w"> </span>rclpy<span class="w"> </span>std_msgs
-</pre></div>
-</div>
-<ol class="arabic simple" start="2">
-<li><p>Estructura generada</p></li>
-</ol>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>mi_pkg_python/
-├── mi_pkg_python/
-│   └── __init__.py
-├── package.xml
-├── resource/
-│   └── mi_pkg_python
-├── setup.py
-├── setup.cfg
-└── test/
-</pre></div>
-</div>
-<ol class="arabic simple" start="3">
-<li><p>Compilar el paquete</p></li>
-</ol>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>~/ros2_ws
-colcon<span class="w"> </span>build<span class="w"> </span>--packages-select<span class="w"> </span>mi_pkg_python
-</pre></div>
-</div>
-</section>
-<section id="nodos-publicador-y-suscriptor">
-<h2>Nodos publicador y Suscriptor<a class="headerlink" href="#nodos-publicador-y-suscriptor" title="Enlace permanente a este encabezado"></a></h2>
-<p>Una vez compilado el paquete, se realiza la creación de los nodos publicador y suscriptor.</p>
-<ol class="arabic simple">
-<li><p>Crear el archivo del nodo publicador</p></li>
-</ol>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>touch<span class="w"> </span>mi_pkg_python/mi_pkg_python/publicador.py
-</pre></div>
-</div>
-<ol class="arabic simple" start="2">
-<li><p>Código del nodo en <code class="docutils literal notranslate"><span class="pre">publicador.py</span></code></p></li>
-</ol>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Importa la librería principal de ROS 2 en Python</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">rclpy</span>
-
-<span class="c1"># Importa la clase base Node, que representa un nodo en ROS 2</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">rclpy.node</span><span class="w"> </span><span class="kn">import</span> <span class="n">Node</span>
-
-<span class="c1"># Importa el tipo de mensaje estándar String del paquete std_msgs</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">std_msgs.msg</span><span class="w"> </span><span class="kn">import</span> <span class="n">String</span>
-
-<span class="c1"># Define una clase que extiende Node, representando un nodo que publica mensajes</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">MinimalPublisher</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># Llama al constructor de la clase padre (Node) con el nombre del nodo</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s1">&#39;minimal_publisher&#39;</span><span class="p">)</span>
-
-        <span class="c1"># Crea un publicador que publica mensajes del tipo String en el topic &#39;topic&#39; con una cola de 10 mensajes</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">publisher_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_publisher</span><span class="p">(</span><span class="n">String</span><span class="p">,</span> <span class="s1">&#39;topic&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
-
-        <span class="c1"># Crea un temporizador que ejecuta la función `timer_callback` cada 0.5 segundos</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">timer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_timer</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">timer_callback</span><span class="p">)</span>
-
-        <span class="c1"># Contador para numerar los mensajes</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
-
-    <span class="c1"># Función que se ejecuta cada 0.5 segundos</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">timer_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># Crea un mensaje tipo String</span>
-        <span class="n">msg</span> <span class="o">=</span> <span class="n">String</span><span class="p">()</span>
-
-        <span class="c1"># Asigna el contenido del mensaje</span>
-        <span class="n">msg</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Hello World: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span>
-
-        <span class="c1"># Publica el mensaje en el topic</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">publisher_</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
-
-        <span class="c1"># Muestra por consola el mensaje publicado</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Publishing: &quot;</span><span class="si">{</span><span class="n">msg</span><span class="o">.</span><span class="n">data</span><span class="si">}</span><span class="s1">&quot;&#39;</span><span class="p">)</span>
-
-        <span class="c1"># Incrementa el contador</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
-
-<span class="c1"># Punto de entrada principal del programa</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="c1"># Inicializa el sistema de nodos de ROS 2</span>
-    <span class="n">rclpy</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">)</span>
-
-    <span class="k">try</span><span class="p">:</span>
-        <span class="c1"># Instancia el nodo y empieza a ejecutarlo</span>
-        <span class="n">node</span> <span class="o">=</span> <span class="n">MinimalPublisher</span><span class="p">()</span>
-
-        <span class="c1"># Mantiene al nodo activo, escuchando eventos y timers</span>
-        <span class="n">rclpy</span><span class="o">.</span><span class="n">spin</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
-
-    <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
-        <span class="c1"># Permite salir con Ctrl+C sin error</span>
-        <span class="k">pass</span>
-
-    <span class="k">finally</span><span class="p">:</span>
-        <span class="c1"># Destruye el nodo de forma limpia y apaga el sistema ROS 2</span>
-        <span class="n">node</span><span class="o">.</span><span class="n">destroy_node</span><span class="p">()</span>
-        <span class="n">rclpy</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
-
-<span class="c1"># Verifica si el archivo se está ejecutando directamente (no importado)</span>
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
-    <span class="n">main</span><span class="p">()</span>
-</pre></div>
-</div>
-<ol class="arabic simple" start="3">
-<li><p>Crear el nodo <code class="docutils literal notranslate"><span class="pre">suscriptor.py</span></code> en la misma dirección donde se encuentra el nodo publicador.py</p></li>
-</ol>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
-<span class="c1"># Importa la librería principal de ROS 2 para Python</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">rclpy</span>
-
-<span class="c1"># Importa la clase base para crear nodos en ROS 2</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">rclpy.node</span><span class="w"> </span><span class="kn">import</span> <span class="n">Node</span>
-
-<span class="c1"># Importa el tipo de mensaje estándar String desde std_msgs</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">std_msgs.msg</span><span class="w"> </span><span class="kn">import</span> <span class="n">String</span>
-
-<span class="c1"># Define una clase que hereda de Node, representa el nodo suscriptor</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">MinimalSubscriber</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
-
-    <span class="c1"># Método constructor de la clase</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># Inicializa el nodo con el nombre &#39;minimal_subscriber&#39;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s1">&#39;minimal_subscriber&#39;</span><span class="p">)</span>
-
-        <span class="c1"># Crea una suscripción al tópico &#39;topic&#39;</span>
-        <span class="c1"># Tipo de mensaje: String</span>
-        <span class="c1"># Función de callback: self.listener_callback</span>
-        <span class="c1"># Tamaño de la cola: 10 mensajes</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">subscription</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_subscription</span><span class="p">(</span>
-            <span class="n">String</span><span class="p">,</span>
-            <span class="s1">&#39;topic&#39;</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">listener_callback</span><span class="p">,</span>
-            <span class="mi">10</span><span class="p">)</span>
-
-        <span class="c1"># Esta línea asegura que la variable no sea optimizada por el compilador (aunque no es obligatorio en Python)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">subscription</span>
-
-    <span class="c1"># Función que se llama cada vez que se recibe un mensaje en el tópico</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">listener_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
-        <span class="c1"># Imprime en consola el contenido del mensaje recibido</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;I heard: &quot;</span><span class="si">%s</span><span class="s1">&quot;&#39;</span> <span class="o">%</span> <span class="n">msg</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
-
-<span class="c1"># Función principal que lanza el nodo</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="c1"># Inicializa el sistema de ROS 2</span>
-    <span class="n">rclpy</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">)</span>
-
-    <span class="c1"># Crea una instancia del nodo suscriptor</span>
-    <span class="n">minimal_subscriber</span> <span class="o">=</span> <span class="n">MinimalSubscriber</span><span class="p">()</span>
-
-    <span class="c1"># Mantiene el nodo corriendo escuchando datos (callback se ejecutará cuando lleguen mensajes)</span>
-    <span class="n">rclpy</span><span class="o">.</span><span class="n">spin</span><span class="p">(</span><span class="n">minimal_subscriber</span><span class="p">)</span>
-
-    <span class="c1"># Cuando se detiene (Ctrl+C o cierre), se destruye el nodo explícitamente (opcional)</span>
-    <span class="n">minimal_subscriber</span><span class="o">.</span><span class="n">destroy_node</span><span class="p">()</span>
-
-    <span class="c1"># Finaliza la ejecución del sistema ROS 2</span>
-    <span class="n">rclpy</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
-
-<span class="c1"># Esta verificación permite que el nodo se ejecute solo si el script se corre directamente</span>
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
-    <span class="n">main</span><span class="p">()</span>
-</pre></div>
-</div>
-<ol class="arabic simple" start="4">
-<li><p>Registrar los nodos en <code class="docutils literal notranslate"><span class="pre">setup.py</span></code></p></li>
-</ol>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">entry_points</span><span class="o">=</span><span class="p">{</span>
-    <span class="s1">&#39;console_scripts&#39;</span><span class="p">:</span> <span class="p">[</span>
-        <span class="s1">&#39;publicador1 = mi_pkg_python.publicador:main&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;suscriptor1 = mi_pkg_python.suscriptor:main&#39;</span><span class="p">,</span>
-    <span class="p">],</span>
-<span class="p">},</span>
-</pre></div>
-</div>
-<ol class="arabic simple" start="5">
-<li><p>Compilar el paquete</p></li>
-</ol>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>~/ros2_ws
-colcon<span class="w"> </span>build<span class="w"> </span>--packages-select<span class="w"> </span>mi_pkg_python
-</pre></div>
-</div>
-<ol class="arabic simple" start="6">
-<li><p>Ejecutar el nodo</p></li>
-</ol>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>run<span class="w"> </span>mi_pkg_python<span class="w"> </span>publicador1
-</pre></div>
-</div>
-</section>
-</section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Pie de página">
         <a href="../tema_1/instalacionROS2.html" class="btn btn-neutral float-left" title="Instalación de ROS2 Humble" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Anterior</a>
-        <a href="tutoriales.html" class="btn btn-neutral float-right" title="AprilTags" accesskey="n" rel="next">Siguiente <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="tutoriales.html" class="btn btn-neutral float-right" title="Tutoriales" accesskey="n" rel="next">Siguiente <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
