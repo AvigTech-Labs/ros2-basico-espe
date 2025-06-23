@@ -240,4 +240,112 @@ Esto se entiende como:
 - Permite **reutilizar nodos genéricos** con distintos robots o simuladores.
 - Facilita pruebas rápidas con distintos sistemas.
 
+## Servicios
 
+Un **servicio** en ROS 2 es una operación remota que sigue un patrón de **llamada y respuesta** (request-response).
+
+
+***Componentes de un servicio:***
+
+- **Cliente**: el nodo que inicia la solicitud.
+- **Servidor**: el nodo que atiende la solicitud y envía la respuesta.
+- **Tipo de servicio**: define la estructura de los datos solicitados y respondidos.
+
+---
+
+***Estructura de un Servicio***
+
+Los servicios están definidos por archivos `.srv`, que contienen dos partes separadas por `---`:
+
+```
+# Ejemplo: example_interfaces/srv/AddTwoInts
+
+int64 a
+int64 b
+---
+int64 sum
+```
+
+Esto significa que:
+- El **cliente** enviará dos enteros `a` y `b`
+- El **servidor** responderá con un entero `sum`
+
+---
+
+***Comunicación Cliente-Servidor***
+
+La interacción funciona así:
+![Seleccion](./servicios.gif)
+
+
+```
+[ Cliente ] -- Request --> [ Servidor ]
+[ Cliente ] <-- Response -- [ Servidor ]
+```
+
+- El cliente espera la respuesta antes de continuar.
+- Se usa para tareas **puntuales**, **deterministas** y de **control**.
+
+---
+
+***¿Cuándo usar un Servicio?***
+
+| Situación                              | Usar Servicio |
+|----------------------------------------|---------------|
+| Encender o apagar un dispositivo       | ✅             |
+| Calcular una operación matemática      | ✅             |
+| Consultar el estado de un sistema      | ✅             |
+| Recibir datos periódicos (sensor, etc) | ❌ (usar tópico) |
+| Ejecutar tareas con duración variable  | ❌ (usar acción) |
+
+---
+
+
+***Ventajas del uso de servicios***
+
+- Comunicación clara de solicitud y respuesta.
+- Ideal para operaciones atómicas.
+- Bajo acoplamiento: los nodos solo necesitan conocer el tipo del servicio.
+- Facilita control de errores: se sabe si hubo respuesta o no.
+
+---
+
+***Consideraciones técnicas***
+
+- La espera por la respuesta puede bloquear el nodo (sin `async`).
+- Los servicios **no están diseñados** para flujos continuos de datos.
+- Si necesitas emitir múltiples respuestas a una sola solicitud → usa **acciones**.
+
+---
+
+***Ejemplos de servicios comunes en ROS 2***
+
+| Servicio                             | Tipo                                  | Descripción                            |
+|--------------------------------------|---------------------------------------|----------------------------------------|
+| `/clear`                             | `std_srvs/Empty`                      | Borrar pantalla de simuladores como turtlesim |
+| `/reset`                             | `std_srvs/Empty`                      | Reiniciar el estado de un nodo         |
+| `/add_two_ints`                      | `example_interfaces/srv/AddTwoInts`  | Sumar dos números                      |
+| `/spawn` (turtlesim)                 | `turtlesim/srv/Spawn`                 | Crear nueva tortuga                    |
+
+
+***Comandos útiles***
+
+Listar servicios disponibles:
+```bash
+ros2 service list
+```
+
+Ver tipo de un servicio:
+```bash
+ros2 service type /nombre_servicio
+```
+
+Ver definición de un servicio:
+```bash
+ros2 interface show [servicio]
+```
+
+Llamar un servicio desde terminal:
+```bash
+ros2 service call /[servicio] "argumentos"
+```
