@@ -269,16 +269,34 @@ gedit msg/AprilTagPixel.msg
 Contenido:
 
 ```
-string id
-int32 posx
-int32 posy
+int32 id
+float32 posx
+float32 posy
+int32 orden
+float32 dist
 ```
 
 Este archivo define un mensaje simple para enviar datos de detección de un tag.
 
 ---
 
-3. Editar `CMakeLists.txt`
+3. Mensajes compuestos 
+
+Se puede crear mensajes que tengan anidada mas información en este caso se va a crear un array de `AprilTagPixel.msg`.
+
+Dentro del paquete `avig_msg`
+```bash
+cd msg
+gedit AprilTagPixelArray.msg
+```
+
+Contenido:
+
+```
+AprilTagPixel[] tags
+```
+
+4. Editar `CMakeLists.txt`
 
 Editar `CMakeLists.txt` para incluir soporte de mensajes:
 
@@ -292,6 +310,7 @@ find_package(builtin_interfaces REQUIRED)
 
 rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/AprilTagPixel.msg"
+  "msg/AprilTagPixelArray.msg"
   DEPENDENCIES builtin_interfaces
 )
 
@@ -306,7 +325,7 @@ ament_package()
 
 ---
 
-4. Editar `package.xml`
+5. Editar `package.xml`
 
 Agregar las dependencias necesarias:
 
@@ -322,7 +341,7 @@ Estas etiquetas aseguran que el sistema de compilación de ROS 2 reconozca este 
 
 ---
 
-5. Compilar e instalar
+6. Compilar e instalar
 
 Desde la raíz del workspace:
 
@@ -334,7 +353,7 @@ source install/setup.bash
 
 ---
 
-6. Verificar el mensaje
+7. Verificar el mensaje
 
 ```bash
 ros2 interface show avig_msg/msg/AprilTagPixel
@@ -342,7 +361,7 @@ ros2 interface show avig_msg/msg/AprilTagPixel
 
 ---
 
-7. Usar el mensaje en otro paquete
+8. Usar el mensaje en otro paquete
 
 
 En el paquete creado anteriormente de Python  `mi_pkg_python`:
@@ -393,7 +412,13 @@ Un **AprilTag** es un tipo de marcador visual 2D diseñado para permitir la dete
 Usamos la librería `pupil_apriltags`, una implementación rápida del detector.  
 Es eficiente, moderna, y puede ser utilizada en aplicaciones en tiempo real.
 
-Instalación:
+El resto de aplicaciones de AprilTag se puede revisar en los siguintes repositorios:
+
+[April-Tags](https://ftc-docs.firstinspires.org/en/latest/apriltag/vision_portal/apriltag_intro/apriltag-intro.html)
+[Git-hub-Tags](https://github.com/rgov/apriltag-pdfs/tree/main/tag36h11/us_letter/100mm)
+
+
+***Instalación:***
 
 ```bash
 pip install pupil-apriltags opencv-python
@@ -475,6 +500,8 @@ Para el uso de april-tags, es importante tener en cuenta las características de
 
 ***Nodo ROS 2 que publica detección de AprilTags***
 
+Para el siguiente nodo, se utulizará los mensajes previamente creados `AprilTagPixel` y `AprilTagPixelArray`
+
 Este nodo se ejecuta en ROS 2 y **publica los datos detectados** (ID y posición en píxeles) en un tópico llamado `/apriltag_pixels`.
 
 ```python
@@ -482,13 +509,15 @@ import cv2
 from pupil_apriltags import Detector
 import rclpy
 from rclpy.node import Node
+
 from std_msgs.msg import String
+from avig_msg.msg import AprilTagPixel, AprilTagPixelArray
 
 class AprilTagPixelPublisher(Node):
     def __init__(self):
         super().__init__('apriltag_pixel_publisher')
 
-        self.publisher_data = self.create_publisher(String, 'apriltag_pixels', 10)
+        self.publisher_data = self.create_publisher(AprilTagPixelArray, 'apriltag_pixels_arreglo', 1)
 
         self.cap = cv2.VideoCapture(0)
         self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
@@ -499,32 +528,35 @@ class AprilTagPixelPublisher(Node):
             self.get_logger().error("No se pudo acceder a la cámara.")
             exit()
 
-        self.at_detector = Detector(families='tag36h11', nthreads=3)
+        self.at_detector = Detector(families='tag36h11', nthreads=4)
 
         # Crear ventana redimensionable (solo si se usa visualización)
         cv2.namedWindow("AprilTag View", cv2.WINDOW_NORMAL)
         cv2.resizeWindow("AprilTag View", 800, 600)
 
         self.timer = self.create_timer(1.0 / 30.0, self.timer_callback)
-        self.get_logger().info("📷 Nodo AprilTag iniciado.")
+        self.get_logger().info("Nodo AprilTag iniciado.")
 
     def timer_callback(self):
         ret, frame = self.cap.read()
         if not ret:
-            self.get_logger().warn("⚠️ No se pudo leer el frame.")
+            self.get_logger().warn(" No se pudo leer el frame.")
             return
 
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         detections = self.at_detector.detect(gray)
 
+        msg_arreglo = AprilTagPixelArray()
         for det in detections:
             tag_id = det.tag_id
             center_px = det.center
-            msg = String()
-            msg.data = f"ID: {tag_id} | x={int(center_px[0])}, y={int(center_px[1])}"
-            self.publisher_data.publish(msg)
-
-        #  Visualizacion
+            msg = AprilTagPixel()
+            msg.id = tag_id
+            msg.posx = float(center_px[0])
+            msg.posy = float(center_px[1])
+            msg_arreglo.tags.append(msg)
+        self.publisher_data.publish(msg_arreglo)
+        # Visualizacion
         self.visualizar_detecciones(frame, detections)
 
     def visualizar_detecciones(self, frame, detections):
@@ -559,6 +591,7 @@ def main(args=None):
 if __name__ == '__main__':
     main()
 
+
 ```
 Se puede utilizar diferentes variaciones para uso de apriltags con ROS2, para poder usar un formato compatible con las imágenes de ROS se debe utilizar el tipo de mensaje `sensor_msgs` y agregar esta dependencia en el paquete creado.
 
@@ -568,8 +601,9 @@ import cv2
 from pupil_apriltags import Detector
 import rclpy
 from rclpy.node import Node
-from std_msgs.msg import String
+from avig_msg.msg import AprilTagPixel, AprilTagPixelArray
 from sensor_msgs.msg import Image
+
 from cv_bridge import CvBridge
 
 class AprilTagPixelPublisher(Node):
@@ -577,9 +611,9 @@ class AprilTagPixelPublisher(Node):
         super().__init__('apriltag_pixel_publisher')
 
         # Publicador para ID y coordenadas en píxeles (bruto)
-        self.publisher_data = self.create_publisher(String, 'apriltag_pixels', 10)
+        self.publisher_data = self.create_publisher(AprilTagPixelArray, 'apriltag_pixels', 1)
         # Publicador para imagen tipo image_raw
-        self.publisher_image = self.create_publisher(Image, 'image_raw', 10)
+        self.publisher_image = self.create_publisher(Image, 'image_raw', 1)
         self.bridge = CvBridge()
 
         # Configurar cámara
@@ -589,33 +623,36 @@ class AprilTagPixelPublisher(Node):
         self.cap.set(cv2.CAP_PROP_FPS, 30)
 
         if not self.cap.isOpened():
-            self.get_logger().error("❌ No se pudo acceder a la cámara.")
+            self.get_logger().error("No se pudo acceder a la cámara.")
             exit()
 
         # Configurar detector de AprilTags
-        self.at_detector = Detector(families='tag36h11')
+        self.at_detector = Detector(families='tag36h11', nthreads=4)
 
         # Temporizador a 30 Hz
         self.timer = self.create_timer(1.0 / 30.0, self.timer_callback)
-        self.get_logger().info("📷 Nodo de detección AprilTag iniciado (modo simple sin calibración).")
+        self.get_logger().info("Nodo de detección AprilTag iniciado (modo simple sin calibración).")
 
     def timer_callback(self):
         ret, frame = self.cap.read()
         if not ret:
-            self.get_logger().warn("⚠️ No se pudo leer el frame.")
+            self.get_logger().warn("No se pudo leer el frame.")
             return
 
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         detections = self.at_detector.detect(gray)
+        msg_arreglo = AprilTagPixelArray()
 
         for det in detections:
             tag_id = det.tag_id
             center_px = det.center  # coordenadas (x, y) en píxeles
+            msg = AprilTagPixel()
+            msg.id = tag_id
+            msg.posx = float(center_px[0])
+            msg.posy = float(center_px[1])
+            msg_arreglo.tags.append(msg)
 
-            msg = String()
-            msg.data = f"ID: {tag_id} | x={int(center_px[0])}, y={int(center_px[1])}"
-            self.publisher_data.publish(msg)
-            self.get_logger().info(f"📤 {msg.data}")
+        self.publisher_data.publish(msg_arreglo)
 
         # Publicar la imagen como sensor_msgs/Image
         img_msg = self.bridge.cv2_to_imgmsg(frame, encoding='bgr8')
@@ -638,7 +675,265 @@ if __name__ == '__main__':
     main()
 ```
 
-El resto de aplicaciones de AprilTag se puede revisar en los siguintes repositorios:
+## Servicios personalizados
 
-[April-Tags](https://ftc-docs.firstinspires.org/en/latest/apriltag/vision_portal/apriltag_intro/apriltag-intro.html)
-[Git-hub-Tags](https://github.com/rgov/apriltag-pdfs/tree/main/tag36h11/us_letter/100mm)
+En el servicio personalizado se agrega la funcionalidad de una Heuristica al sistema de control del robot.
+
+***Definición general***
+Una heurística es una regla, método o estrategia que simplifica la toma de decisiones y permite encontrar soluciones aproximadas en situaciones complejas, donde el cálculo exacto sería muy costoso o imposible.
+
+Para ello, se establece un servicio que tiene como requerimiento  el tipo de mensaje `AprilTagPixelArray` y como respuesta un `AprilTagPixel`
+
+1. Creación del archivo srv
+
+Dentro del paquete `avig_msg`
+
+```bash
+mkdir srv
+cd srv
+gedit Heuristica.srv
+```
+Contenido:
+```
+avig_msg/AprilTagPixelArray tags_in
+---
+avig_msg/AprilTagPixel tag_out
+```
+
+Esto indica que el servicio recibirá una lista de tags y devolverá solo uno como resultado.
+
+---
+
+2. Configurar CMakeLists.txt
+
+Agrega lo siguiente si no está presente:
+
+```cmake
+find_package(rosidl_default_generators REQUIRED)
+```
+
+Agrega todos los archivos `.msg` y `.srv`:
+
+```cmake
+rosidl_generate_interfaces(${PROJECT_NAME}
+  "msg/AprilTagPixel.msg"
+  "msg/AprilTagPixelArray.msg"
+  "srv/Heuristica.srv"
+  DEPENDENCIES builtin_interfaces
+)
+```
+
+revisar que se encuentren exportadas las dependencias:
+
+```cmake
+ament_export_dependencies(rosidl_default_runtime)
+```
+
+---
+
+3. Configurar package.xml
+
+Incluye los siguientes bloques:
+
+```xml
+<buildtool_depend>ament_cmake</buildtool_depend>
+<build_depend>rosidl_default_generators</build_depend>
+<exec_depend>rosidl_default_runtime</exec_depend>
+<member_of_group>rosidl_interface_packages</member_of_group>
+```
+
+---
+
+4. Compilar
+
+Desde la raíz del workspace:
+
+```bash
+colcon build --packages-select avig_msg
+source install/setup.bash
+```
+
+Verifica el servicio:
+
+```bash
+ros2 interface show avig_msg/srv/Heuristica
+```
+
+---
+
+5. Crear el Servidor
+
+Guarda el siguiente código como `Heuristica_server.py`:
+
+```python
+import rclpy
+from rclpy.node import Node
+from avig_msg.srv import Euristica
+from avig_msg.msg import AprilTagPixel, AprilTagPixelArray
+
+class EuristicaClient(Node):
+    def __init__(self):
+        super().__init__('euristica_client')
+        self.client = self.create_client(Euristica, 'euristica')
+
+        while not self.client.wait_for_service(timeout_sec=1.0):
+            self.get_logger().info('Esperando al servicio...')
+
+        # Crear solicitud con varios tags
+        msg_array = AprilTagPixelArray()
+        for i in range(3, 5, 1):
+            tag = AprilTagPixel()
+            tag.id = i
+            tag.posx = float(100 - i*5)
+            tag.posy = float(50 + i*2)
+            msg_array.tags.append(tag)
+        
+        tag = AprilTagPixel()
+        tag.id = 0
+        tag.posx = 125.2
+        tag.posy = 23.5
+        msg_array.tags.append(tag)
+
+        tag = AprilTagPixel()
+        tag.id = 1
+        tag.posx = 105.2
+        tag.posy = 23.5
+        msg_array.tags.append(tag)
+
+        request = Euristica.Request()
+        request.tags_in = msg_array
+
+        self.future = self.client.call_async(request)
+
+def main(args=None):
+    rclpy.init(args=args)
+    node = EuristicaClient()
+
+    while rclpy.ok():
+        rclpy.spin_once(node)
+        if node.future.done():
+            try:
+                response = node.future.result()
+                node.get_logger().info(f"Tag seleccionado: {response.tag_out}")
+                                       
+                node.get_logger().info(f"Tag ID: {response.tag_out.id} "
+                                       f"({response.tag_out.posx:.1f}, {response.tag_out.posy:.1f})")
+            except Exception as e:
+                node.get_logger().error(f"Error al llamar al servicio: {e}")
+            break
+
+    rclpy.shutdown()
+
+if __name__ == '__main__':
+    main()
+
+```
+
+Este nodo:
+- Se llama `Heuristica_server`
+- Responde a solicitudes del servicio `Heuristica`
+- Elige el tag con menor distancia al tag 0 (`dist`)
+
+---
+
+6. Crear el Cliente
+
+Guarda el siguiente código como `Heuristica_client.py`:
+
+```python
+import rclpy
+from rclpy.node import Node
+from avig_msg.srv import Euristica
+from avig_msg.msg import AprilTagPixel
+import math
+
+class EuristicaServer(Node):
+    def __init__(self):
+        super().__init__('euristica_server')
+        self.srv = self.create_service(Euristica, 'euristica', self.heuristica_callback)
+        self.get_logger().info('Servicio Euristica listo.')
+
+    def heuristica_callback(self, request, response):
+        tags = request.tags_in.tags
+        self.get_logger().info(f"Recibidos {tags} tags.")
+
+        if not tags:
+            self.get_logger().warn("No se recibió ningún tag.")
+            return response
+        
+        tag0 = next((tag for tag in tags if tag.id == 0), None)
+        tag1 = next((tag for tag in tags if tag.id == 1), None)
+
+        if tag0 is None or tag1 is None:
+            self.get_logger().warn("Faltan tag0 o tag1, no se puede continuar.")
+            return response
+
+
+        tags_ordenados = [tag for tag in tags if tag.id != 0 and tag.id != 1]
+        
+        for i, tag in enumerate(tags_ordenados):
+            self.get_logger().info(f"Revisando el tag: {tag.id}")
+
+            if 10 <= tag.id < 20:
+                tag.dist = math.sqrt((tag.posx - tag0.posx)**2 + (tag.posy - tag0.posy)**2)
+            else:
+                tag.dist = math.sqrt((tag.posx - tag1.posx)**2 + (tag.posy - tag1.posy)**2)
+
+        # Heurística: devolver el tag con menor coordenada posx
+        tag_ordenado = sorted(tags_ordenados, key=lambda t: t.dist)[0]
+        response.tag_out = tag_ordenado
+        self.get_logger().info(f"Tag elegido: {tag_ordenado.id}")
+        return response
+
+def main(args=None):
+    rclpy.init(args=args)
+    node = EuristicaServer()
+    rclpy.spin(node)
+    rclpy.shutdown()
+
+if __name__ == '__main__':
+    main()
+```
+
+Este nodo:
+- Crea y envía una lista de `AprilTagPixel`
+- Solicita una respuesta del servidor
+- Muestra el tag seleccionado
+
+---
+
+7. Registrar los nodos en setup.py
+
+En tu `setup.py` agrega:
+
+```python
+entry_points={
+    'console_scripts': [
+        'Heuristica_server = mi_pkg_python.Heuristica_server:main',
+        'Heuristica_client = mi_pkg_python.Heuristica_client:main',
+    ],
+},
+```
+
+---
+8. Compilar nuevamente
+
+```bash
+colcon build --packages-select mi_pkg_python
+source install/setup.bash
+```
+
+---
+9. Ejecutar
+
+En dos terminales diferentes:
+
+```bash
+ros2 run mi_pkg_python Heuristica_server
+```
+
+```bash
+ros2 run mi_pkg_python Heuristica_client
+```
+
+
