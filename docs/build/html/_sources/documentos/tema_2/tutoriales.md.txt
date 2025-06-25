@@ -1,5 +1,3 @@
-
-
 # Tutoriales
 
 ## Creación de un espacio de trabajo
@@ -763,44 +761,119 @@ ros2 interface show avig_msg/srv/Heuristica
 
 5. Crear el Servidor
 
-Guarda el siguiente código como `Heuristica_server.py`:
+Dentro del paquete `mi_pkg_python`
+
+```bash
+mkdir servicios
+cd servicios
+touch __initi__.py
+```
+Guarda el siguiente código como `srv_servidor.py`:
 
 ```python
 import rclpy
 from rclpy.node import Node
-from avig_msg.srv import Euristica
+from avig_msg.srv import Heuristica
+from avig_msg.msg import AprilTagPixel
+import math
+
+class EuristicaServer(Node):
+    def __init__(self):
+        super().__init__('euristica_server')
+        self.srv = self.create_service(Heuristica, 'Heuristica', self.heuristica_callback)
+        self.get_logger().info('Servicio Euristica listo.')
+
+    def heuristica_callback(self, request, response):
+        tags = request.tags_in.tags
+        self.get_logger().info(f"Recibidos {tags} tags.")
+
+        if not tags:
+            self.get_logger().warn("No se recibió ningún tag.")
+            return response
+        
+        tag1 = next((tag for tag in tags if tag.id == 1), None)
+        tag2 = next((tag for tag in tags if tag.id == 2), None)
+
+        if tag1 is None or tag2 is None:
+            self.get_logger().warn("Faltan tag1 o tag2, no se puede continuar.")
+            return response
+
+
+        tags_ordenados = [tag for tag in tags if tag.id != 0 and tag.id != 1 and tag.id != 2]
+        
+        for i, tag in enumerate(tags_ordenados):
+            self.get_logger().info(f"Revisando el tag: {tag.id}")
+            if 10 <= tag.id < 20:
+                tag.dist = math.sqrt((tag.posx - tag1.posx)**2 + (tag.posy - tag1.posy)**2)
+            else:
+                tag.dist = math.sqrt((tag.posx - tag2.posx)**2 + (tag.posy - tag2.posy)**2)
+            
+            self.get_logger().info(f"Distancia del Tag: {tag.id} es {tag.dist}")
+            
+        # Heurística: devolver el tag con menor coordenada posx
+        tag_ordenado = sorted(tags_ordenados, key=lambda t: t.dist)[0]
+        response.tag_out = tag_ordenado
+        self.get_logger().info(f"Tag elegido: {tag_ordenado.id}")
+        return response
+
+def main(args=None):
+    rclpy.init(args=args)
+    node = EuristicaServer()
+    rclpy.spin(node)
+    rclpy.shutdown()
+
+if __name__ == '__main__':
+    main()
+```
+
+Este nodo:
+- Se llama `srv_servidor`
+- Responde a solicitudes del servicio `Heuristica`
+- Elige el tag con menor distancia al tag 0 (`dist`)
+
+---
+
+6. Crear el Cliente
+
+Guarda el siguiente código como `srv_cliente.py`:
+
+```python
+import rclpy
+from rclpy.node import Node
+
+from avig_msg.srv import Heuristica
 from avig_msg.msg import AprilTagPixel, AprilTagPixelArray
 
 class EuristicaClient(Node):
     def __init__(self):
         super().__init__('euristica_client')
-        self.client = self.create_client(Euristica, 'euristica')
+        self.client = self.create_client(Heuristica, 'Heuristica')
 
         while not self.client.wait_for_service(timeout_sec=1.0):
             self.get_logger().info('Esperando al servicio...')
 
         # Crear solicitud con varios tags
         msg_array = AprilTagPixelArray()
-        for i in range(3, 5, 1):
+        for i in range(10, 19, 1):
             tag = AprilTagPixel()
             tag.id = i
-            tag.posx = float(100 - i*5)
-            tag.posy = float(50 + i*2)
+            tag.posx = float(100 - i*10)
+            tag.posy = float(50  + i*10)
             msg_array.tags.append(tag)
         
         tag = AprilTagPixel()
-        tag.id = 0
-        tag.posx = 125.2
-        tag.posy = 23.5
+        tag.id = 1
+        tag.posx = -20.0
+        tag.posy = 170.0
         msg_array.tags.append(tag)
 
         tag = AprilTagPixel()
-        tag.id = 1
+        tag.id = 2
         tag.posx = 105.2
         tag.posy = 23.5
         msg_array.tags.append(tag)
 
-        request = Euristica.Request()
+        request = Heuristica.Request()
         request.tags_in = msg_array
 
         self.future = self.client.call_async(request)
@@ -826,73 +899,6 @@ def main(args=None):
 
 if __name__ == '__main__':
     main()
-
-```
-
-Este nodo:
-- Se llama `Heuristica_server`
-- Responde a solicitudes del servicio `Heuristica`
-- Elige el tag con menor distancia al tag 0 (`dist`)
-
----
-
-6. Crear el Cliente
-
-Guarda el siguiente código como `Heuristica_client.py`:
-
-```python
-import rclpy
-from rclpy.node import Node
-from avig_msg.srv import Euristica
-from avig_msg.msg import AprilTagPixel
-import math
-
-class EuristicaServer(Node):
-    def __init__(self):
-        super().__init__('euristica_server')
-        self.srv = self.create_service(Euristica, 'euristica', self.heuristica_callback)
-        self.get_logger().info('Servicio Euristica listo.')
-
-    def heuristica_callback(self, request, response):
-        tags = request.tags_in.tags
-        self.get_logger().info(f"Recibidos {tags} tags.")
-
-        if not tags:
-            self.get_logger().warn("No se recibió ningún tag.")
-            return response
-        
-        tag0 = next((tag for tag in tags if tag.id == 0), None)
-        tag1 = next((tag for tag in tags if tag.id == 1), None)
-
-        if tag0 is None or tag1 is None:
-            self.get_logger().warn("Faltan tag0 o tag1, no se puede continuar.")
-            return response
-
-
-        tags_ordenados = [tag for tag in tags if tag.id != 0 and tag.id != 1]
-        
-        for i, tag in enumerate(tags_ordenados):
-            self.get_logger().info(f"Revisando el tag: {tag.id}")
-
-            if 10 <= tag.id < 20:
-                tag.dist = math.sqrt((tag.posx - tag0.posx)**2 + (tag.posy - tag0.posy)**2)
-            else:
-                tag.dist = math.sqrt((tag.posx - tag1.posx)**2 + (tag.posy - tag1.posy)**2)
-
-        # Heurística: devolver el tag con menor coordenada posx
-        tag_ordenado = sorted(tags_ordenados, key=lambda t: t.dist)[0]
-        response.tag_out = tag_ordenado
-        self.get_logger().info(f"Tag elegido: {tag_ordenado.id}")
-        return response
-
-def main(args=None):
-    rclpy.init(args=args)
-    node = EuristicaServer()
-    rclpy.spin(node)
-    rclpy.shutdown()
-
-if __name__ == '__main__':
-    main()
 ```
 
 Este nodo:
@@ -909,8 +915,8 @@ En tu `setup.py` agrega:
 ```python
 entry_points={
     'console_scripts': [
-        'Heuristica_server = mi_pkg_python.Heuristica_server:main',
-        'Heuristica_client = mi_pkg_python.Heuristica_client:main',
+        'servidor = servicio.srv_servidor:main',
+        'cliente = servicio.srv_cliente:main',
     ],
 },
 ```
@@ -929,11 +935,11 @@ source install/setup.bash
 En dos terminales diferentes:
 
 ```bash
-ros2 run mi_pkg_python Heuristica_server
+ros2 run mi_pkg_python servidor
 ```
 
 ```bash
-ros2 run mi_pkg_python Heuristica_client
+ros2 run mi_pkg_python cliente
 ```
 
 

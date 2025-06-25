@@ -817,42 +817,115 @@ gedit<span class="w"> </span>Heuristica.srv
 <ol class="arabic simple" start="5">
 <li><p>Crear el Servidor</p></li>
 </ol>
-<p>Guarda el siguiente código como <code class="docutils literal notranslate"><span class="pre">Heuristica_server.py</span></code>:</p>
+<p>Dentro del paquete <code class="docutils literal notranslate"><span class="pre">mi_pkg_python</span></code></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir<span class="w"> </span>servicios
+<span class="nb">cd</span><span class="w"> </span>servicios
+touch<span class="w"> </span>__initi__.py
+</pre></div>
+</div>
+<p>Guarda el siguiente código como <code class="docutils literal notranslate"><span class="pre">srv_servidor.py</span></code>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">rclpy</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">rclpy.node</span><span class="w"> </span><span class="kn">import</span> <span class="n">Node</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">avig_msg.srv</span><span class="w"> </span><span class="kn">import</span> <span class="n">Euristica</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">avig_msg.srv</span><span class="w"> </span><span class="kn">import</span> <span class="n">Heuristica</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">avig_msg.msg</span><span class="w"> </span><span class="kn">import</span> <span class="n">AprilTagPixel</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">EuristicaServer</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s1">&#39;euristica_server&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">srv</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_service</span><span class="p">(</span><span class="n">Heuristica</span><span class="p">,</span> <span class="s1">&#39;Heuristica&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">heuristica_callback</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Servicio Euristica listo.&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">heuristica_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">response</span><span class="p">):</span>
+        <span class="n">tags</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">tags_in</span><span class="o">.</span><span class="n">tags</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Recibidos </span><span class="si">{</span><span class="n">tags</span><span class="si">}</span><span class="s2"> tags.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">tags</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;No se recibió ningún tag.&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">response</span>
+        
+        <span class="n">tag1</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">tag</span> <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">tags</span> <span class="k">if</span> <span class="n">tag</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="mi">1</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">tag2</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">tag</span> <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">tags</span> <span class="k">if</span> <span class="n">tag</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="mi">2</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">tag1</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">tag2</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Faltan tag1 o tag2, no se puede continuar.&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">response</span>
+
+
+        <span class="n">tags_ordenados</span> <span class="o">=</span> <span class="p">[</span><span class="n">tag</span> <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">tags</span> <span class="k">if</span> <span class="n">tag</span><span class="o">.</span><span class="n">id</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">tag</span><span class="o">.</span><span class="n">id</span> <span class="o">!=</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">tag</span><span class="o">.</span><span class="n">id</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">]</span>
+        
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">tag</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">tags_ordenados</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Revisando el tag: </span><span class="si">{</span><span class="n">tag</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="mi">10</span> <span class="o">&lt;=</span> <span class="n">tag</span><span class="o">.</span><span class="n">id</span> <span class="o">&lt;</span> <span class="mi">20</span><span class="p">:</span>
+                <span class="n">tag</span><span class="o">.</span><span class="n">dist</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">tag</span><span class="o">.</span><span class="n">posx</span> <span class="o">-</span> <span class="n">tag1</span><span class="o">.</span><span class="n">posx</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">tag</span><span class="o">.</span><span class="n">posy</span> <span class="o">-</span> <span class="n">tag1</span><span class="o">.</span><span class="n">posy</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">tag</span><span class="o">.</span><span class="n">dist</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">tag</span><span class="o">.</span><span class="n">posx</span> <span class="o">-</span> <span class="n">tag2</span><span class="o">.</span><span class="n">posx</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">tag</span><span class="o">.</span><span class="n">posy</span> <span class="o">-</span> <span class="n">tag2</span><span class="o">.</span><span class="n">posy</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+            
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Distancia del Tag: </span><span class="si">{</span><span class="n">tag</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2"> es </span><span class="si">{</span><span class="n">tag</span><span class="o">.</span><span class="n">dist</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            
+        <span class="c1"># Heurística: devolver el tag con menor coordenada posx</span>
+        <span class="n">tag_ordenado</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">tags_ordenados</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">dist</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">response</span><span class="o">.</span><span class="n">tag_out</span> <span class="o">=</span> <span class="n">tag_ordenado</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Tag elegido: </span><span class="si">{</span><span class="n">tag_ordenado</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">rclpy</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">)</span>
+    <span class="n">node</span> <span class="o">=</span> <span class="n">EuristicaServer</span><span class="p">()</span>
+    <span class="n">rclpy</span><span class="o">.</span><span class="n">spin</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+    <span class="n">rclpy</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Este nodo:</p>
+<ul class="simple">
+<li><p>Se llama <code class="docutils literal notranslate"><span class="pre">srv_servidor</span></code></p></li>
+<li><p>Responde a solicitudes del servicio <code class="docutils literal notranslate"><span class="pre">Heuristica</span></code></p></li>
+<li><p>Elige el tag con menor distancia al tag 0 (<code class="docutils literal notranslate"><span class="pre">dist</span></code>)</p></li>
+</ul>
+<hr class="docutils" />
+<ol class="arabic simple" start="6">
+<li><p>Crear el Cliente</p></li>
+</ol>
+<p>Guarda el siguiente código como <code class="docutils literal notranslate"><span class="pre">srv_cliente.py</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">rclpy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rclpy.node</span><span class="w"> </span><span class="kn">import</span> <span class="n">Node</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">avig_msg.srv</span><span class="w"> </span><span class="kn">import</span> <span class="n">Heuristica</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">avig_msg.msg</span><span class="w"> </span><span class="kn">import</span> <span class="n">AprilTagPixel</span><span class="p">,</span> <span class="n">AprilTagPixelArray</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">EuristicaClient</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s1">&#39;euristica_client&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_client</span><span class="p">(</span><span class="n">Euristica</span><span class="p">,</span> <span class="s1">&#39;euristica&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_client</span><span class="p">(</span><span class="n">Heuristica</span><span class="p">,</span> <span class="s1">&#39;Heuristica&#39;</span><span class="p">)</span>
 
         <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">wait_for_service</span><span class="p">(</span><span class="n">timeout_sec</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Esperando al servicio...&#39;</span><span class="p">)</span>
 
         <span class="c1"># Crear solicitud con varios tags</span>
         <span class="n">msg_array</span> <span class="o">=</span> <span class="n">AprilTagPixelArray</span><span class="p">()</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">19</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
             <span class="n">tag</span> <span class="o">=</span> <span class="n">AprilTagPixel</span><span class="p">()</span>
             <span class="n">tag</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">i</span>
-            <span class="n">tag</span><span class="o">.</span><span class="n">posx</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="mi">100</span> <span class="o">-</span> <span class="n">i</span><span class="o">*</span><span class="mi">5</span><span class="p">)</span>
-            <span class="n">tag</span><span class="o">.</span><span class="n">posy</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="mi">50</span> <span class="o">+</span> <span class="n">i</span><span class="o">*</span><span class="mi">2</span><span class="p">)</span>
+            <span class="n">tag</span><span class="o">.</span><span class="n">posx</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="mi">100</span> <span class="o">-</span> <span class="n">i</span><span class="o">*</span><span class="mi">10</span><span class="p">)</span>
+            <span class="n">tag</span><span class="o">.</span><span class="n">posy</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="mi">50</span>  <span class="o">+</span> <span class="n">i</span><span class="o">*</span><span class="mi">10</span><span class="p">)</span>
             <span class="n">msg_array</span><span class="o">.</span><span class="n">tags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
         
         <span class="n">tag</span> <span class="o">=</span> <span class="n">AprilTagPixel</span><span class="p">()</span>
-        <span class="n">tag</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="n">tag</span><span class="o">.</span><span class="n">posx</span> <span class="o">=</span> <span class="mf">125.2</span>
-        <span class="n">tag</span><span class="o">.</span><span class="n">posy</span> <span class="o">=</span> <span class="mf">23.5</span>
+        <span class="n">tag</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">tag</span><span class="o">.</span><span class="n">posx</span> <span class="o">=</span> <span class="o">-</span><span class="mf">20.0</span>
+        <span class="n">tag</span><span class="o">.</span><span class="n">posy</span> <span class="o">=</span> <span class="mf">170.0</span>
         <span class="n">msg_array</span><span class="o">.</span><span class="n">tags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
 
         <span class="n">tag</span> <span class="o">=</span> <span class="n">AprilTagPixel</span><span class="p">()</span>
-        <span class="n">tag</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">tag</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="mi">2</span>
         <span class="n">tag</span><span class="o">.</span><span class="n">posx</span> <span class="o">=</span> <span class="mf">105.2</span>
         <span class="n">tag</span><span class="o">.</span><span class="n">posy</span> <span class="o">=</span> <span class="mf">23.5</span>
         <span class="n">msg_array</span><span class="o">.</span><span class="n">tags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
 
-        <span class="n">request</span> <span class="o">=</span> <span class="n">Euristica</span><span class="o">.</span><span class="n">Request</span><span class="p">()</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">Heuristica</span><span class="o">.</span><span class="n">Request</span><span class="p">()</span>
         <span class="n">request</span><span class="o">.</span><span class="n">tags_in</span> <span class="o">=</span> <span class="n">msg_array</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">future</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
@@ -878,72 +951,6 @@ gedit<span class="w"> </span>Heuristica.srv
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
     <span class="n">main</span><span class="p">()</span>
-
-</pre></div>
-</div>
-<p>Este nodo:</p>
-<ul class="simple">
-<li><p>Se llama <code class="docutils literal notranslate"><span class="pre">Heuristica_server</span></code></p></li>
-<li><p>Responde a solicitudes del servicio <code class="docutils literal notranslate"><span class="pre">Heuristica</span></code></p></li>
-<li><p>Elige el tag con menor distancia al tag 0 (<code class="docutils literal notranslate"><span class="pre">dist</span></code>)</p></li>
-</ul>
-<hr class="docutils" />
-<ol class="arabic simple" start="6">
-<li><p>Crear el Cliente</p></li>
-</ol>
-<p>Guarda el siguiente código como <code class="docutils literal notranslate"><span class="pre">Heuristica_client.py</span></code>:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">rclpy</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">rclpy.node</span><span class="w"> </span><span class="kn">import</span> <span class="n">Node</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">avig_msg.srv</span><span class="w"> </span><span class="kn">import</span> <span class="n">Euristica</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">avig_msg.msg</span><span class="w"> </span><span class="kn">import</span> <span class="n">AprilTagPixel</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
-
-<span class="k">class</span><span class="w"> </span><span class="nc">EuristicaServer</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s1">&#39;euristica_server&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">srv</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_service</span><span class="p">(</span><span class="n">Euristica</span><span class="p">,</span> <span class="s1">&#39;euristica&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">heuristica_callback</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Servicio Euristica listo.&#39;</span><span class="p">)</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">heuristica_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">response</span><span class="p">):</span>
-        <span class="n">tags</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">tags_in</span><span class="o">.</span><span class="n">tags</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Recibidos </span><span class="si">{</span><span class="n">tags</span><span class="si">}</span><span class="s2"> tags.&quot;</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">tags</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;No se recibió ningún tag.&quot;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">response</span>
-        
-        <span class="n">tag0</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">tag</span> <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">tags</span> <span class="k">if</span> <span class="n">tag</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="mi">0</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="n">tag1</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">tag</span> <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">tags</span> <span class="k">if</span> <span class="n">tag</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="mi">1</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">tag0</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">tag1</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Faltan tag0 o tag1, no se puede continuar.&quot;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">response</span>
-
-
-        <span class="n">tags_ordenados</span> <span class="o">=</span> <span class="p">[</span><span class="n">tag</span> <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">tags</span> <span class="k">if</span> <span class="n">tag</span><span class="o">.</span><span class="n">id</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">tag</span><span class="o">.</span><span class="n">id</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">]</span>
-        
-        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">tag</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">tags_ordenados</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Revisando el tag: </span><span class="si">{</span><span class="n">tag</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-
-            <span class="k">if</span> <span class="mi">10</span> <span class="o">&lt;=</span> <span class="n">tag</span><span class="o">.</span><span class="n">id</span> <span class="o">&lt;</span> <span class="mi">20</span><span class="p">:</span>
-                <span class="n">tag</span><span class="o">.</span><span class="n">dist</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">tag</span><span class="o">.</span><span class="n">posx</span> <span class="o">-</span> <span class="n">tag0</span><span class="o">.</span><span class="n">posx</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">tag</span><span class="o">.</span><span class="n">posy</span> <span class="o">-</span> <span class="n">tag0</span><span class="o">.</span><span class="n">posy</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">tag</span><span class="o">.</span><span class="n">dist</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">tag</span><span class="o">.</span><span class="n">posx</span> <span class="o">-</span> <span class="n">tag1</span><span class="o">.</span><span class="n">posx</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">tag</span><span class="o">.</span><span class="n">posy</span> <span class="o">-</span> <span class="n">tag1</span><span class="o">.</span><span class="n">posy</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
-
-        <span class="c1"># Heurística: devolver el tag con menor coordenada posx</span>
-        <span class="n">tag_ordenado</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">tags_ordenados</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">dist</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">response</span><span class="o">.</span><span class="n">tag_out</span> <span class="o">=</span> <span class="n">tag_ordenado</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Tag elegido: </span><span class="si">{</span><span class="n">tag_ordenado</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">response</span>
-
-<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="n">rclpy</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">)</span>
-    <span class="n">node</span> <span class="o">=</span> <span class="n">EuristicaServer</span><span class="p">()</span>
-    <span class="n">rclpy</span><span class="o">.</span><span class="n">spin</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
-    <span class="n">rclpy</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
-
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
-    <span class="n">main</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>Este nodo:</p>
@@ -959,8 +966,8 @@ gedit<span class="w"> </span>Heuristica.srv
 <p>En tu <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> agrega:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">entry_points</span><span class="o">=</span><span class="p">{</span>
     <span class="s1">&#39;console_scripts&#39;</span><span class="p">:</span> <span class="p">[</span>
-        <span class="s1">&#39;Heuristica_server = mi_pkg_python.Heuristica_server:main&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;Heuristica_client = mi_pkg_python.Heuristica_client:main&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;servidor = servicio.srv_servidor:main&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;cliente = servicio.srv_cliente:main&#39;</span><span class="p">,</span>
     <span class="p">],</span>
 <span class="p">},</span>
 </pre></div>
@@ -978,10 +985,10 @@ gedit<span class="w"> </span>Heuristica.srv
 <li><p>Ejecutar</p></li>
 </ol>
 <p>En dos terminales diferentes:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>run<span class="w"> </span>mi_pkg_python<span class="w"> </span>Heuristica_server
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>run<span class="w"> </span>mi_pkg_python<span class="w"> </span>servidor
 </pre></div>
 </div>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>run<span class="w"> </span>mi_pkg_python<span class="w"> </span>Heuristica_client
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>run<span class="w"> </span>mi_pkg_python<span class="w"> </span>cliente
 </pre></div>
 </div>
 </section>
