@@ -349,3 +349,90 @@ Llamar un servicio desde terminal:
 ```bash
 ros2 service call /[servicio] "argumentos"
 ```
+
+## Acciones
+
+***¿Qué es una Acción en ROS 2?***
+
+En ROS 2, una **acción** (`action`) es una estructura de comunicación que permite la ejecución de tareas **a largo plazo**, donde se necesita:
+
+- Enviar un **objetivo (goal)** desde un nodo cliente a un nodo servidor.
+- Recibir **retroalimentación (feedback)** mientras se ejecuta la tarea.
+- Obtener un **resultado (result)** cuando finaliza la acción.
+- Tener la posibilidad de **cancelar la ejecución** en cualquier momento.
+
+---
+
+***¿Por qué usar acciones y no servicios o tópicos?***
+
+| Característica      | Tópico     | Servicio    | Acción     |
+|---------------------|------------|-------------|------------|
+| Comunicación        | Unidireccional | Bidireccional | Bidireccional |
+| Tiempo de ejecución | Continuo   | Corto       | Largo       |
+| Respuesta directa   | ❌         | ✅           | ✅         |
+| Retroalimentación   | ❌         | ❌           | ✅         |
+| Cancelación posible | ❌         | ❌           | ✅         |
+
+En **Conclusión:** Las acciones combinan lo mejor de los servicios y tópicos, permitiendo tareas de larga duración con control dinámico.
+
+---
+
+***Estructura de un archivo `.action`***
+
+Un archivo `.action` define tres partes:
+
+```
+# Objetivo (Goal)
+int32 x
+int32 y
+---
+# Resultado (Result)
+bool success
+---
+# Retroalimentación (Feedback)
+float32 percentage_complete
+```
+
+---
+
+***Componentes Clave***
+
+- **Cliente de acción:** Nodo que solicita ejecutar una acción.
+- **Servidor de acción:** Nodo que ejecuta la acción y responde con resultados o feedback.
+- **Goal:** Datos de entrada que representan la tarea.
+- **Result:** Salida final cuando se completa la acción.
+- **Feedback:** Información de progreso enviada mientras se ejecuta.
+
+---
+
+***Flujo de Ejecución***
+
+1. El cliente envía un **objetivo (goal)**.
+2. El servidor **acepta o rechaza** el objetivo.
+3. Si es aceptado, el servidor comienza la ejecución.
+4. Se envía **feedback** continuamente.
+5. Cuando termina, se envía un **resultado**.
+6. El cliente puede **cancelar** la acción si es necesario.´
+
+
+![gif](./acciones.gif)
+---
+
+***Casos de Uso Típicos***
+
+- Navegar a una posición (navegación autónoma).
+- Ejecutar trayectorias robóticas.
+- Manipular objetos.
+- Esperar eventos con tiempo prolongado.
+- Controlar movimiento con retroalimentación.
+
+---
+
+***Ejemplos de acciones existentes***
+
+- `nav2_msgs/action/NavigateToPose`
+- `control_msgs/action/FollowJointTrajectory`
+- `moveit_msgs/action/MoveGroup`
+- `lifecycle_msgs/action/Transition`
+
+---

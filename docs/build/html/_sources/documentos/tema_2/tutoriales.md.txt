@@ -212,8 +212,7 @@ colcon build --packages-select mi_pkg_python
 ros2 run mi_pkg_python publicador1
 ```
 
-
-## Creación de un Paquete de Mensajes Personalizados en ROS 2 (`ament_cmake`)
+## Paquetes con mensajes personalizados
 
 Los mensajes personalizados permiten crear un paquete exclusivo para generar estructuras personales de mensajes en ROS2 usando `ament_cmake`, ademas de poder integrarlos a otros paquetes.
 

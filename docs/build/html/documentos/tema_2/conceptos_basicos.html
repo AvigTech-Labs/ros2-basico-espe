@@ -71,6 +71,8 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#servicios">Servicios</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#acciones">Acciones</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id1"></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="tutoriales.html">Tutoriales</a></li>
@@ -487,6 +489,109 @@ sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> <
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>service<span class="w"> </span>call<span class="w"> </span>/<span class="o">[</span>servicio<span class="o">]</span><span class="w"> </span><span class="s2">&quot;argumentos&quot;</span>
 </pre></div>
 </div>
+</section>
+<section id="acciones">
+<h2>Acciones<a class="headerlink" href="#acciones" title="Link to this heading"></a></h2>
+<p><em><strong>¿Qué es una Acción en ROS 2?</strong></em></p>
+<p>En ROS 2, una <strong>acción</strong> (<code class="docutils literal notranslate"><span class="pre">action</span></code>) es una estructura de comunicación que permite la ejecución de tareas <strong>a largo plazo</strong>, donde se necesita:</p>
+<ul class="simple">
+<li><p>Enviar un <strong>objetivo (goal)</strong> desde un nodo cliente a un nodo servidor.</p></li>
+<li><p>Recibir <strong>retroalimentación (feedback)</strong> mientras se ejecuta la tarea.</p></li>
+<li><p>Obtener un <strong>resultado (result)</strong> cuando finaliza la acción.</p></li>
+<li><p>Tener la posibilidad de <strong>cancelar la ejecución</strong> en cualquier momento.</p></li>
+</ul>
+<hr class="docutils" />
+<p><em><strong>¿Por qué usar acciones y no servicios o tópicos?</strong></em></p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Característica</p></th>
+<th class="head"><p>Tópico</p></th>
+<th class="head"><p>Servicio</p></th>
+<th class="head"><p>Acción</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Comunicación</p></td>
+<td><p>Unidireccional</p></td>
+<td><p>Bidireccional</p></td>
+<td><p>Bidireccional</p></td>
+</tr>
+<tr class="row-odd"><td><p>Tiempo de ejecución</p></td>
+<td><p>Continuo</p></td>
+<td><p>Corto</p></td>
+<td><p>Largo</p></td>
+</tr>
+<tr class="row-even"><td><p>Respuesta directa</p></td>
+<td><p>❌</p></td>
+<td><p>✅</p></td>
+<td><p>✅</p></td>
+</tr>
+<tr class="row-odd"><td><p>Retroalimentación</p></td>
+<td><p>❌</p></td>
+<td><p>❌</p></td>
+<td><p>✅</p></td>
+</tr>
+<tr class="row-even"><td><p>Cancelación posible</p></td>
+<td><p>❌</p></td>
+<td><p>❌</p></td>
+<td><p>✅</p></td>
+</tr>
+</tbody>
+</table>
+<p>En <strong>Conclusión:</strong> Las acciones combinan lo mejor de los servicios y tópicos, permitiendo tareas de larga duración con control dinámico.</p>
+<hr class="docutils" />
+<p><em><strong>Estructura de un archivo <code class="docutils literal notranslate"><span class="pre">.action</span></code></strong></em></p>
+<p>Un archivo <code class="docutils literal notranslate"><span class="pre">.action</span></code> define tres partes:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Objetivo (Goal)</span>
+<span class="n">int32</span> <span class="n">x</span>
+<span class="n">int32</span> <span class="n">y</span>
+<span class="o">---</span>
+<span class="c1"># Resultado (Result)</span>
+<span class="nb">bool</span> <span class="n">success</span>
+<span class="o">---</span>
+<span class="c1"># Retroalimentación (Feedback)</span>
+<span class="n">float32</span> <span class="n">percentage_complete</span>
+</pre></div>
+</div>
+<hr class="docutils" />
+<p><em><strong>Componentes Clave</strong></em></p>
+<ul class="simple">
+<li><p><strong>Cliente de acción:</strong> Nodo que solicita ejecutar una acción.</p></li>
+<li><p><strong>Servidor de acción:</strong> Nodo que ejecuta la acción y responde con resultados o feedback.</p></li>
+<li><p><strong>Goal:</strong> Datos de entrada que representan la tarea.</p></li>
+<li><p><strong>Result:</strong> Salida final cuando se completa la acción.</p></li>
+<li><p><strong>Feedback:</strong> Información de progreso enviada mientras se ejecuta.</p></li>
+</ul>
+<hr class="docutils" />
+<p><em><strong>Flujo de Ejecución</strong></em></p>
+<ol class="arabic simple">
+<li><p>El cliente envía un <strong>objetivo (goal)</strong>.</p></li>
+<li><p>El servidor <strong>acepta o rechaza</strong> el objetivo.</p></li>
+<li><p>Si es aceptado, el servidor comienza la ejecución.</p></li>
+<li><p>Se envía <strong>feedback</strong> continuamente.</p></li>
+<li><p>Cuando termina, se envía un <strong>resultado</strong>.</p></li>
+<li><p>El cliente puede <strong>cancelar</strong> la acción si es necesario.´</p></li>
+</ol>
+</section>
+<section id="id1">
+<h2><img alt="gif" src="../../_images/acciones.gif" /><a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<p><em><strong>Casos de Uso Típicos</strong></em></p>
+<ul class="simple">
+<li><p>Navegar a una posición (navegación autónoma).</p></li>
+<li><p>Ejecutar trayectorias robóticas.</p></li>
+<li><p>Manipular objetos.</p></li>
+<li><p>Esperar eventos con tiempo prolongado.</p></li>
+<li><p>Controlar movimiento con retroalimentación.</p></li>
+</ul>
+<hr class="docutils" />
+<p><em><strong>Ejemplos de acciones existentes</strong></em></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">nav2_msgs/action/NavigateToPose</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">control_msgs/action/FollowJointTrajectory</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">moveit_msgs/action/MoveGroup</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">lifecycle_msgs/action/Transition</span></code></p></li>
+</ul>
+<hr class="docutils" />
 </section>
 </section>
 

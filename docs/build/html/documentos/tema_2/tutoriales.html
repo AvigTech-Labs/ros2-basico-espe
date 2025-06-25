@@ -63,7 +63,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#creacion-de-un-espacio-de-trabajo">Creación de un espacio de trabajo</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#creacion-paquetes">Creación Paquetes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#nodos-publicador-y-suscriptor">Nodos publicador y Suscriptor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#creacion-de-un-paquete-de-mensajes-personalizados-en-ros-2-ament-cmake">Creación de un Paquete de Mensajes Personalizados en ROS 2 (<code class="docutils literal notranslate"><span class="pre">ament_cmake</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#paquetes-con-mensajes-personalizados">Paquetes con mensajes personalizados</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#april-tags">April-Tags</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#servicios-personalizados">Servicios personalizados</a></li>
 </ul>
@@ -318,8 +318,8 @@ colcon<span class="w"> </span>build<span class="w"> </span>--packages-select<spa
 </pre></div>
 </div>
 </section>
-<section id="creacion-de-un-paquete-de-mensajes-personalizados-en-ros-2-ament-cmake">
-<h2>Creación de un Paquete de Mensajes Personalizados en ROS 2 (<code class="docutils literal notranslate"><span class="pre">ament_cmake</span></code>)<a class="headerlink" href="#creacion-de-un-paquete-de-mensajes-personalizados-en-ros-2-ament-cmake" title="Link to this heading"></a></h2>
+<section id="paquetes-con-mensajes-personalizados">
+<h2>Paquetes con mensajes personalizados<a class="headerlink" href="#paquetes-con-mensajes-personalizados" title="Link to this heading"></a></h2>
 <p>Los mensajes personalizados permiten crear un paquete exclusivo para generar estructuras personales de mensajes en ROS2 usando <code class="docutils literal notranslate"><span class="pre">ament_cmake</span></code>, ademas de poder integrarlos a otros paquetes.</p>
 <p>Antes de continuar con la generación de mensajes es necesario revisar, que tipos de mensajes están disponibles:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>interface<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>msg
