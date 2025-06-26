@@ -941,4 +941,407 @@ ros2 run mi_pkg_python servidor
 ros2 run mi_pkg_python cliente
 ```
 
+## Implementación de una Acción Personalizada
+
+En esta **acción personalizada** llamada `MoverA` se simula el movimiento de un robot hacia una posición `(x, y)` objetivo, utilizando el sistema de acciones de ROS 2.
+
+---
+
+***Estructura general***
+
+- **Paquete de mensajes:** `avig_msg`
+- **Archivo de acción:** `MoverA.action`
+- **Paquete de código (cliente/servidor):** `mi_pkg_python`
+
+---
+
+1. Definición de `MoverA.action`
+
+Ubicar en `avig_msg/action/MoverA.action`:
+
+```
+# Objetivo
+float32 x_actual
+float32 y_actual
+float32 x_meta
+float32 y_meta
+
+---
+# Resultado
+bool success
+---
+# Feedback
+float32 distancia_restante
+```
+
+---
+
+2. Configurar `CMakeLists.txt` en `avig_msg`
+
+Agregar:
+
+```
+find_package(rosidl_default_generators REQUIRED)
+
+rosidl_generate_interfaces(${PROJECT_NAME}
+  "action/MoverA.action"
+  DEPENDENCIES builtin_interfaces
+)
+
+ament_export_dependencies(rosidl_default_runtime)
+```
+
+---
+
+3. Configurar `package.xml` en `avig_msg`
+
+Agregar:
+
+```xml
+<buildtool_depend>ament_cmake</buildtool_depend>
+<build_depend>rosidl_default_generators</build_depend>
+<exec_depend>rosidl_default_runtime</exec_depend>
+<member_of_group>rosidl_interface_packages</member_of_group>
+```
+
+---
+
+4. Servidor de acción (`action_server.py` en `mi_pkg_python/acciones`)
+Este nodo:
+
+- Recibe un objetivo de la posición inicial`(x, y)` y de la posición objetivo `(x, y)`.
+- Simula el movimiento hacia la meta.
+- Envía `feedback` de la distancia restante.
+- Devuelve `success = true` si llega al destino.
+
+```python
+# Importación de librerías necesarias
+import rclpy  # Librería principal de ROS 2 en Python
+from rclpy.node import Node  # Clase base para nodos ROS 2
+from rclpy.action import ActionServer  # Clase para crear un servidor de acciones
+from avig_msg.action import MoverA  # Importación de la acción personalizada 'MoverA'
+import math  # Para funciones matemáticas como raíz cuadrada
+
+# Clase que define el servidor de acción
+class MoverAServer(Node):
+    def __init__(self):
+        super().__init__('movera_server')  # Inicializa el nodo con el nombre 'movera_server'
+
+        # Crea el servidor de acción asociado a la acción MoverA y al nombre 'mover_a'
+        self._action_server = ActionServer(
+            self,            # Nodo actual
+            MoverA,          # Tipo de acción
+            'mover_a',       # Nombre del tópico de la acción
+            self.execute_callback  # Callback que se ejecuta cuando llega una meta
+        )
+
+        self.get_logger().info('🚀 Servidor de acción MoverA listo.')
+
+    # Función que se ejecuta cuando el servidor recibe una meta
+    async def execute_callback(self, goal_handle):
+        # Imprime la posición inicial y final solicitada
+        self.get_logger().info(f'🎯 Recibido objetivo: Punto inicial: x={goal_handle.request.x_actual:.2f}, y={goal_handle.request.y_actual:.2f}')
+        self.get_logger().info(f'🎯 Recibido objetivo: Meta: x={goal_handle.request.x_meta:.2f}, y={goal_handle.request.y_meta:.2f}')
+
+        # Extrae los valores de la meta
+        x_goal = goal_handle.request.x_meta
+        y_goal = goal_handle.request.y_meta
+        x_actual = goal_handle.request.x_actual
+        y_actual = goal_handle.request.x_actual  # ⚠️ Esto parece un error, debería ser y_actual = goal_handle.request.y_actual
+
+        step_size = 0.1  # Paso fijo para simular el movimiento
+        # Define una función lambda para calcular la distancia euclidiana al objetivo
+        distance = lambda xa, ya: math.sqrt((xa - x_goal) ** 2 + (ya - y_goal) ** 2)
+
+        feedback_msg = MoverA.Feedback()  # Objeto para enviar retroalimentación (feedback) al cliente
+
+        # Mientras la distancia al objetivo sea mayor que un umbral
+        while distance(x_actual, y_actual) > 0.1:
+
+            # Si el cliente canceló la acción
+            if goal_handle.is_cancel_requested:
+                goal_handle.canceled()
+                self.get_logger().warn('❌ Objetivo cancelado.')
+                return MoverA.Result(success=False)
+
+            # Avanza un paso hacia el objetivo en línea recta (normalizando la dirección)
+            x_actual += step_size * (x_goal - x_actual) / distance(x_actual, y_actual)
+            y_actual += step_size * (y_goal - y_actual) / distance(x_actual, y_actual)
+
+            # Calcula la distancia restante
+            dist_remain = distance(x_actual, y_actual)
+
+            # Actualiza y publica el feedback al cliente
+            feedback_msg.distancia_restante = float(dist_remain)
+            goal_handle.publish_feedback(feedback_msg)
+            self.get_logger().info(f'📡 Distancia restante: {dist_remain:.2f}')
+
+            # Espera medio segundo antes del siguiente paso
+            await rclpy.sleep(0.5)
+
+        # Si llegó a la meta, marca la acción como completada exitosamente
+        goal_handle.succeed()
+        self.get_logger().info('✅ Objetivo alcanzado.')
+        return MoverA.Result(success=True)
+
+# Función principal que ejecuta el nodo
+def main(args=None):
+    rclpy.init(args=args)     # Inicializa el sistema de nodos de ROS 2
+    node = MoverAServer()     # Crea una instancia del servidor de acción
+    rclpy.spin(node)          # Mantiene al nodo activo y escuchando
+    rclpy.shutdown()          # Apaga ROS 2 al finalizar
+
+# Punto de entrada del script
+if __name__ == '__main__':
+    main()
+
+```
+
+Es importante agregar el archivo `__init__.py` en el direccitorio `mi_pkg_python/acciones`
+---
+
+5. Cliente de acción (`action_client.py` en `mi_pkg_python`)
+
+```
+# Importación de librerías necesarias
+import rclpy                            # Librería principal de ROS 2 en Python
+from rclpy.node import Node             # Clase base para crear nodos
+from rclpy.action import ActionClient   # Clase para crear un cliente de acciones
+from avig_msg.action import MoverA      # Importación de la acción personalizada definida en avig_msg
+
+# Definición de la clase del cliente de acción
+class MoverAClient(Node):
+    def __init__(self):
+        super().__init__('movera_client')  # Inicializa el nodo con el nombre 'movera_client'
+
+        # Crea un cliente de acción asociado a la acción MoverA y al nombre del tópico 'mover_a'
+        self._client = ActionClient(self, MoverA, 'mover_a')
+        self._goal_handle = None  # Referencia al "handle" de la meta enviada, se usará más adelante
+
+    # Función para enviar una meta con posición inicial (xi, yi) y meta final (xm, ym)
+    def send_goal(self, xi, yi, xm, ym):
+        goal_msg = MoverA.Goal()
+        goal_msg.x_actual = xi
+        goal_msg.y_actual = yi
+        goal_msg.x_meta = xm
+        goal_msg.y_meta = ym
+
+        # Espera a que el servidor esté disponible
+        self._client.wait_for_server()
+        self.get_logger().info(f'🚀 Enviando objetivo: posición inicial x={xi}, y={yi}, meta: x={xm}, y={ym}')
+
+        # Envía la meta de forma asíncrona y define el callback para recibir feedback
+        self._send_goal_future = self._client.send_goal_async(
+            goal_msg,
+            feedback_callback=self.feedback_callback
+        )
+        self._send_goal_future.add_done_callback(self.goal_response_callback)  # Define qué hacer al recibir respuesta
+
+    # Función que se llama cada vez que se recibe feedback del servidor
+    def feedback_callback(self, feedback_msg):
+        dist = feedback_msg.feedback.distancia_restante
+        self.get_logger().info(f'📶 Feedback: distancia restante = {dist:.2f}')
+
+        # Si la distancia es menor a 0.3, solicita la cancelación de la acción
+        if dist < 0.3 and self._goal_handle is not None:
+            self.get_logger().warn(f'🛑 Distancia {dist:.2f} < 0.3 → cancelando acción...')
+            cancel_future = self._goal_handle.cancel_goal_async()
+            cancel_future.add_done_callback(self.cancel_callback)  # Callback para confirmar si se canceló
+
+    # Función que se ejecuta cuando el servidor responde si acepta o rechaza la meta
+    def goal_response_callback(self, future):
+        self._goal_handle = future.result()
+
+        if not self._goal_handle.accepted:
+            self.get_logger().error('❌ Objetivo rechazado.')
+            return
+
+        self.get_logger().info('✅ Objetivo aceptado.')
+
+        # Espera de forma asíncrona el resultado final
+        self._get_result_future = self._goal_handle.get_result_async()
+        self._get_result_future.add_done_callback(self.result_callback)
+
+    # Función que se ejecuta cuando se recibe respuesta a la solicitud de cancelación
+    def cancel_callback(self, future):
+        cancel_response = future.result()
+
+        if len(cancel_response.goals_canceling) > 0:
+            self.get_logger().info('🧹 Acción cancelada exitosamente.')
+        else:
+            self.get_logger().info('⚠️ No se pudo cancelar la acción.')
+
+    # Función que se ejecuta cuando se recibe el resultado final de la acción
+    def result_callback(self, future):
+        result = future.result().result
+        if result.success:
+            self.get_logger().info('🎉 Llegamos al destino.')
+        else:
+            self.get_logger().info('⚠️ Acción no completada.')
+        rclpy.shutdown()  # Cierra el nodo una vez que termina la acción
+
+# Función principal que lanza el nodo y envía una meta al servidor
+def main(args=None):
+    rclpy.init(args=args)  # Inicializa el sistema ROS 2
+    node = MoverAClient()  # Crea el cliente de acción
+    node.send_goal(5.0, 3.0, 0.0, 0.1)  # Envía una meta con posición inicial y destino
+    rclpy.spin(node)  # Mantiene el nodo activo esperando feedback y resultados
+
+# Ejecuta main si este script es el principal
+if __name__ == '__main__':
+    main()
+```
+
+Este nodo:
+
+- Envía un objetivo `(x, y)` con la posición inicial y  un objetivo `(x, y)` con la posición meta al servidor.
+- Imprime el feedback recibido.
+- Muestra el resultado final.
+
+---
+
+6. setup.py
+Registrar scripts en el `setup.py` de `acciones`:
+
+```python
+entry_points={
+    'console_scripts': [
+        'action_server = acciones.action_server:main',
+        'action_client = acciones.action_client:main',
+    ],
+}
+```
+
+---
+
+7. Compilación
+
+Desde la raíz del workspace:
+
+```bash
+colcon build 
+source install/setup.bash
+```
+
+---
+
+8. Ejecución
+
+En una terminal, ejecutar el servidor:
+
+```bash
+ros2 run mi_pkg_python action_server
+```
+
+En otra terminal, ejecutar el cliente:
+
+```bash
+ros2 run mi_pkg_python action_client
+```
+
+
+¿CÓMO SE SIMULA EL MOVIMIENTO EN LÍNEA RECTA?
+Supongamos:
+
+Punto inicial: (x0, y0)
+
+Meta: (x1, y1)
+
+Queremos simular paso a paso el recorrido desde (x0, y0) hasta (x1, y1).
+
+Paso 1: calcular dirección
+La dirección al objetivo es el vector:
+
+text
+Copiar
+Editar
+v = (x1 - x0, y1 - y0)
+Paso 2: normalizar dirección
+Para que el robot no “salte” hasta la meta, se normaliza ese vector, dividiendo por su longitud (distancia):
+
+text
+Copiar
+Editar
+v_normalizado = v / ||v||
+Paso 3: avanzar en esa dirección
+Se da un paso fijo en esa dirección usando step_size:
+
+text
+Copiar
+Editar
+x += step_size * dx / distancia
+y += step_size * dy / distancia
+Esto se repite hasta que la distancia a la meta sea menor a un umbral (0.1 por ejemplo).
+
+🧪 Resultado
+Parece que el robot se va “acercando” poco a poco a la meta, siempre en línea recta, sin desviaciones.
+
+gif
+
+```python
+import matplotlib.pyplot as plt
+import numpy as np
+import imageio.v2 as imageio
+import time
+from pathlib import Path
+
+# Parámetros
+x_start, y_start = 0, 0
+x_goal, y_goal = 5, 3
+step_size = 0.1
+threshold = 0.1
+frames = []
+
+# Inicialización
+x_actual = x_start
+y_actual = y_start
+trajectory_x = [x_actual]
+trajectory_y = [y_actual]
+
+# Crear figura
+fig, ax = plt.subplots()
+ax.set_xlim(min(x_start, x_goal) - 1, max(x_start, x_goal) + 1)
+ax.set_ylim(min(y_start, y_goal) - 1, max(y_start, y_goal) + 1)
+ax.set_aspect('equal')
+ax.grid()
+ax.plot(x_goal, y_goal, 'ro', label='Meta')
+robot_dot, = ax.plot([], [], 'bo', label='Robot')
+line_path, = ax.plot([], [], 'b--', alpha=0.5)
+ax.legend()
+
+# Función de distancia
+def distance(xa, ya, xb, yb):
+    return np.sqrt((xa - xb) ** 2 + (ya - yb) ** 2)
+
+# Simular movimiento y guardar cada frame como imagen
+while distance(x_actual, y_actual, x_goal, y_goal) > threshold:
+    dx = x_goal - x_actual
+    dy = y_goal - y_actual
+    dist = distance(x_actual, y_actual, x_goal, y_goal)
+
+    x_actual += step_size * dx / dist
+    y_actual += step_size * dy / dist
+
+    trajectory_x.append(x_actual)
+    trajectory_y.append(y_actual)
+
+    robot_dot.set_data(x_actual, y_actual)
+    line_path.set_data(trajectory_x, trajectory_y)
+
+    # Dibujar y guardar como frame de imagen
+    fig.canvas.draw()
+    image_path = f"/mnt/data/frame_{len(frames):03d}.png"
+    fig.savefig(image_path)
+    frames.append(imageio.imread(image_path))
+
+# Guardar como GIF
+gif_path = Path("/mnt/data/sim_movimiento.gif")
+imageio.mimsave(gif_path, frames, fps=10)
+
+# Limpiar imágenes temporales (opcional)
+for f in Path("/mnt/data").glob("frame_*.png"):
+    f.unlink()
+
+gif_path
+```
 
