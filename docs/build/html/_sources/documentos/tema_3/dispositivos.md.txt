@@ -1,8 +1,5 @@
 # Conexión con dispositivos 
 
-
-# Dispositivos y ROS2
-
 ## MQTT
 
 **MQTT (Message Queuing Telemetry Transport)** es un protocolo de mensajería ligero diseñado para dispositivos con recursos limitados y redes de baja calidad. Es ideal para aplicaciones **IoT (Internet de las cosas)** como sensores, actuadores o microcontroladores.
@@ -150,5 +147,3 @@ client.publish("topic", mensaje_json.c_str(), 1);  // QoS 1
 ```cpp
 client.subscribe("Carrito_1/Acciones", 0);  // QoS 0
 ```
-
-

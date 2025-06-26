@@ -67,18 +67,14 @@
 <li class="toctree-l2"><a class="reference internal" href="#april-tags">April-Tags</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#servicios-personalizados">Servicios personalizados</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#implementacion-de-una-accion-personalizada">Implementación de una Acción Personalizada</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#vec-v-x-1-x-0-y-1-y-0">$$
-\vec{v} = (x_1 - x_0,; y_1 - y_0)
-$$</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id1"></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#es-importante-agregar-el-archivo-init-py-en-el-direccitorio-mi-pkg-python-acciones">Es importante agregar el archivo <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code> en el direccitorio <code class="docutils literal notranslate"><span class="pre">mi_pkg_python/acciones</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id1">
+</a></li>
 </ul>
 </li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Conexión con dispositivos</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../tema_3/dispositivos.html">Conexión con dispositivos</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tema_3/dispositivos.html#dispositivos-y-ros2">Dispositivos y ROS2</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Conexión con dispositivos</span></p>
 <ul>
@@ -1001,32 +997,10 @@ touch<span class="w"> </span>__initi__.py
 <p>En esta <strong>acción personalizada</strong> llamada <code class="docutils literal notranslate"><span class="pre">MoverA</span></code> se simula el movimiento de un robot hacia una posición <code class="docutils literal notranslate"><span class="pre">(x,</span> <span class="pre">y)</span></code> objetivo, utilizando el sistema de acciones de ROS 2.</p>
 <p>La acción representa como el robot se mueve gradualmente en línea recta hacia la meta, acercándose poco a poco hasta que la distancia sea menor a un umbral (por ejemplo, 0.1).</p>
 <p>La trayectoría que se simularña en este ejercicio obedece los siguientes puntos:</p>
-<hr class="docutils" />
-<p>Sea el punto inicial $<code class="docutils literal notranslate"><span class="pre">x_0,</span> <span class="pre">y_0</span></code>$ y la meta $<code class="docutils literal notranslate"><span class="pre">x_1,</span> <span class="pre">y_1</span></code>$.<br />
-La dirección al objetivo es el vector:</p>
-</section>
-<section id="vec-v-x-1-x-0-y-1-y-0">
-<h2>$$
-\vec{v} = (x_1 - x_0,; y_1 - y_0)
-$$<a class="headerlink" href="#vec-v-x-1-x-0-y-1-y-0" title="Link to this heading"></a></h2>
-<p>Para moverse en esa dirección sin “saltar” hasta la meta, se <strong>normaliza</strong> el vector, es decir, se convierte en un vector unitario dividiéndolo por su magnitud:</p>
-<p>$$
-|\vec{v}| = \sqrt{(x_1 - x_0)^2 + (y_1 - y_0)^2}
-$$</p>
-<p>$$
-\vec{v}_{\text{norm}} = \left( \frac{x_1 - x_0}{|\vec{v}|},; \frac{y_1 - y_0}{|\vec{v}|} \right)
-$$</p>
-<hr class="docutils" />
-<p>Posteriormente, se usa un <strong>tamaño de paso fijo</strong> (<code class="docutils literal notranslate"><span class="pre">step_size</span></code>) para avanzar gradualmente en la dirección normalizada:</p>
-<p>$$
-x_{\text{nuevo}} = x + \text{step_size} \cdot \frac{(x_1 - x)}{\text{distancia}}
-$$</p>
-<p>$$
-y_{\text{nuevo}} = y + \text{step_size} \cdot \frac{(y_1 - y)}{\text{distancia}}
-$$</p>
 </section>
 <section id="id1">
-<h2><img alt="gif" src="../../_images/mov.gif" /><a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<h2><img alt="mat" src="../../_images/matematica.png" />
+<img alt="gif" src="../../_images/mov.gif" /><a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
 <p><em><strong>Estructura general</strong></em></p>
 <ul class="simple">
 <li><p><strong>Paquete de mensajes:</strong> <code class="docutils literal notranslate"><span class="pre">avig_msg</span></code></p></li>
@@ -1196,9 +1170,7 @@ Este nodo:</p></li>
     <span class="n">main</span><span class="p">()</span>
 </pre></div>
 </div>
-</section>
-<section id="es-importante-agregar-el-archivo-init-py-en-el-direccitorio-mi-pkg-python-acciones">
-<h2>Es importante agregar el archivo <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code> en el direccitorio <code class="docutils literal notranslate"><span class="pre">mi_pkg_python/acciones</span></code><a class="headerlink" href="#es-importante-agregar-el-archivo-init-py-en-el-direccitorio-mi-pkg-python-acciones" title="Link to this heading"></a></h2>
+<p>Es importante agregar el archivo <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code> en el direccitorio <code class="docutils literal notranslate"><span class="pre">mi_pkg_python/acciones</span></code></p>
 <ol class="arabic simple" start="5">
 <li><p>Cliente de acción (<code class="docutils literal notranslate"><span class="pre">action_client.py</span></code> en <code class="docutils literal notranslate"><span class="pre">mi_pkg_python</span></code>)</p></li>
 </ol>

@@ -949,39 +949,7 @@ La acción representa como el robot se mueve gradualmente en línea recta hacia 
 
 La trayectoría que se simularña en este ejercicio obedece los siguientes puntos:
 
----
-
-Sea el punto inicial $`x_0, y_0`$ y la meta $`x_1, y_1`$.  
-La dirección al objetivo es el vector:
-
-$$
-\vec{v} = (x_1 - x_0,\; y_1 - y_0)
-$$
----
-
-Para moverse en esa dirección sin “saltar” hasta la meta, se **normaliza** el vector, es decir, se convierte en un vector unitario dividiéndolo por su magnitud:
-
-$$
-|\vec{v}| = \sqrt{(x_1 - x_0)^2 + (y_1 - y_0)^2}
-$$
-
-$$
-\vec{v}_{\text{norm}} = \left( \frac{x_1 - x_0}{|\vec{v}|},\; \frac{y_1 - y_0}{|\vec{v}|} \right)
-$$
-
----
-
-Posteriormente, se usa un **tamaño de paso fijo** (`step_size`) para avanzar gradualmente en la dirección normalizada:
-
-$$
-x_{\text{nuevo}} = x + \text{step\_size} \cdot \frac{(x_1 - x)}{\text{distancia}}
-$$
-
-$$
-y_{\text{nuevo}} = y + \text{step\_size} \cdot \frac{(y_1 - y)}{\text{distancia}}
-$$
-
-
+![mat](./matematica.png)
 ![gif](./mov.gif)
 ---
 
@@ -1161,7 +1129,6 @@ if __name__ == '__main__':
 ```
 
 Es importante agregar el archivo `__init__.py` en el direccitorio `mi_pkg_python/acciones`
----
 
 5. Cliente de acción (`action_client.py` en `mi_pkg_python`)
 

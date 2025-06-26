@@ -416,7 +416,6 @@ float32 percentage_complete
 
 
 ![gif](./acciones.gif)
----
 
 ***Casos de Uso Típicos***
 
@@ -434,5 +433,3 @@ float32 percentage_complete
 - `control_msgs/action/FollowJointTrajectory`
 - `moveit_msgs/action/MoveGroup`
 - `lifecycle_msgs/action/Transition`
-
----
