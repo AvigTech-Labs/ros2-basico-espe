@@ -66,6 +66,8 @@
 <li class="toctree-l2"><a class="reference internal" href="#paquetes-con-mensajes-personalizados">Paquetes con mensajes personalizados</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#april-tags">April-Tags</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#servicios-personalizados">Servicios personalizados</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#implementacion-de-una-accion-personalizada">Implementación de una Acción Personalizada</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#es-importante-agregar-el-archivo-init-py-en-el-direccitorio-mi-pkg-python-acciones">Es importante agregar el archivo <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code> en el direccitorio <code class="docutils literal notranslate"><span class="pre">mi_pkg_python/acciones</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -989,6 +991,384 @@ touch<span class="w"> </span>__initi__.py
 </pre></div>
 </div>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>run<span class="w"> </span>mi_pkg_python<span class="w"> </span>cliente
+</pre></div>
+</div>
+</section>
+<section id="implementacion-de-una-accion-personalizada">
+<h2>Implementación de una Acción Personalizada<a class="headerlink" href="#implementacion-de-una-accion-personalizada" title="Enlace permanente a este encabezado"></a></h2>
+<p>En esta <strong>acción personalizada</strong> llamada <code class="docutils literal notranslate"><span class="pre">MoverA</span></code> se simula el movimiento de un robot hacia una posición <code class="docutils literal notranslate"><span class="pre">(x,</span> <span class="pre">y)</span></code> objetivo, utilizando el sistema de acciones de ROS 2.</p>
+<hr class="docutils" />
+<p><em><strong>Estructura general</strong></em></p>
+<ul class="simple">
+<li><p><strong>Paquete de mensajes:</strong> <code class="docutils literal notranslate"><span class="pre">avig_msg</span></code></p></li>
+<li><p><strong>Archivo de acción:</strong> <code class="docutils literal notranslate"><span class="pre">MoverA.action</span></code></p></li>
+<li><p><strong>Paquete de código (cliente/servidor):</strong> <code class="docutils literal notranslate"><span class="pre">mi_pkg_python</span></code></p></li>
+</ul>
+<hr class="docutils" />
+<ol class="arabic simple">
+<li><p>Definición de <code class="docutils literal notranslate"><span class="pre">MoverA.action</span></code></p></li>
+</ol>
+<p>Ubicar en <code class="docutils literal notranslate"><span class="pre">avig_msg/action/MoverA.action</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Objetivo</span>
+<span class="n">float32</span> <span class="n">x_actual</span>
+<span class="n">float32</span> <span class="n">y_actual</span>
+<span class="n">float32</span> <span class="n">x_meta</span>
+<span class="n">float32</span> <span class="n">y_meta</span>
+
+<span class="o">---</span>
+<span class="c1"># Resultado</span>
+<span class="nb">bool</span> <span class="n">success</span>
+<span class="o">---</span>
+<span class="c1"># Feedback</span>
+<span class="n">float32</span> <span class="n">distancia_restante</span>
+</pre></div>
+</div>
+<hr class="docutils" />
+<ol class="arabic simple" start="2">
+<li><p>Configurar <code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code> en <code class="docutils literal notranslate"><span class="pre">avig_msg</span></code></p></li>
+</ol>
+<p>Agregar:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>find_package(rosidl_default_generators REQUIRED)
+
+rosidl_generate_interfaces(${PROJECT_NAME}
+  &quot;action/MoverA.action&quot;
+  DEPENDENCIES builtin_interfaces
+)
+
+ament_export_dependencies(rosidl_default_runtime)
+</pre></div>
+</div>
+<hr class="docutils" />
+<ol class="arabic simple" start="3">
+<li><p>Configurar <code class="docutils literal notranslate"><span class="pre">package.xml</span></code> en <code class="docutils literal notranslate"><span class="pre">avig_msg</span></code></p></li>
+</ol>
+<p>Agregar:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;buildtool_depend&gt;</span>ament_cmake<span class="nt">&lt;/buildtool_depend&gt;</span>
+<span class="nt">&lt;build_depend&gt;</span>rosidl_default_generators<span class="nt">&lt;/build_depend&gt;</span>
+<span class="nt">&lt;exec_depend&gt;</span>rosidl_default_runtime<span class="nt">&lt;/exec_depend&gt;</span>
+<span class="nt">&lt;member_of_group&gt;</span>rosidl_interface_packages<span class="nt">&lt;/member_of_group&gt;</span>
+</pre></div>
+</div>
+<hr class="docutils" />
+<ol class="arabic simple" start="4">
+<li><p>Servidor de acción (<code class="docutils literal notranslate"><span class="pre">action_server.py</span></code> en <code class="docutils literal notranslate"><span class="pre">mi_pkg_python/acciones</span></code>)
+Este nodo:</p></li>
+</ol>
+<ul class="simple">
+<li><p>Recibe un objetivo de la posición inicial<code class="docutils literal notranslate"><span class="pre">(x,</span> <span class="pre">y)</span></code> y de la posición objetivo <code class="docutils literal notranslate"><span class="pre">(x,</span> <span class="pre">y)</span></code>.</p></li>
+<li><p>Simula el movimiento hacia la meta.</p></li>
+<li><p>Envía <code class="docutils literal notranslate"><span class="pre">feedback</span></code> de la distancia restante.</p></li>
+<li><p>Devuelve <code class="docutils literal notranslate"><span class="pre">success</span> <span class="pre">=</span> <span class="pre">true</span></code> si llega al destino.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Importación de librerías necesarias</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">rclpy</span>  <span class="c1"># Librería principal de ROS 2 en Python</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rclpy.node</span><span class="w"> </span><span class="kn">import</span> <span class="n">Node</span>  <span class="c1"># Clase base para nodos ROS 2</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rclpy.action</span><span class="w"> </span><span class="kn">import</span> <span class="n">ActionServer</span>  <span class="c1"># Clase para crear un servidor de acciones</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">avig_msg.action</span><span class="w"> </span><span class="kn">import</span> <span class="n">MoverA</span>  <span class="c1"># Importación de la acción personalizada &#39;MoverA&#39;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>  <span class="c1"># Para funciones matemáticas como raíz cuadrada</span>
+
+<span class="c1"># Clase que define el servidor de acción</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MoverAServer</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s1">&#39;movera_server&#39;</span><span class="p">)</span>  <span class="c1"># Inicializa el nodo con el nombre &#39;movera_server&#39;</span>
+
+        <span class="c1"># Crea el servidor de acción asociado a la acción MoverA y al nombre &#39;mover_a&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_action_server</span> <span class="o">=</span> <span class="n">ActionServer</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>            <span class="c1"># Nodo actual</span>
+            <span class="n">MoverA</span><span class="p">,</span>          <span class="c1"># Tipo de acción</span>
+            <span class="s1">&#39;mover_a&#39;</span><span class="p">,</span>       <span class="c1"># Nombre del tópico de la acción</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">execute_callback</span>  <span class="c1"># Callback que se ejecuta cuando llega una meta</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;🚀 Servidor de acción MoverA listo.&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Función que se ejecuta cuando el servidor recibe una meta</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">execute_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">goal_handle</span><span class="p">):</span>
+        <span class="c1"># Imprime la posición inicial y final solicitada</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;🎯 Recibido objetivo: Punto inicial: x=</span><span class="si">{</span><span class="n">goal_handle</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">x_actual</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">, y=</span><span class="si">{</span><span class="n">goal_handle</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">y_actual</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;🎯 Recibido objetivo: Meta: x=</span><span class="si">{</span><span class="n">goal_handle</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">x_meta</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">, y=</span><span class="si">{</span><span class="n">goal_handle</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">y_meta</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Extrae los valores de la meta</span>
+        <span class="n">x_goal</span> <span class="o">=</span> <span class="n">goal_handle</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">x_meta</span>
+        <span class="n">y_goal</span> <span class="o">=</span> <span class="n">goal_handle</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">y_meta</span>
+        <span class="n">x_actual</span> <span class="o">=</span> <span class="n">goal_handle</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">x_actual</span>
+        <span class="n">y_actual</span> <span class="o">=</span> <span class="n">goal_handle</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">x_actual</span>  <span class="c1"># ⚠️ Esto parece un error, debería ser y_actual = goal_handle.request.y_actual</span>
+
+        <span class="n">step_size</span> <span class="o">=</span> <span class="mf">0.1</span>  <span class="c1"># Paso fijo para simular el movimiento</span>
+        <span class="c1"># Define una función lambda para calcular la distancia euclidiana al objetivo</span>
+        <span class="n">distance</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">xa</span><span class="p">,</span> <span class="n">ya</span><span class="p">:</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">xa</span> <span class="o">-</span> <span class="n">x_goal</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">ya</span> <span class="o">-</span> <span class="n">y_goal</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+
+        <span class="n">feedback_msg</span> <span class="o">=</span> <span class="n">MoverA</span><span class="o">.</span><span class="n">Feedback</span><span class="p">()</span>  <span class="c1"># Objeto para enviar retroalimentación (feedback) al cliente</span>
+
+        <span class="c1"># Mientras la distancia al objetivo sea mayor que un umbral</span>
+        <span class="k">while</span> <span class="n">distance</span><span class="p">(</span><span class="n">x_actual</span><span class="p">,</span> <span class="n">y_actual</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">0.1</span><span class="p">:</span>
+
+            <span class="c1"># Si el cliente canceló la acción</span>
+            <span class="k">if</span> <span class="n">goal_handle</span><span class="o">.</span><span class="n">is_cancel_requested</span><span class="p">:</span>
+                <span class="n">goal_handle</span><span class="o">.</span><span class="n">canceled</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;❌ Objetivo cancelado.&#39;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">MoverA</span><span class="o">.</span><span class="n">Result</span><span class="p">(</span><span class="n">success</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+            <span class="c1"># Avanza un paso hacia el objetivo en línea recta (normalizando la dirección)</span>
+            <span class="n">x_actual</span> <span class="o">+=</span> <span class="n">step_size</span> <span class="o">*</span> <span class="p">(</span><span class="n">x_goal</span> <span class="o">-</span> <span class="n">x_actual</span><span class="p">)</span> <span class="o">/</span> <span class="n">distance</span><span class="p">(</span><span class="n">x_actual</span><span class="p">,</span> <span class="n">y_actual</span><span class="p">)</span>
+            <span class="n">y_actual</span> <span class="o">+=</span> <span class="n">step_size</span> <span class="o">*</span> <span class="p">(</span><span class="n">y_goal</span> <span class="o">-</span> <span class="n">y_actual</span><span class="p">)</span> <span class="o">/</span> <span class="n">distance</span><span class="p">(</span><span class="n">x_actual</span><span class="p">,</span> <span class="n">y_actual</span><span class="p">)</span>
+
+            <span class="c1"># Calcula la distancia restante</span>
+            <span class="n">dist_remain</span> <span class="o">=</span> <span class="n">distance</span><span class="p">(</span><span class="n">x_actual</span><span class="p">,</span> <span class="n">y_actual</span><span class="p">)</span>
+
+            <span class="c1"># Actualiza y publica el feedback al cliente</span>
+            <span class="n">feedback_msg</span><span class="o">.</span><span class="n">distancia_restante</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">dist_remain</span><span class="p">)</span>
+            <span class="n">goal_handle</span><span class="o">.</span><span class="n">publish_feedback</span><span class="p">(</span><span class="n">feedback_msg</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;📡 Distancia restante: </span><span class="si">{</span><span class="n">dist_remain</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+            <span class="c1"># Espera medio segundo antes del siguiente paso</span>
+            <span class="k">await</span> <span class="n">rclpy</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+
+        <span class="c1"># Si llegó a la meta, marca la acción como completada exitosamente</span>
+        <span class="n">goal_handle</span><span class="o">.</span><span class="n">succeed</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;✅ Objetivo alcanzado.&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">MoverA</span><span class="o">.</span><span class="n">Result</span><span class="p">(</span><span class="n">success</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Función principal que ejecuta el nodo</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">rclpy</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">)</span>     <span class="c1"># Inicializa el sistema de nodos de ROS 2</span>
+    <span class="n">node</span> <span class="o">=</span> <span class="n">MoverAServer</span><span class="p">()</span>     <span class="c1"># Crea una instancia del servidor de acción</span>
+    <span class="n">rclpy</span><span class="o">.</span><span class="n">spin</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>          <span class="c1"># Mantiene al nodo activo y escuchando</span>
+    <span class="n">rclpy</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>          <span class="c1"># Apaga ROS 2 al finalizar</span>
+
+<span class="c1"># Punto de entrada del script</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+
+</pre></div>
+</div>
+</section>
+<section id="es-importante-agregar-el-archivo-init-py-en-el-direccitorio-mi-pkg-python-acciones">
+<h2>Es importante agregar el archivo <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code> en el direccitorio <code class="docutils literal notranslate"><span class="pre">mi_pkg_python/acciones</span></code><a class="headerlink" href="#es-importante-agregar-el-archivo-init-py-en-el-direccitorio-mi-pkg-python-acciones" title="Enlace permanente a este encabezado"></a></h2>
+<ol class="arabic simple" start="5">
+<li><p>Cliente de acción (<code class="docutils literal notranslate"><span class="pre">action_client.py</span></code> en <code class="docutils literal notranslate"><span class="pre">mi_pkg_python</span></code>)</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Importación de librerías necesarias</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">rclpy</span>                            <span class="c1"># Librería principal de ROS 2 en Python</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rclpy.node</span><span class="w"> </span><span class="kn">import</span> <span class="n">Node</span>             <span class="c1"># Clase base para crear nodos</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rclpy.action</span><span class="w"> </span><span class="kn">import</span> <span class="n">ActionClient</span>   <span class="c1"># Clase para crear un cliente de acciones</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">avig_msg.action</span><span class="w"> </span><span class="kn">import</span> <span class="n">MoverA</span>      <span class="c1"># Importación de la acción personalizada definida en avig_msg</span>
+
+<span class="c1"># Definición de la clase del cliente de acción</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MoverAClient</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s1">&#39;movera_client&#39;</span><span class="p">)</span>  <span class="c1"># Inicializa el nodo con el nombre &#39;movera_client&#39;</span>
+
+        <span class="c1"># Crea un cliente de acción asociado a la acción MoverA y al nombre del tópico &#39;mover_a&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_client</span> <span class="o">=</span> <span class="n">ActionClient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">MoverA</span><span class="p">,</span> <span class="s1">&#39;mover_a&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_goal_handle</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Referencia al &quot;handle&quot; de la meta enviada, se usará más adelante</span>
+
+    <span class="c1"># Función para enviar una meta con posición inicial (xi, yi) y meta final (xm, ym)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">send_goal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xi</span><span class="p">,</span> <span class="n">yi</span><span class="p">,</span> <span class="n">xm</span><span class="p">,</span> <span class="n">ym</span><span class="p">):</span>
+        <span class="n">goal_msg</span> <span class="o">=</span> <span class="n">MoverA</span><span class="o">.</span><span class="n">Goal</span><span class="p">()</span>
+        <span class="n">goal_msg</span><span class="o">.</span><span class="n">x_actual</span> <span class="o">=</span> <span class="n">xi</span>
+        <span class="n">goal_msg</span><span class="o">.</span><span class="n">y_actual</span> <span class="o">=</span> <span class="n">yi</span>
+        <span class="n">goal_msg</span><span class="o">.</span><span class="n">x_meta</span> <span class="o">=</span> <span class="n">xm</span>
+        <span class="n">goal_msg</span><span class="o">.</span><span class="n">y_meta</span> <span class="o">=</span> <span class="n">ym</span>
+
+        <span class="c1"># Espera a que el servidor esté disponible</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">wait_for_server</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;🚀 Enviando objetivo: posición inicial x=</span><span class="si">{</span><span class="n">xi</span><span class="si">}</span><span class="s1">, y=</span><span class="si">{</span><span class="n">yi</span><span class="si">}</span><span class="s1">, meta: x=</span><span class="si">{</span><span class="n">xm</span><span class="si">}</span><span class="s1">, y=</span><span class="si">{</span><span class="n">ym</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Envía la meta de forma asíncrona y define el callback para recibir feedback</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_send_goal_future</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">send_goal_async</span><span class="p">(</span>
+            <span class="n">goal_msg</span><span class="p">,</span>
+            <span class="n">feedback_callback</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">feedback_callback</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_send_goal_future</span><span class="o">.</span><span class="n">add_done_callback</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">goal_response_callback</span><span class="p">)</span>  <span class="c1"># Define qué hacer al recibir respuesta</span>
+
+    <span class="c1"># Función que se llama cada vez que se recibe feedback del servidor</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">feedback_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feedback_msg</span><span class="p">):</span>
+        <span class="n">dist</span> <span class="o">=</span> <span class="n">feedback_msg</span><span class="o">.</span><span class="n">feedback</span><span class="o">.</span><span class="n">distancia_restante</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;📶 Feedback: distancia restante = </span><span class="si">{</span><span class="n">dist</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Si la distancia es menor a 0.3, solicita la cancelación de la acción</span>
+        <span class="k">if</span> <span class="n">dist</span> <span class="o">&lt;</span> <span class="mf">0.3</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_goal_handle</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;🛑 Distancia </span><span class="si">{</span><span class="n">dist</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1"> &lt; 0.3 → cancelando acción...&#39;</span><span class="p">)</span>
+            <span class="n">cancel_future</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_goal_handle</span><span class="o">.</span><span class="n">cancel_goal_async</span><span class="p">()</span>
+            <span class="n">cancel_future</span><span class="o">.</span><span class="n">add_done_callback</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cancel_callback</span><span class="p">)</span>  <span class="c1"># Callback para confirmar si se canceló</span>
+
+    <span class="c1"># Función que se ejecuta cuando el servidor responde si acepta o rechaza la meta</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">goal_response_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">future</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_goal_handle</span> <span class="o">=</span> <span class="n">future</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_goal_handle</span><span class="o">.</span><span class="n">accepted</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;❌ Objetivo rechazado.&#39;</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;✅ Objetivo aceptado.&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Espera de forma asíncrona el resultado final</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_get_result_future</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_goal_handle</span><span class="o">.</span><span class="n">get_result_async</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_get_result_future</span><span class="o">.</span><span class="n">add_done_callback</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">result_callback</span><span class="p">)</span>
+
+    <span class="c1"># Función que se ejecuta cuando se recibe respuesta a la solicitud de cancelación</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">cancel_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">future</span><span class="p">):</span>
+        <span class="n">cancel_response</span> <span class="o">=</span> <span class="n">future</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cancel_response</span><span class="o">.</span><span class="n">goals_canceling</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;🧹 Acción cancelada exitosamente.&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;⚠️ No se pudo cancelar la acción.&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Función que se ejecuta cuando se recibe el resultado final de la acción</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">result_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">future</span><span class="p">):</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">future</span><span class="o">.</span><span class="n">result</span><span class="p">()</span><span class="o">.</span><span class="n">result</span>
+        <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">success</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;🎉 Llegamos al destino.&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;⚠️ Acción no completada.&#39;</span><span class="p">)</span>
+        <span class="n">rclpy</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>  <span class="c1"># Cierra el nodo una vez que termina la acción</span>
+
+<span class="c1"># Función principal que lanza el nodo y envía una meta al servidor</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">rclpy</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">)</span>  <span class="c1"># Inicializa el sistema ROS 2</span>
+    <span class="n">node</span> <span class="o">=</span> <span class="n">MoverAClient</span><span class="p">()</span>  <span class="c1"># Crea el cliente de acción</span>
+    <span class="n">node</span><span class="o">.</span><span class="n">send_goal</span><span class="p">(</span><span class="mf">5.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)</span>  <span class="c1"># Envía una meta con posición inicial y destino</span>
+    <span class="n">rclpy</span><span class="o">.</span><span class="n">spin</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>  <span class="c1"># Mantiene el nodo activo esperando feedback y resultados</span>
+
+<span class="c1"># Ejecuta main si este script es el principal</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Este nodo:</p>
+<ul class="simple">
+<li><p>Envía un objetivo <code class="docutils literal notranslate"><span class="pre">(x,</span> <span class="pre">y)</span></code> con la posición inicial y  un objetivo <code class="docutils literal notranslate"><span class="pre">(x,</span> <span class="pre">y)</span></code> con la posición meta al servidor.</p></li>
+<li><p>Imprime el feedback recibido.</p></li>
+<li><p>Muestra el resultado final.</p></li>
+</ul>
+<hr class="docutils" />
+<ol class="arabic simple" start="6">
+<li><p>setup.py
+Registrar scripts en el <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> de <code class="docutils literal notranslate"><span class="pre">acciones</span></code>:</p></li>
+</ol>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">entry_points</span><span class="o">=</span><span class="p">{</span>
+    <span class="s1">&#39;console_scripts&#39;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s1">&#39;action_server = acciones.action_server:main&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;action_client = acciones.action_client:main&#39;</span><span class="p">,</span>
+    <span class="p">],</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<hr class="docutils" />
+<ol class="arabic simple" start="7">
+<li><p>Compilación</p></li>
+</ol>
+<p>Desde la raíz del workspace:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>colcon<span class="w"> </span>build<span class="w"> </span>
+<span class="nb">source</span><span class="w"> </span>install/setup.bash
+</pre></div>
+</div>
+<hr class="docutils" />
+<ol class="arabic simple" start="8">
+<li><p>Ejecución</p></li>
+</ol>
+<p>En una terminal, ejecutar el servidor:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>run<span class="w"> </span>mi_pkg_python<span class="w"> </span>action_server
+</pre></div>
+</div>
+<p>En otra terminal, ejecutar el cliente:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>run<span class="w"> </span>mi_pkg_python<span class="w"> </span>action_client
+</pre></div>
+</div>
+<p>¿CÓMO SE SIMULA EL MOVIMIENTO EN LÍNEA RECTA?
+Supongamos:</p>
+<p>Punto inicial: (x0, y0)</p>
+<p>Meta: (x1, y1)</p>
+<p>Queremos simular paso a paso el recorrido desde (x0, y0) hasta (x1, y1).</p>
+<p>Paso 1: calcular dirección
+La dirección al objetivo es el vector:</p>
+<p>text
+Copiar
+Editar
+v = (x1 - x0, y1 - y0)
+Paso 2: normalizar dirección
+Para que el robot no “salte” hasta la meta, se normaliza ese vector, dividiendo por su longitud (distancia):</p>
+<p>text
+Copiar
+Editar
+v_normalizado = v / ||v||
+Paso 3: avanzar en esa dirección
+Se da un paso fijo en esa dirección usando step_size:</p>
+<p>text
+Copiar
+Editar
+x += step_size * dx / distancia
+y += step_size * dy / distancia
+Esto se repite hasta que la distancia a la meta sea menor a un umbral (0.1 por ejemplo).</p>
+<p>🧪 Resultado
+Parece que el robot se va “acercando” poco a poco a la meta, siempre en línea recta, sin desviaciones.</p>
+<p>gif</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">imageio.v2</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">imageio</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="c1"># Parámetros</span>
+<span class="n">x_start</span><span class="p">,</span> <span class="n">y_start</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
+<span class="n">x_goal</span><span class="p">,</span> <span class="n">y_goal</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">3</span>
+<span class="n">step_size</span> <span class="o">=</span> <span class="mf">0.1</span>
+<span class="n">threshold</span> <span class="o">=</span> <span class="mf">0.1</span>
+<span class="n">frames</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="c1"># Inicialización</span>
+<span class="n">x_actual</span> <span class="o">=</span> <span class="n">x_start</span>
+<span class="n">y_actual</span> <span class="o">=</span> <span class="n">y_start</span>
+<span class="n">trajectory_x</span> <span class="o">=</span> <span class="p">[</span><span class="n">x_actual</span><span class="p">]</span>
+<span class="n">trajectory_y</span> <span class="o">=</span> <span class="p">[</span><span class="n">y_actual</span><span class="p">]</span>
+
+<span class="c1"># Crear figura</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">x_start</span><span class="p">,</span> <span class="n">x_goal</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="n">x_start</span><span class="p">,</span> <span class="n">x_goal</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">y_start</span><span class="p">,</span> <span class="n">y_goal</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="n">y_start</span><span class="p">,</span> <span class="n">y_goal</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_goal</span><span class="p">,</span> <span class="n">y_goal</span><span class="p">,</span> <span class="s1">&#39;ro&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Meta&#39;</span><span class="p">)</span>
+<span class="n">robot_dot</span><span class="p">,</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([],</span> <span class="p">[],</span> <span class="s1">&#39;bo&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Robot&#39;</span><span class="p">)</span>
+<span class="n">line_path</span><span class="p">,</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([],</span> <span class="p">[],</span> <span class="s1">&#39;b--&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+<span class="c1"># Función de distancia</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">distance</span><span class="p">(</span><span class="n">xa</span><span class="p">,</span> <span class="n">ya</span><span class="p">,</span> <span class="n">xb</span><span class="p">,</span> <span class="n">yb</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">xa</span> <span class="o">-</span> <span class="n">xb</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">ya</span> <span class="o">-</span> <span class="n">yb</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+
+<span class="c1"># Simular movimiento y guardar cada frame como imagen</span>
+<span class="k">while</span> <span class="n">distance</span><span class="p">(</span><span class="n">x_actual</span><span class="p">,</span> <span class="n">y_actual</span><span class="p">,</span> <span class="n">x_goal</span><span class="p">,</span> <span class="n">y_goal</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">threshold</span><span class="p">:</span>
+    <span class="n">dx</span> <span class="o">=</span> <span class="n">x_goal</span> <span class="o">-</span> <span class="n">x_actual</span>
+    <span class="n">dy</span> <span class="o">=</span> <span class="n">y_goal</span> <span class="o">-</span> <span class="n">y_actual</span>
+    <span class="n">dist</span> <span class="o">=</span> <span class="n">distance</span><span class="p">(</span><span class="n">x_actual</span><span class="p">,</span> <span class="n">y_actual</span><span class="p">,</span> <span class="n">x_goal</span><span class="p">,</span> <span class="n">y_goal</span><span class="p">)</span>
+
+    <span class="n">x_actual</span> <span class="o">+=</span> <span class="n">step_size</span> <span class="o">*</span> <span class="n">dx</span> <span class="o">/</span> <span class="n">dist</span>
+    <span class="n">y_actual</span> <span class="o">+=</span> <span class="n">step_size</span> <span class="o">*</span> <span class="n">dy</span> <span class="o">/</span> <span class="n">dist</span>
+
+    <span class="n">trajectory_x</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x_actual</span><span class="p">)</span>
+    <span class="n">trajectory_y</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">y_actual</span><span class="p">)</span>
+
+    <span class="n">robot_dot</span><span class="o">.</span><span class="n">set_data</span><span class="p">(</span><span class="n">x_actual</span><span class="p">,</span> <span class="n">y_actual</span><span class="p">)</span>
+    <span class="n">line_path</span><span class="o">.</span><span class="n">set_data</span><span class="p">(</span><span class="n">trajectory_x</span><span class="p">,</span> <span class="n">trajectory_y</span><span class="p">)</span>
+
+    <span class="c1"># Dibujar y guardar como frame de imagen</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+    <span class="n">image_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;/mnt/data/frame_</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">frames</span><span class="p">)</span><span class="si">:</span><span class="s2">03d</span><span class="si">}</span><span class="s2">.png&quot;</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">image_path</span><span class="p">)</span>
+    <span class="n">frames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">imageio</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">image_path</span><span class="p">))</span>
+
+<span class="c1"># Guardar como GIF</span>
+<span class="n">gif_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;/mnt/data/sim_movimiento.gif&quot;</span><span class="p">)</span>
+<span class="n">imageio</span><span class="o">.</span><span class="n">mimsave</span><span class="p">(</span><span class="n">gif_path</span><span class="p">,</span> <span class="n">frames</span><span class="p">,</span> <span class="n">fps</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+<span class="c1"># Limpiar imágenes temporales (opcional)</span>
+<span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;/mnt/data&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;frame_*.png&quot;</span><span class="p">):</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span>
+
+<span class="n">gif_path</span>
 </pre></div>
 </div>
 </section>
