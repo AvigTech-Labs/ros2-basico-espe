@@ -949,6 +949,7 @@ La acción representa como el robot se mueve gradualmente en línea recta hacia 
 
 La trayectoría que se simularña en este ejercicio obedece los siguientes puntos:
 
+
 ![mat](./matematica.png)
 ![gif](./mov.gif)
 ---
