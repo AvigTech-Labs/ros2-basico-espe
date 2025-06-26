@@ -945,6 +945,44 @@ ros2 run mi_pkg_python cliente
 
 En esta **acción personalizada** llamada `MoverA` se simula el movimiento de un robot hacia una posición `(x, y)` objetivo, utilizando el sistema de acciones de ROS 2.
 
+La acción representa como el robot se mueve gradualmente en línea recta hacia la meta, acercándose poco a poco hasta que la distancia sea menor a un umbral (por ejemplo, 0.1). 
+
+La trayectoría que se simularña en este ejercicio obedece los siguientes puntos:
+
+---
+
+Sea el punto inicial $`x_0, y_0`$ y la meta $`x_1, y_1`$.  
+La dirección al objetivo es el vector:
+
+$$
+\vec{v} = (x_1 - x_0,\; y_1 - y_0)
+$$
+---
+
+Para moverse en esa dirección sin “saltar” hasta la meta, se **normaliza** el vector, es decir, se convierte en un vector unitario dividiéndolo por su magnitud:
+
+$$
+|\vec{v}| = \sqrt{(x_1 - x_0)^2 + (y_1 - y_0)^2}
+$$
+
+$$
+\vec{v}_{\text{norm}} = \left( \frac{x_1 - x_0}{|\vec{v}|},\; \frac{y_1 - y_0}{|\vec{v}|} \right)
+$$
+
+---
+
+Posteriormente, se usa un **tamaño de paso fijo** (`step_size`) para avanzar gradualmente en la dirección normalizada:
+
+$$
+x_{\text{nuevo}} = x + \text{step\_size} \cdot \frac{(x_1 - x)}{\text{distancia}}
+$$
+
+$$
+y_{\text{nuevo}} = y + \text{step\_size} \cdot \frac{(y_1 - y)}{\text{distancia}}
+$$
+
+
+![gif](./mov.gif)
 ---
 
 ***Estructura general***
@@ -1102,7 +1140,7 @@ Es importante agregar el archivo `__init__.py` en el direccitorio `mi_pkg_python
 
 5. Cliente de acción (`action_client.py` en `mi_pkg_python`)
 
-```
+```python
 # Importación de librerías necesarias
 import rclpy                            # Librería principal de ROS 2 en Python
 from rclpy.node import Node             # Clase base para crear nodos
@@ -1240,41 +1278,7 @@ ros2 run mi_pkg_python action_client
 ```
 
 
-¿CÓMO SE SIMULA EL MOVIMIENTO EN LÍNEA RECTA?
-Supongamos:
 
-Punto inicial: (x0, y0)
-
-Meta: (x1, y1)
-
-Queremos simular paso a paso el recorrido desde (x0, y0) hasta (x1, y1).
-
-Paso 1: calcular dirección
-La dirección al objetivo es el vector:
-
-text
-Copiar
-Editar
-v = (x1 - x0, y1 - y0)
-Paso 2: normalizar dirección
-Para que el robot no “salte” hasta la meta, se normaliza ese vector, dividiendo por su longitud (distancia):
-
-text
-Copiar
-Editar
-v_normalizado = v / ||v||
-Paso 3: avanzar en esa dirección
-Se da un paso fijo en esa dirección usando step_size:
-
-text
-Copiar
-Editar
-x += step_size * dx / distancia
-y += step_size * dy / distancia
-Esto se repite hasta que la distancia a la meta sea menor a un umbral (0.1 por ejemplo).
-
-🧪 Resultado
-Parece que el robot se va “acercando” poco a poco a la meta, siempre en línea recta, sin desviaciones.
 
 gif
 

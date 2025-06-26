@@ -67,6 +67,10 @@
 <li class="toctree-l2"><a class="reference internal" href="#april-tags">April-Tags</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#servicios-personalizados">Servicios personalizados</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#implementacion-de-una-accion-personalizada">Implementación de una Acción Personalizada</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#vec-v-x-1-x-0-y-1-y-0">$$
+\vec{v} = (x_1 - x_0,; y_1 - y_0)
+$$</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id1"></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#es-importante-agregar-el-archivo-init-py-en-el-direccitorio-mi-pkg-python-acciones">Es importante agregar el archivo <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code> en el direccitorio <code class="docutils literal notranslate"><span class="pre">mi_pkg_python/acciones</span></code></a></li>
 </ul>
 </li>
@@ -997,7 +1001,34 @@ touch<span class="w"> </span>__initi__.py
 <section id="implementacion-de-una-accion-personalizada">
 <h2>Implementación de una Acción Personalizada<a class="headerlink" href="#implementacion-de-una-accion-personalizada" title="Link to this heading"></a></h2>
 <p>En esta <strong>acción personalizada</strong> llamada <code class="docutils literal notranslate"><span class="pre">MoverA</span></code> se simula el movimiento de un robot hacia una posición <code class="docutils literal notranslate"><span class="pre">(x,</span> <span class="pre">y)</span></code> objetivo, utilizando el sistema de acciones de ROS 2.</p>
+<p>La acción representa como el robot se mueve gradualmente en línea recta hacia la meta, acercándose poco a poco hasta que la distancia sea menor a un umbral (por ejemplo, 0.1).</p>
+<p>La trayectoría que se simularña en este ejercicio obedece los siguientes puntos:</p>
 <hr class="docutils" />
+<p>Sea el punto inicial $<code class="docutils literal notranslate"><span class="pre">x_0,</span> <span class="pre">y_0</span></code>$ y la meta $<code class="docutils literal notranslate"><span class="pre">x_1,</span> <span class="pre">y_1</span></code>$.<br />
+La dirección al objetivo es el vector:</p>
+</section>
+<section id="vec-v-x-1-x-0-y-1-y-0">
+<h2>$$
+\vec{v} = (x_1 - x_0,; y_1 - y_0)
+$$<a class="headerlink" href="#vec-v-x-1-x-0-y-1-y-0" title="Link to this heading"></a></h2>
+<p>Para moverse en esa dirección sin “saltar” hasta la meta, se <strong>normaliza</strong> el vector, es decir, se convierte en un vector unitario dividiéndolo por su magnitud:</p>
+<p>$$
+|\vec{v}| = \sqrt{(x_1 - x_0)^2 + (y_1 - y_0)^2}
+$$</p>
+<p>$$
+\vec{v}_{\text{norm}} = \left( \frac{x_1 - x_0}{|\vec{v}|},; \frac{y_1 - y_0}{|\vec{v}|} \right)
+$$</p>
+<hr class="docutils" />
+<p>Posteriormente, se usa un <strong>tamaño de paso fijo</strong> (<code class="docutils literal notranslate"><span class="pre">step_size</span></code>) para avanzar gradualmente en la dirección normalizada:</p>
+<p>$$
+x_{\text{nuevo}} = x + \text{step_size} \cdot \frac{(x_1 - x)}{\text{distancia}}
+$$</p>
+<p>$$
+y_{\text{nuevo}} = y + \text{step_size} \cdot \frac{(y_1 - y)}{\text{distancia}}
+$$</p>
+</section>
+<section id="id1">
+<h2><img alt="gif" src="../../_images/mov.gif" /><a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
 <p><em><strong>Estructura general</strong></em></p>
 <ul class="simple">
 <li><p><strong>Paquete de mensajes:</strong> <code class="docutils literal notranslate"><span class="pre">avig_msg</span></code></p></li>
@@ -1148,7 +1179,7 @@ Este nodo:</p></li>
 <ol class="arabic simple" start="5">
 <li><p>Cliente de acción (<code class="docutils literal notranslate"><span class="pre">action_client.py</span></code> en <code class="docutils literal notranslate"><span class="pre">mi_pkg_python</span></code>)</p></li>
 </ol>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Importación de librerías necesarias</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Importación de librerías necesarias</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">rclpy</span>                            <span class="c1"># Librería principal de ROS 2 en Python</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">rclpy.node</span><span class="w"> </span><span class="kn">import</span> <span class="n">Node</span>             <span class="c1"># Clase base para crear nodos</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">rclpy.action</span><span class="w"> </span><span class="kn">import</span> <span class="n">ActionClient</span>   <span class="c1"># Clase para crear un cliente de acciones</span>
@@ -1277,33 +1308,6 @@ Registrar scripts en el <code class="docutils literal notranslate"><span class="
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>run<span class="w"> </span>mi_pkg_python<span class="w"> </span>action_client
 </pre></div>
 </div>
-<p>¿CÓMO SE SIMULA EL MOVIMIENTO EN LÍNEA RECTA?
-Supongamos:</p>
-<p>Punto inicial: (x0, y0)</p>
-<p>Meta: (x1, y1)</p>
-<p>Queremos simular paso a paso el recorrido desde (x0, y0) hasta (x1, y1).</p>
-<p>Paso 1: calcular dirección
-La dirección al objetivo es el vector:</p>
-<p>text
-Copiar
-Editar
-v = (x1 - x0, y1 - y0)
-Paso 2: normalizar dirección
-Para que el robot no “salte” hasta la meta, se normaliza ese vector, dividiendo por su longitud (distancia):</p>
-<p>text
-Copiar
-Editar
-v_normalizado = v / ||v||
-Paso 3: avanzar en esa dirección
-Se da un paso fijo en esa dirección usando step_size:</p>
-<p>text
-Copiar
-Editar
-x += step_size * dx / distancia
-y += step_size * dy / distancia
-Esto se repite hasta que la distancia a la meta sea menor a un umbral (0.1 por ejemplo).</p>
-<p>🧪 Resultado
-Parece que el robot se va “acercando” poco a poco a la meta, siempre en línea recta, sin desviaciones.</p>
 <p>gif</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
