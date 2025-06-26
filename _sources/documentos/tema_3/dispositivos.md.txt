@@ -333,13 +333,167 @@ Tabla de librerías recomendadas para tu proyecto ESP32 con WiFiManager y MQTT
 
 1. Uso de MQTT desde Arduino
 
-Crear 2 pestañas: `Esp32_Mqtt` y `Conf_MQTT`
+Crear 2 pestañas: `Esp32_mqtt` y `Conf_mqtt`
 
-***Pestaña 1***
+***Pestaña 1 ESP32_mqtt***
 ```cpp
+#include <PubSubClient.h>
+#include <WiFi.h>
+#include <ArduinoJson.h>
 
+// Variable de Control Alarmar
+int activar  = 0;
+int estado   = 0;
+int encoderi = 0;
+int encoderd = 0;
+
+// GPIO de salidad Digital
+int pin_led   = 2;
+
+//  Credenciales Wifi 
+const char* ssid = "CARMEN GONZALEZ_";
+const char* password = "123wa321vg";
+
+// Credenciales MQTT
+const char* mqtt_broker = "192.168.100.76";
+const int mqtt_port = 1883;
+const char* cliente = "rm1_esp32";
+
+// Temas MQTT Publicar
+const char* tema_sub = "rm1/acciones";
+const char* tema_pub_est = "rm1/estados";
+const char* tema_pub_sen = "rm1/sensores";
+
+// Creacion del objeto cliente
+WiFiClient espClient;
+PubSubClient client(espClient);
+
+// Tamaño de mensaje JSON
+const size_t capacidad_json = JSON_OBJECT_SIZE(30);
+
+
+void setup() {
+  // Setup Serial
+  Serial.begin(115200);
+  // Setup Wifi
+  setup_wifi();
+  // Setup MQTT
+  conexion();
+  // Manejo del rele
+  pinMode(pin_led, OUTPUT);     
+  
+}
+
+void loop() {
+  Loop_MQTT();
+  if (activar == 1){
+    digitalWrite(pin_led, HIGH);  // Enciende el LED
+    estado = 1;
+    encoderi = 35;
+    envioDatos(tema_pub_est, estado, encoderi, encoderd);
+    envioDatos(tema_pub_sen, estado, encoderi, encoderd);
+    }
+  else {
+    digitalWrite(pin_led, LOW);  // Enciende el LED
+    estado = 0;
+    encoderi = 30;
+    envioDatos(tema_pub_est, estado, encoderi, encoderd);
+    envioDatos(tema_pub_sen, estado, encoderi, encoderd);
+  }
+  
+}
 ```
 
+***Pestaña 2 Conf_Mqtt***
+```cpp
+void setup_wifi() {
+  // Conexión Wifi
+  delay(10);
+  Serial.println();
+  Serial.print("Conectando a ");
+  Serial.println(ssid);
+  WiFi.begin(ssid, password);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+  Serial.println("");
+  Serial.print("WiFi conectado - Dirección IP del ESP: ");
+  Serial.println(WiFi.localIP());
+}
+
+void reconnect() {
+  // Control de conexión MQTT
+  while (!client.connected()) {
+    Serial.print("Intentando conexión MQTT...");
+    if (client.connect(cliente)) {
+      Serial.println("Conectado");
+      // Suscripción a TEMAS
+      client.subscribe(tema_sub, 1);
+    } else {
+      Serial.print("Falló, rc=");
+      Serial.print(client.state());
+      Serial.println("Intentando de nuevo en 2 segundos");
+      delay(2000);
+    }
+  }
+}
+
+void conexion() {
+  // Conexión MQTT
+  client.setServer(mqtt_broker, mqtt_port);
+  client.setCallback(callback);
+}
+
+void Loop_MQTT() {
+  // Manejo MQTT 
+  if (!client.connected()) {
+    reconnect();
+  }
+  client.loop();
+}
+
+void envioDatos(const char* mqtt_topic_publicar, int estado, int encoderi, int encoderd) {
+  DynamicJsonDocument mensaje(256);
+
+  if (mqtt_topic_publicar == tema_pub_est) {
+    mensaje["estado"]   = estado;
+    String mensaje_json;
+    serializeJson(mensaje, mensaje_json);
+    client.publish(mqtt_topic_publicar, mensaje_json.c_str(), 1);
+  }
+
+  if (mqtt_topic_publicar == tema_pub_sen) {
+     mensaje["encoderi"]   = encoderi;
+     mensaje["encoderd"]   = encoderd;
+     String mensaje_json;
+    serializeJson(mensaje, mensaje_json);
+    client.publish(mqtt_topic_publicar, mensaje_json.c_str(), 1);
+  }
+  
+  
+}
+
+void callback(char* topic, byte* payload, unsigned int length) {
+  StaticJsonDocument<capacidad_json> doc;
+  char buffer[length + 1];
+  memcpy(buffer, payload, length);
+  buffer[length] = '\0';  // Asegura que el buffer tenga fin de cadena
+
+  DeserializationError error = deserializeJson(doc, buffer);
+
+  if (error) {
+    Serial.print("Error al deserializar JSON: ");
+    Serial.println(error.c_str());
+    return;
+  }
+
+  String topico(topic);
+  if (topico == "rm1/acciones") {
+      activar  = doc["avanzar"];
+  }
+}
+```
 
 Notas adicionales:
 ***Publicar mensaje:***
