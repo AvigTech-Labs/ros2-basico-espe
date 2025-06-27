@@ -276,8 +276,16 @@ Una vez configurado mosquitto, es necesario descargar arduino IDE, el programa q
 ### Instalación
 
 1. ***Descargar Arduino IDE***
-Desde: https://www.arduino.cc/en/software/
 
+Enlace de descargar, AppImage [arduino](https://www.arduino.cc/en/software/)
+
+En la carpeta donde se descargó el AppImage, cambiar el nombre al archivo descargado por `arduino-ide`
+```bash
+sudo apt update
+sudo apt upgrade
+sudo install libfuse2
+./arduino-ide.AppImage
+```
 
 2. ***Instalar soporte para ESP32***
 
