@@ -242,9 +242,9 @@ sudo systemctl status mosquitto</p>
 
 <span class="c1"># Configuración del broker</span>
 <span class="n">BROKER</span>            <span class="o">=</span> <span class="s2">&quot;192.168.100.176&quot;</span> <span class="c1"># Ip del computador o localhost</span>
-<span class="n">TOPIC_SUB_SEN</span>     <span class="o">=</span> <span class="s2">&quot;rm_1/sensores&quot;</span>
-<span class="n">TOPIC_SUB_EST</span>     <span class="o">=</span> <span class="s2">&quot;rm_1/estados&quot;</span>
-<span class="n">TOPIC_PUB</span>         <span class="o">=</span> <span class="s2">&quot;rm_1/acciones&quot;</span>
+<span class="n">TOPIC_SUB_SEN</span>     <span class="o">=</span> <span class="s2">&quot;rm1/sensores&quot;</span>
+<span class="n">TOPIC_SUB_EST</span>     <span class="o">=</span> <span class="s2">&quot;rm1/estados&quot;</span>
+<span class="n">TOPIC_PUB</span>         <span class="o">=</span> <span class="s2">&quot;rm1/acciones&quot;</span>
 <span class="n">CLIENT_ID</span>         <span class="o">=</span> <span class="s2">&quot;cliente_rm1&quot;</span>
 
 <span class="c1"># Callback cuando se conecta al broker</span>
@@ -262,12 +262,11 @@ sudo systemctl status mosquitto</p>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">mensaje</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">payload</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">mensaje</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="n">msg</span><span class="o">.</span><span class="n">topic</span><span class="si">}</span><span class="s2">] -&gt; </span><span class="si">{</span><span class="n">data</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">msg</span><span class="o">.</span><span class="n">topic</span> <span class="o">==</span> <span class="n">TOPIC_SUB_SEN</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Mensaje recido del Equipo2:&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;EncoderI&quot;</span><span class="p">])</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Mensaje recido del Equipo2 EncoderI:&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;EncoderI&quot;</span><span class="p">])</span>
         
         <span class="k">if</span> <span class="n">msg</span><span class="o">.</span><span class="n">topic</span> <span class="o">==</span> <span class="n">TOPIC_SUB_EST</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Mensaje recido del Equipo2:&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;Estado&quot;</span><span class="p">])</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Mensaje recido del Equipo2 Estado:&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;Estado&quot;</span><span class="p">])</span>
 
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error procesando mensaje:&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
@@ -300,8 +299,8 @@ sudo systemctl status mosquitto</p>
             <span class="p">}</span>
         <span class="n">mensaje</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
         <span class="n">client</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">TOPIC_PUB</span><span class="p">,</span> <span class="n">mensaje</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Publicado en datos_1:&quot;</span><span class="p">,</span> <span class="n">payload</span><span class="p">)</span>
-        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+        <span class="c1">#print(&quot;Publicado en datos_1:&quot;, payload)</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
 <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> Finalizando conexión MQTT...&quot;</span><span class="p">)</span>
@@ -340,7 +339,6 @@ sudo systemctl status mosquitto</p>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">mensaje</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">payload</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">mensaje</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="n">msg</span><span class="o">.</span><span class="n">topic</span><span class="si">}</span><span class="s2">] -&gt; </span><span class="si">{</span><span class="n">data</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">msg</span><span class="o">.</span><span class="n">topic</span> <span class="o">==</span> <span class="n">TOPIC_SUB</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Mensaje recido del Equipo1:&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;vel&quot;</span><span class="p">][</span><span class="s2">&quot;u_meta&quot;</span><span class="p">])</span>
 
@@ -375,10 +373,8 @@ sudo systemctl status mosquitto</p>
             <span class="p">}</span>
         <span class="n">mensaje2</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">payload2</span><span class="p">)</span>
         <span class="n">client</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">TOPIC_PUB_EST</span><span class="p">,</span> <span class="n">mensaje2</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Publicado:&quot;</span><span class="p">,</span> <span class="n">payload</span><span class="p">)</span>
-
-
-        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+        <span class="c1">#print(&quot;Publicado:&quot;, payload)</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
 <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> Finalizando conexión MQTT...&quot;</span><span class="p">)</span>

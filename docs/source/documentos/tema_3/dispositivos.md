@@ -121,9 +121,9 @@ import time
 
 # Configuración del broker
 BROKER            = "192.168.100.176" # Ip del computador o localhost
-TOPIC_SUB_SEN     = "rm_1/sensores"
-TOPIC_SUB_EST     = "rm_1/estados"
-TOPIC_PUB         = "rm_1/acciones"
+TOPIC_SUB_SEN     = "rm1/sensores"
+TOPIC_SUB_EST     = "rm1/estados"
+TOPIC_PUB         = "rm1/acciones"
 CLIENT_ID         = "cliente_rm1"
 
 # Callback cuando se conecta al broker
@@ -141,12 +141,11 @@ def on_message(client, userdata, msg):
     try:
         mensaje = msg.payload.decode("utf-8")
         data = json.loads(mensaje)
-        print(f"[{msg.topic}] -> {data}")
         if msg.topic == TOPIC_SUB_SEN:
-            print("Mensaje recido del Equipo2:", data["EncoderI"])
+            print("Mensaje recido del Equipo2 EncoderI:", data["EncoderI"])
         
         if msg.topic == TOPIC_SUB_EST:
-            print("Mensaje recido del Equipo2:", data["Estado"])
+            print("Mensaje recido del Equipo2 Estado:", data["Estado"])
 
     except Exception as e:
         print("Error procesando mensaje:", e)
@@ -179,8 +178,8 @@ try:
             }
         mensaje = json.dumps(payload)
         client.publish(TOPIC_PUB, mensaje)
-        print("Publicado en datos_1:", payload)
-        time.sleep(5)
+        #print("Publicado en datos_1:", payload)
+        time.sleep(1)
 
 except KeyboardInterrupt:
     print("\n Finalizando conexión MQTT...")
@@ -219,7 +218,6 @@ def on_message(client, userdata, msg):
     try:
         mensaje = msg.payload.decode("utf-8")
         data = json.loads(mensaje)
-        print(f"[{msg.topic}] -> {data}")
         if msg.topic == TOPIC_SUB:
             print("Mensaje recido del Equipo1:", data["vel"]["u_meta"])
 
@@ -254,10 +252,8 @@ try:
             }
         mensaje2 = json.dumps(payload2)
         client.publish(TOPIC_PUB_EST, mensaje2)
-        print("Publicado:", payload)
-
-
-        time.sleep(5)
+        #print("Publicado:", payload)
+        time.sleep(1)
 
 except KeyboardInterrupt:
     print("\n Finalizando conexión MQTT...")
