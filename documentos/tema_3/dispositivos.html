@@ -74,10 +74,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#ejemplos-de-uso">Ejemplos de Uso.</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#micro-ros">Micro - ROS</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id2">Instalación</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="#puente-mqtt-ros2">Puente MQTT - ROS2</a></li>
 </ul>
 </li>
 </ul>
@@ -244,7 +241,7 @@ sudo systemctl status mosquitto</p>
 <span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
 
 <span class="c1"># Configuración del broker</span>
-<span class="n">BROKER</span>            <span class="o">=</span> <span class="s2">&quot;192.168.100.76&quot;</span>
+<span class="n">BROKER</span>            <span class="o">=</span> <span class="s2">&quot;192.168.100.176&quot;</span> <span class="c1"># Ip del computador o localhost</span>
 <span class="n">TOPIC_SUB_SEN</span>     <span class="o">=</span> <span class="s2">&quot;rm_1/sensores&quot;</span>
 <span class="n">TOPIC_SUB_EST</span>     <span class="o">=</span> <span class="s2">&quot;rm_1/estados&quot;</span>
 <span class="n">TOPIC_PUB</span>         <span class="o">=</span> <span class="s2">&quot;rm_1/acciones&quot;</span>
@@ -323,7 +320,7 @@ sudo systemctl status mosquitto</p>
 <span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
 
 <span class="c1"># Configuración del broker</span>
-<span class="n">BROKER</span>            <span class="o">=</span> <span class="s2">&quot;192.168.100.76&quot;</span>
+<span class="n">BROKER</span>            <span class="o">=</span> <span class="s2">&quot;192.168.100.176&quot;</span> <span class="c1">#Ip del computador o Localhost</span>
 <span class="n">TOPIC_PUB_SEN</span>     <span class="o">=</span> <span class="s2">&quot;rm1/sensores&quot;</span>
 <span class="n">TOPIC_PUB_EST</span>     <span class="o">=</span> <span class="s2">&quot;rm1/estados&quot;</span>
 <span class="n">TOPIC_SUB</span>         <span class="o">=</span> <span class="s2">&quot;rm1/acciones&quot;</span>
@@ -408,6 +405,7 @@ sudo systemctl status mosquitto</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt<span class="w"> </span>update
 sudo<span class="w"> </span>apt<span class="w"> </span>upgrade
 sudo<span class="w"> </span>install<span class="w"> </span>libfuse2
+sudo<span class="w"> </span>chmod<span class="w"> </span>+x<span class="w"> </span>arduino-ide.AppImage
 ./arduino-ide.AppImage
 </pre></div>
 </div>
@@ -438,11 +436,11 @@ sudo<span class="w"> </span>install<span class="w"> </span>libfuse2
 </div>
 <p>Reiniciar sesión para aplicar cambios.</p>
 <p>Ver dispositivos conectados</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ls<span class="w"> </span>/dev/ttyUSB*<span class="w"> </span>/dev/ttyACM*
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ls<span class="w"> </span>/dev/ttyUSB*
 </pre></div>
 </div>
 <p>Ver cambios al conectar o desconectar</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>watch<span class="w"> </span>-n<span class="w"> </span><span class="m">1</span><span class="w"> </span>ls<span class="w"> </span>/dev/ttyUSB*<span class="w"> </span>/dev/ttyACM*
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>watch<span class="w"> </span>-n<span class="w"> </span><span class="m">1</span><span class="w"> </span>ls<span class="w"> </span>/dev/ttyUSB*
 </pre></div>
 </div>
 <hr class="docutils" />
@@ -663,115 +661,17 @@ sudo<span class="w"> </span>install<span class="w"> </span>libfuse2
 </div>
 </section>
 </section>
-<section id="micro-ros">
-<h2>Micro - ROS<a class="headerlink" href="#micro-ros" title="Enlace permanente a este encabezado"></a></h2>
-<p>Instalación de micro-ROS para ESP32 en Arduino IDE</p>
-<p>En este apartado aprenderás a instalar micro-ROS para programar un microcontrolador <strong>ESP32</strong> directamente desde el <strong>Arduino IDE</strong>, compatible con <strong>ROS 2 Humble</strong>.</p>
+<section id="puente-mqtt-ros2">
+<h2>Puente MQTT - ROS2<a class="headerlink" href="#puente-mqtt-ros2" title="Enlace permanente a este encabezado"></a></h2>
+<p>Una vez obtenida una base de MQTT para su uso en microcontroladores y equipos. Se presenta un nodo que funcionará como puente para la comunicación entre la ESP32 y ROS2.</p>
 <hr class="docutils" />
-<section id="id2">
-<h3>Instalación<a class="headerlink" href="#id2" title="Enlace permanente a este encabezado"></a></h3>
-<ol class="arabic simple">
-<li><p>Prerrequisitos</p></li>
-</ol>
-<ul class="simple">
-<li><p>ROS 2 Humble instalado correctamente.</p></li>
-<li><p>Arduino IDE 2.x instalado.</p></li>
-<li><p>Conexión a internet activa.</p></li>
-<li><p>Ya debes tener instalado el <strong>núcleo ESP32 versión 3.x</strong>, en nuestro caso:</p></li>
-</ul>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">ESP32</span><span class="w"> </span><span class="n">Board</span><span class="w"> </span><span class="n">Core</span><span class="o">:</span><span class="w"> </span><span class="mf">3.2.0</span><span class="w"> </span><span class="p">(</span><span class="n">Espressif</span><span class="p">)</span>
-</pre></div>
-</div>
-<blockquote>
-<div><p>Si no lo tienes aún, puedes instalarlo desde el <strong>Gestor de Tarjetas</strong> con el siguiente URL en Preferencias:</p>
-</div></blockquote>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">raw</span><span class="o">.</span><span class="n">githubusercontent</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">espressif</span><span class="o">/</span><span class="n">arduino</span><span class="o">-</span><span class="n">esp32</span><span class="o">/</span><span class="n">gh</span><span class="o">-</span><span class="n">pages</span><span class="o">/</span><span class="n">package_esp32_index</span><span class="o">.</span><span class="n">json</span>
-</pre></div>
-</div>
-<hr class="docutils" />
-<ol class="arabic simple" start="2">
-<li><p>Instalar Biblioteca micro-ROS para Arduino</p></li>
-</ol>
-<p>Desde el <strong>Gestor de Bibliotecas</strong>, busca e instala:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">micro_ros_arduino</span></code></p></li>
-</ul>
-<p>🔍 También puedes instalarla desde GitHub para mayor control:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/micro-ROS/micro_ros_arduino.git
-</pre></div>
-</div>
-<p>Y copiar la carpeta al directorio de bibliotecas de Arduino:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>~/.arduino15/libraries/micro_ros_arduino/
-</pre></div>
-</div>
-<hr class="docutils" />
-<ol class="arabic simple" start="3">
-<li><p>Instalar dependencias en ROS 2 (PC)</p></li>
-</ol>
-<p>Abre una terminal y ejecuta:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt<span class="w"> </span>update
-sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>python3-pip
-pip3<span class="w"> </span>install<span class="w"> </span>-U<span class="w"> </span>empy<span class="w"> </span>catkin_pkg<span class="w"> </span>lark-parser<span class="w"> </span>colcon-common-extensions
-</pre></div>
-</div>
-<p>Luego instala <code class="docutils literal notranslate"><span class="pre">micro_ros_agent</span></code>:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>ros-humble-micro-ros-agent
-</pre></div>
-</div>
-<hr class="docutils" />
-<ol class="arabic simple" start="4">
-<li><p>Preparar ESP32 en Arduino</p></li>
-<li><p>Abre Arduino IDE.</p></li>
-<li><p>Selecciona tu placa <strong>ESP32 Dev Module</strong>.</p></li>
-<li><p>Carga el ejemplo:</p></li>
-</ol>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Archivo</span> <span class="o">&gt;</span> <span class="n">Ejemplos</span> <span class="o">&gt;</span> <span class="n">micro_ros_arduino</span> <span class="o">&gt;</span> <span class="n">micro_ros_publisher</span>
-</pre></div>
-</div>
-<ol class="arabic simple" start="4">
-<li><p>Modifica las credenciales WiFi en el sketch:</p></li>
-</ol>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">WiFi</span><span class="p">.</span><span class="n">begin</span><span class="p">(</span><span class="s">&quot;CARMEN GONZALEZ_&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;123wa321vg&quot;</span><span class="p">);</span>
-</pre></div>
-</div>
-<ol class="arabic simple" start="5">
-<li><p>Compila y sube el sketch al ESP32.</p></li>
-</ol>
-<hr class="docutils" />
-<ol class="arabic simple" start="5">
-<li><p>Ejecutar el micro-ROS Agent en PC</p></li>
-</ol>
-<p>Conecta el ESP32 por USB y encuentra el puerto con:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ls<span class="w"> </span>/dev/ttyUSB*
-</pre></div>
-</div>
-<p>Luego lanza el agente:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>run<span class="w"> </span>micro_ros_agent<span class="w"> </span>micro_ros_agent<span class="w"> </span>serial<span class="w"> </span>--dev<span class="w"> </span>/dev/ttyUSB0
-</pre></div>
-</div>
-<blockquote>
-<div><p>Cambia <code class="docutils literal notranslate"><span class="pre">/dev/ttyUSB0</span></code> por el que detectes en tu sistema.</p>
-</div></blockquote>
-<hr class="docutils" />
-<ol class="arabic simple" start="6">
-<li><p>Verificar Conexión</p></li>
-</ol>
-<p>Abre otra terminal y ejecuta:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>topic<span class="w"> </span>list
-</pre></div>
-</div>
-<p>Deberías ver el tópico <code class="docutils literal notranslate"><span class="pre">/micro_ros_arduino_node_publisher</span></code>.</p>
-<p>También puedes escuchar los datos:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>topic<span class="w"> </span><span class="nb">echo</span><span class="w"> </span>/micro_ros_arduino_node_publisher
-</pre></div>
-</div>
-<hr class="docutils" />
-<p><em><strong>Referencias</strong></em></p>
+<p><em><strong>Nota</strong></em></p>
+<p>Existe la posibilidad de utilizar ros2 en microcontroladores, sin embargo se necesitan versiones de nucleo de tarjetas específicas.</p>
+<p>Para revisar mas contenido relacionado se puede revisar los siguientes links:</p>
 <ul class="simple">
 <li><p>micro-ROS oficial: https://micro.ros.org/</p></li>
 <li><p>Repositorio Arduino: https://github.com/micro-ROS/micro_ros_arduino</p></li>
 </ul>
-</section>
 </section>
 </section>
 
