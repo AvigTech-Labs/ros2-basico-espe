@@ -120,7 +120,7 @@ import json
 import time
 
 # Configuración del broker
-BROKER            = "192.168.100.76"
+BROKER            = "192.168.100.176" # Ip del computador o localhost
 TOPIC_SUB_SEN     = "rm_1/sensores"
 TOPIC_SUB_EST     = "rm_1/estados"
 TOPIC_PUB         = "rm_1/acciones"
@@ -199,7 +199,7 @@ import json
 import time
 
 # Configuración del broker
-BROKER            = "192.168.100.76"
+BROKER            = "192.168.100.176" #Ip del computador o Localhost
 TOPIC_PUB_SEN     = "rm1/sensores"
 TOPIC_PUB_EST     = "rm1/estados"
 TOPIC_SUB         = "rm1/acciones"
@@ -284,11 +284,11 @@ En la carpeta donde se descargó el AppImage, cambiar el nombre al archivo desca
 sudo apt update
 sudo apt upgrade
 sudo install libfuse2
+sudo chmod +x arduino-ide.AppImage
 ./arduino-ide.AppImage
 ```
 
 2. ***Instalar soporte para ESP32***
-
     1. Ir a `Archivo → Preferencias`
     2. En el campo **URLs adicionales para tarjetas**, agregar:
     ```
@@ -314,12 +314,12 @@ Reiniciar sesión para aplicar cambios.
 
 Ver dispositivos conectados
 ```bash
-ls /dev/ttyUSB* /dev/ttyACM*
+ls /dev/ttyUSB*
 ```
 
 Ver cambios al conectar o desconectar
 ```bash
-watch -n 1 ls /dev/ttyUSB* /dev/ttyACM*
+watch -n 1 ls /dev/ttyUSB*
 ```
 
 ---
@@ -514,126 +514,18 @@ client.publish("topic", mensaje_json.c_str(), 1);  // QoS 1
 client.subscribe("Carrito_1/Acciones", 0);  // QoS 0
 ```
 
-## Micro - ROS
+## Puente MQTT - ROS2
 
-Instalación de micro-ROS para ESP32 en Arduino IDE
+Una vez obtenida una base de MQTT para su uso en microcontroladores y equipos. Se presenta un nodo que funcionará como puente para la comunicación entre la ESP32 y ROS2.
 
-En este apartado aprenderás a instalar micro-ROS para programar un microcontrolador **ESP32** directamente desde el **Arduino IDE**, compatible con **ROS 2 Humble**.
 
 ---
 
-### Instalación
+***Nota***
 
-1. Prerrequisitos
-- ROS 2 Humble instalado correctamente.
-- Arduino IDE 2.x instalado.
-- Conexión a internet activa.
-- Ya debes tener instalado el **núcleo ESP32 versión 3.x**, en nuestro caso:
+Existe la posibilidad de utilizar ros2 en microcontroladores, sin embargo se necesitan versiones de nucleo de tarjetas específicas. 
 
-```cpp
-ESP32 Board Core: 3.2.0 (Espressif)
-```
-
-> Si no lo tienes aún, puedes instalarlo desde el **Gestor de Tarjetas** con el siguiente URL en Preferencias:
-```
-https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
-```
-
----
-
-2. Instalar Biblioteca micro-ROS para Arduino
-
-Desde el **Gestor de Bibliotecas**, busca e instala:
-
-- `micro_ros_arduino`
-
-🔍 También puedes instalarla desde GitHub para mayor control:
-```bash
-git clone https://github.com/micro-ROS/micro_ros_arduino.git
-```
-Y copiar la carpeta al directorio de bibliotecas de Arduino:
-```bash
-~/.arduino15/libraries/micro_ros_arduino/
-```
-
----
-
-3. Instalar dependencias en ROS 2 (PC)
-
-Abre una terminal y ejecuta:
-
-```bash
-sudo apt update
-sudo apt install python3-pip
-pip3 install -U empy catkin_pkg lark-parser colcon-common-extensions
-```
-
-Luego instala `micro_ros_agent`:
-
-```bash
-sudo apt install ros-humble-micro-ros-agent
-```
-
----
-
-4. Preparar ESP32 en Arduino
-
-  1. Abre Arduino IDE.
-  2. Selecciona tu placa **ESP32 Dev Module**.
-  3. Carga el ejemplo:
-
-  ```
-  Archivo > Ejemplos > micro_ros_arduino > micro_ros_publisher
-  ```
-
-  4. Modifica las credenciales WiFi en el sketch:
-
-  ```cpp
-  WiFi.begin("CARMEN GONZALEZ_", "123wa321vg");
-  ```
-
-  5. Compila y sube el sketch al ESP32.
-
----
-
-5. Ejecutar el micro-ROS Agent en PC
-
-Conecta el ESP32 por USB y encuentra el puerto con:
-
-```bash
-ls /dev/ttyUSB*
-```
-
-Luego lanza el agente:
-
-```bash
-ros2 run micro_ros_agent micro_ros_agent serial --dev /dev/ttyUSB0
-```
-
-> Cambia `/dev/ttyUSB0` por el que detectes en tu sistema.
-
----
-
-6. Verificar Conexión
-
-Abre otra terminal y ejecuta:
-
-```bash
-ros2 topic list
-```
-
-Deberías ver el tópico `/micro_ros_arduino_node_publisher`.
-
-También puedes escuchar los datos:
-
-```bash
-ros2 topic echo /micro_ros_arduino_node_publisher
-```
-
----
-
-
-***Referencias***
+Para revisar mas contenido relacionado se puede revisar los siguientes links:
 
 - micro-ROS oficial: https://micro.ros.org/
 - Repositorio Arduino: https://github.com/micro-ROS/micro_ros_arduino
