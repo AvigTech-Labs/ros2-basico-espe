@@ -81,7 +81,6 @@
 <p class="caption" role="heading"><span class="caption-text">Conexión con dispositivos</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../tema_4/visualizacion_datos.html">URDF</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tema_4/visualizacion_datos.html#gemelo-digital">Gemelo Digital</a></li>
 </ul>
 
         </div>
@@ -223,11 +222,11 @@ sudo systemctl status mosquitto</p>
 </div>
 <p><em><strong>Pruebas de funcionamiento</strong></em></p>
 <p>En la terminal 1</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mosquitto_sub<span class="w"> </span>-h<span class="w"> </span><span class="m">192</span>.168.100.176<span class="w"> </span>-t<span class="w"> </span><span class="nb">test</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mosquitto_sub<span class="w"> </span>-h<span class="w"> </span><span class="m">192</span>.168.100.178<span class="w"> </span>-t<span class="w"> </span><span class="nb">test</span>
 </pre></div>
 </div>
 <p>En la terminal 2</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mosquitto_pub<span class="w"> </span>-h<span class="w"> </span><span class="m">192</span>.168.100.176<span class="w"> </span>-t<span class="w"> </span><span class="nb">test</span><span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;ss&quot;</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mosquitto_pub<span class="w"> </span>-h<span class="w"> </span><span class="m">192</span>.168.100.178<span class="w"> </span>-t<span class="w"> </span><span class="nb">test</span><span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;ss&quot;</span>
 </pre></div>
 </div>
 </section>
@@ -310,11 +309,11 @@ sudo systemctl status mosquitto</p>
     <span class="n">client</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; Desconectado correctamente.&quot;</span><span class="p">)</span>
 
+
 </pre></div>
 </div>
 <p>En el archivo equipo2.py</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">paho.mqtt.client</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mqtt</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">paho.mqtt.client</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mqtt</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
 
@@ -361,8 +360,8 @@ sudo systemctl status mosquitto</p>
 <span class="k">try</span><span class="p">:</span>
     <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
         <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;Encoderi&quot;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>
-            <span class="s2">&quot;Encoderd&quot;</span><span class="p">:</span> <span class="mi">30</span><span class="p">,</span>
+            <span class="s2">&quot;EncoderI&quot;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>
+            <span class="s2">&quot;EncoderD&quot;</span><span class="p">:</span> <span class="mi">30</span><span class="p">,</span>
             <span class="p">}</span>
         <span class="n">mensaje</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
         <span class="n">client</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">TOPIC_PUB_SEN</span><span class="p">,</span> <span class="n">mensaje</span><span class="p">)</span>
@@ -507,7 +506,7 @@ sudo<span class="w"> </span>chmod<span class="w"> </span>+x<span class="w"> </sp
 <span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">password</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;123wa321vg&quot;</span><span class="p">;</span>
 
 <span class="c1">// Credenciales MQTT</span>
-<span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">mqtt_broker</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;192.168.100.76&quot;</span><span class="p">;</span>
+<span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">mqtt_broker</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;192.168.100.178&quot;</span><span class="p">;</span>
 <span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">mqtt_port</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1883</span><span class="p">;</span>
 <span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">cliente</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;rm1_esp32&quot;</span><span class="p">;</span>
 
@@ -515,6 +514,9 @@ sudo<span class="w"> </span>chmod<span class="w"> </span>+x<span class="w"> </sp
 <span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">tema_sub</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;rm1/acciones&quot;</span><span class="p">;</span>
 <span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">tema_pub_est</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;rm1/estados&quot;</span><span class="p">;</span>
 <span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">tema_pub_sen</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;rm1/sensores&quot;</span><span class="p">;</span>
+
+<span class="c1">// Variables de control de tiempo</span>
+<span class="kt">unsigned</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">lastTime</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
 
 <span class="c1">// Creacion del objeto cliente</span>
 <span class="n">WiFiClient</span><span class="w"> </span><span class="n">espClient</span><span class="p">;</span>
@@ -538,19 +540,19 @@ sudo<span class="w"> </span>chmod<span class="w"> </span>+x<span class="w"> </sp
 
 <span class="kt">void</span><span class="w"> </span><span class="nf">loop</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="n">Loop_MQTT</span><span class="p">();</span>
-<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">activar</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">){</span>
-<span class="w">    </span><span class="n">digitalWrite</span><span class="p">(</span><span class="n">pin_led</span><span class="p">,</span><span class="w"> </span><span class="n">HIGH</span><span class="p">);</span><span class="w">  </span><span class="c1">// Enciende el LED</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">millis</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">lastTime</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">100</span><span class="p">){</span>
 <span class="w">    </span><span class="n">estado</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">    </span><span class="n">encoderi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">35</span><span class="p">;</span>
+<span class="w">    </span><span class="n">encoderi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">encoderi</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span>
 <span class="w">    </span><span class="n">envioDatos</span><span class="p">(</span><span class="n">tema_pub_est</span><span class="p">,</span><span class="w"> </span><span class="n">estado</span><span class="p">,</span><span class="w"> </span><span class="n">encoderi</span><span class="p">,</span><span class="w"> </span><span class="n">encoderd</span><span class="p">);</span>
 <span class="w">    </span><span class="n">envioDatos</span><span class="p">(</span><span class="n">tema_pub_sen</span><span class="p">,</span><span class="w"> </span><span class="n">estado</span><span class="p">,</span><span class="w"> </span><span class="n">encoderi</span><span class="p">,</span><span class="w"> </span><span class="n">encoderd</span><span class="p">);</span>
+<span class="w">    </span><span class="n">lastTime</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">millis</span><span class="p">();</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">activar</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">){</span>
+<span class="w">    </span><span class="n">digitalWrite</span><span class="p">(</span><span class="n">pin_led</span><span class="p">,</span><span class="w"> </span><span class="n">HIGH</span><span class="p">);</span><span class="w">  </span><span class="c1">// Enciende el LED</span>
+<span class="w">    </span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">digitalWrite</span><span class="p">(</span><span class="n">pin_led</span><span class="p">,</span><span class="w"> </span><span class="n">LOW</span><span class="p">);</span><span class="w">  </span><span class="c1">// Enciende el LED</span>
-<span class="w">    </span><span class="n">estado</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">    </span><span class="n">encoderi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">30</span><span class="p">;</span>
-<span class="w">    </span><span class="n">envioDatos</span><span class="p">(</span><span class="n">tema_pub_est</span><span class="p">,</span><span class="w"> </span><span class="n">estado</span><span class="p">,</span><span class="w"> </span><span class="n">encoderi</span><span class="p">,</span><span class="w"> </span><span class="n">encoderd</span><span class="p">);</span>
-<span class="w">    </span><span class="n">envioDatos</span><span class="p">(</span><span class="n">tema_pub_sen</span><span class="p">,</span><span class="w"> </span><span class="n">estado</span><span class="p">,</span><span class="w"> </span><span class="n">encoderi</span><span class="p">,</span><span class="w"> </span><span class="n">encoderd</span><span class="p">);</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="w">  </span>
 <span class="p">}</span>
@@ -615,8 +617,8 @@ sudo<span class="w"> </span>chmod<span class="w"> </span>+x<span class="w"> </sp
 <span class="w">  </span><span class="p">}</span>
 
 <span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">mqtt_topic_publicar</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">tema_pub_sen</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">     </span><span class="n">mensaje</span><span class="p">[</span><span class="s">&quot;encoderi&quot;</span><span class="p">]</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">encoderi</span><span class="p">;</span>
-<span class="w">     </span><span class="n">mensaje</span><span class="p">[</span><span class="s">&quot;encoderd&quot;</span><span class="p">]</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">encoderd</span><span class="p">;</span>
+<span class="w">     </span><span class="n">mensaje</span><span class="p">[</span><span class="s">&quot;EncoderI&quot;</span><span class="p">]</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">encoderi</span><span class="p">;</span>
+<span class="w">     </span><span class="n">mensaje</span><span class="p">[</span><span class="s">&quot;EncoderD&quot;</span><span class="p">]</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">encoderd</span><span class="p">;</span>
 <span class="w">     </span><span class="n">String</span><span class="w"> </span><span class="n">mensaje_json</span><span class="p">;</span>
 <span class="w">    </span><span class="n">serializeJson</span><span class="p">(</span><span class="n">mensaje</span><span class="p">,</span><span class="w"> </span><span class="n">mensaje_json</span><span class="p">);</span>
 <span class="w">    </span><span class="n">client</span><span class="p">.</span><span class="n">publish</span><span class="p">(</span><span class="n">mqtt_topic_publicar</span><span class="p">,</span><span class="w"> </span><span class="n">mensaje_json</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
@@ -660,6 +662,86 @@ sudo<span class="w"> </span>chmod<span class="w"> </span>+x<span class="w"> </sp
 <section id="puente-mqtt-ros2">
 <h2>Puente MQTT - ROS2<a class="headerlink" href="#puente-mqtt-ros2" title="Enlace permanente a este encabezado"></a></h2>
 <p>Una vez obtenida una base de MQTT para su uso en microcontroladores y equipos. Se presenta un nodo que funcionará como puente para la comunicación entre la ESP32 y ROS2.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">rclpy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rclpy.node</span><span class="w"> </span><span class="kn">import</span> <span class="n">Node</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rclpy.duration</span><span class="w"> </span><span class="kn">import</span> <span class="n">Duration</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">std_msgs.msg</span><span class="w"> </span><span class="kn">import</span> <span class="n">Float32</span><span class="p">,</span> <span class="n">Int32</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">paho.mqtt.client</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mqtt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">MQTTBridge</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span> 
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s1">&#39;mqtt_bridge&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">pub</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_publisher</span><span class="p">(</span><span class="n">Float32</span><span class="p">,</span> <span class="s1">&#39;sensores&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subscription</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_subscription</span><span class="p">(</span><span class="n">Int32</span><span class="p">,</span> <span class="s1">&#39;acciones&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">listener_callback</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_data</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">active</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># control de publicación activa</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_mqtt_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_clock</span><span class="p">()</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">timer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_timer</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">publish_sensor_data</span><span class="p">)</span>       <span class="c1"># Publicador (10 Hz)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">timer_watchdog</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_timer</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_timeout</span><span class="p">)</span>    <span class="c1"># Verificador de tiempo</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">topic_sub</span> <span class="o">=</span> <span class="s2">&quot;rm1/sensores&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">topic_pub</span> <span class="o">=</span> <span class="s2">&quot;rm1/acciones&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mqtt_client</span> <span class="o">=</span> <span class="n">mqtt</span><span class="o">.</span><span class="n">Client</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mqtt_client</span><span class="o">.</span><span class="n">on_connect</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">on_connect</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mqtt_client</span><span class="o">.</span><span class="n">on_message</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">on_message</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mqtt_client</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;192.168.100.178&quot;</span><span class="p">,</span> <span class="mi">1883</span><span class="p">,</span> <span class="mi">60</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mqtt_client</span><span class="o">.</span><span class="n">loop_start</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">listener_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+        <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;vel&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;u_meta&quot;</span><span class="p">:</span> <span class="mf">0.34</span><span class="p">,</span> <span class="s2">&quot;w_meta&quot;</span><span class="p">:</span> <span class="mf">0.10</span><span class="p">},</span>
+            <span class="s2">&quot;avanzar&quot;</span><span class="p">:</span> <span class="n">msg</span><span class="o">.</span><span class="n">data</span>
+        <span class="p">}</span>
+        <span class="n">msg_mqtt</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mqtt_client</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">topic_pub</span><span class="p">,</span> <span class="n">msg_mqtt</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">on_connect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">userdata</span><span class="p">,</span> <span class="n">flags</span><span class="p">,</span> <span class="n">rc</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">rc</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Conectado al broker MQTT&quot;</span><span class="p">)</span>
+            <span class="n">client</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">topic_sub</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error de conexión: código </span><span class="si">{</span><span class="n">rc</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">on_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">userdata</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">mensaje</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">payload</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">mensaje</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">msg</span><span class="o">.</span><span class="n">topic</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">topic_sub</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">last_data</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;EncoderI&quot;</span><span class="p">])</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">last_mqtt_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_clock</span><span class="p">()</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>  <span class="c1"># Actualiza tiempo del último dato</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">active</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error procesando mensaje:&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">publish_sensor_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">active</span><span class="p">:</span>
+            <span class="n">ros_msg</span> <span class="o">=</span> <span class="n">Float32</span><span class="p">()</span>
+            <span class="n">ros_msg</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_data</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pub</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">ros_msg</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ROS2 publicó: </span><span class="si">{</span><span class="n">ros_msg</span><span class="o">.</span><span class="n">data</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">check_timeout</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">now</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_clock</span><span class="p">()</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">now</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_mqtt_time</span> <span class="o">&gt;</span> <span class="n">Duration</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mf">2.0</span><span class="p">):</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">active</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;No se reciben datos desde MQTT. Se detiene la publicación.&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">active</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">rclpy</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">)</span>
+    <span class="n">node</span> <span class="o">=</span> <span class="n">MQTTBridge</span><span class="p">()</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">rclpy</span><span class="o">.</span><span class="n">spin</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
+        <span class="k">pass</span>
+    <span class="n">rclpy</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
+
+</pre></div>
+</div>
 <hr class="docutils" />
 <p><em><strong>Nota</strong></em></p>
 <p>Existe la posibilidad de utilizar ros2 en microcontroladores, sin embargo se necesitan versiones de nucleo de tarjetas específicas.</p>
