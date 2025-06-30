@@ -2,23 +2,17 @@
 
 Para crear archivos URDF en base a diseños personalidados de robots con solidworks, es necesario gescargar la extensión URDF.
 
-[Extension-Solid](https://github.com/ros/solidworks_urdf_exporter), para versiones de SolidWorks superiores a la 2021. Seleccionar la opción: SolidWorks 2021 Extensión.
+[Extension-Solid](https://github.com/ros/solidworks_urdf_exporter), para versiones de SolidWorks superiores a la 2021. Seleccionar la opción: SolidWorks 2021
 
 Una vez generado el solid con el que se va a trabajar es necesario configurar el arbol de juntas y eslabones del robot usando la extensión de archivos URDF.
 
 ![Imagen](solid.png)
 
-Esta extensión generará una carpeta ZIP, con los documentos necesarios para simular el robot.
+Esta extensión generará una carpeta con los documentos necesarios para simular el robot. Se puede visualizar configuración obtenida utilizando [visualizador](https://gkjohnson.github.io/urdf-loaders/javascript/example/bundle/index.html), en el cual unicamente arrastrando la carpeta en la pantalla realizará una visualización rapida del modelo obtenido.
 
-Se puede visualizar si se configuró bien el archivo usando el siguiente link:
-
-[visualizador](https://gkjohnson.github.io/urdf-loaders/javascript/example/bundle/index.html)
-
-Para usar la herramienta de visualización en linea es necesario unicamente arrastrar la carpeta generada por la extensión URDF de solidWorks.
 ![Ejemplo](image.png)
-Puede utilizar la configuración realizada para este ejemplo:
 
-[Scara-URDF](https://drive.google.com/open?id=15o6Q_H6R-In0UsSA8FMnYaNj3OwC1M9L&usp=drive_fs)
+En el siguiente enlace [Scara-URDF](https://drive.google.com/open?id=15o6Q_H6R-In0UsSA8FMnYaNj3OwC1M9L&usp=drive_fs), se encuentra el modelo base que será utilizado para configurar el visualizador RVIZ2.
 
 ## Visualización de archivos URDF 
 
@@ -34,9 +28,10 @@ sudo apt install ros-humble-joint-state-publisher-gui
 
 2.  Copiar archivos al paquete
 
-Dentro de tu paquete `mi_pkg_python`, organiza los directorios y documentos de la siguiente forma:
+Dentro del paquete `mi_pkg_python`, se debe crear los directorios: `urdf/meshes` y `launch`.
 
-Dentro del directorio urdf: Agregar el archivo urdf generado y dentro del subdirectorio meshes: colocar todos los archvos .STL, finalmente crear el directorio launch y dentro el archivo visualizar_rviz.launch.py
+- Directorio urdf: agregar el archivo urdf generado y dentro del subdirectorio meshes: colocar todos los archvos STL
+- Directorio launch: crear un archivo vacio `visualizar_rviz.launch.py`
 
 ```
 mi_pkg_python/
@@ -51,6 +46,7 @@ mi_pkg_python/
 │   ├── visualizar_rviz.launch.py
 ```
 
+nota: Es importante revisar la correcta escritura de los diferentes archivos.
 ---
 
 3. Verifica y edita las rutas en el URDF
@@ -61,22 +57,27 @@ Dentro de `ensamblaje.urdf`, es necesario revisar que las rutas a las mallas est
 <mesh filename="package://mi_pkg_python/urdf/meshes/base_link.STL"/>
 ```
 
+En este punto es necesario revisar que los parámetros <limit/> sean diferentes de 0, por ejemplo:
+```xml
+<limit lower="-1.57" upper="1.57" effort="1.0" velocity="1.0" />
+```
+
 ---
 
 4. Modificar `setup.py` para instalar los recursos
 
-Dentro de `setup.py`, asegúrate de que el bloque `data_files` contenga:
+Dentro de `setup.py`, realizar la modificación  del bloque `data_files` de la sigueinte forma:
 
 ```python
 data_files=[
     ('share/ament_index/resource_index/packages', ['resource/' + package_name]),
     ('share/' + package_name, ['package.xml']),
-    ('share/' + package_name + '/urdf', ['urdf/ensamblaje1.urdf']),
+    ('share/' + package_name + '/urdf', ['urdf/ensamblaje.urdf']),
     ('share/' + package_name + '/urdf/meshes', [
         'urdf/meshes/base_link.STL',
         'urdf/meshes/brazo_link.STL',
         'urdf/meshes/antebrazo_link.STL',
-        'urdf/meshes/efector.STL',
+        'urdf/meshes/efector_link.STL',
     ]),
     ('share/' + package_name + '/launch', ['launch/visualizar_rviz.launch.py']),
     ],
@@ -141,7 +142,7 @@ def generate_launch_description():
 
 **¿Por qué se usan estos nodos?**
 
-- `robot_state_publisher`: publica la descripción del robot (`robot_description`) para que RViz la use.
+- `robot_state_publisher`: publica la descripción del robot (`robot_description`) para que RViz2 la use.
 - `joint_state_publisher_gui`: permite mover las juntas manualmente mediante sliders.
 - `rviz2`: lanza la visualización.
 
@@ -152,7 +153,6 @@ def generate_launch_description():
 ```bash
 cd ~/ros2_ws
 colcon build --packages-select mi_pkg_python
-source install/setup.bash
 ros2 launch mi_pkg_python visualizar_rviz.launch.py
 ```
 

@@ -68,6 +68,7 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">URDF</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#visualizacion-de-archivos-urdf">Visualización de archivos URDF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#nota-es-importante-revisar-la-correcta-escritura-de-los-diferentes-archivos">nota: Es importante revisar la correcta escritura de los diferentes archivos.</a></li>
 </ul>
 </li>
 </ul>
@@ -98,16 +99,12 @@
   <section id="urdf">
 <h1>URDF<a class="headerlink" href="#urdf" title="Link to this heading"></a></h1>
 <p>Para crear archivos URDF en base a diseños personalidados de robots con solidworks, es necesario gescargar la extensión URDF.</p>
-<p><a class="reference external" href="https://github.com/ros/solidworks_urdf_exporter">Extension-Solid</a>, para versiones de SolidWorks superiores a la 2021. Seleccionar la opción: SolidWorks 2021 Extensión.</p>
+<p><a class="reference external" href="https://github.com/ros/solidworks_urdf_exporter">Extension-Solid</a>, para versiones de SolidWorks superiores a la 2021. Seleccionar la opción: SolidWorks 2021</p>
 <p>Una vez generado el solid con el que se va a trabajar es necesario configurar el arbol de juntas y eslabones del robot usando la extensión de archivos URDF.</p>
 <p><img alt="Imagen" src="../../_images/solid.png" /></p>
-<p>Esta extensión generará una carpeta ZIP, con los documentos necesarios para simular el robot.</p>
-<p>Se puede visualizar si se configuró bien el archivo usando el siguiente link:</p>
-<p><a class="reference external" href="https://gkjohnson.github.io/urdf-loaders/javascript/example/bundle/index.html">visualizador</a></p>
-<p>Para usar la herramienta de visualización en linea es necesario unicamente arrastrar la carpeta generada por la extensión URDF de solidWorks.
-<img alt="Ejemplo" src="../../_images/image.png" />
-Puede utilizar la configuración realizada para este ejemplo:</p>
-<p><a class="reference external" href="https://drive.google.com/open?id=15o6Q_H6R-In0UsSA8FMnYaNj3OwC1M9L&amp;amp;usp=drive_fs">Scara-URDF</a></p>
+<p>Esta extensión generará una carpeta con los documentos necesarios para simular el robot. Se puede visualizar configuración obtenida utilizando <a class="reference external" href="https://gkjohnson.github.io/urdf-loaders/javascript/example/bundle/index.html">visualizador</a>, en el cual unicamente arrastrando la carpeta en la pantalla realizará una visualización rapida del modelo obtenido.</p>
+<p><img alt="Ejemplo" src="../../_images/image.png" /></p>
+<p>En el siguiente enlace <a class="reference external" href="https://drive.google.com/open?id=15o6Q_H6R-In0UsSA8FMnYaNj3OwC1M9L&amp;amp;usp=drive_fs">Scara-URDF</a>, se encuentra el modelo base que será utilizado para configurar el visualizador RVIZ2.</p>
 <section id="visualizacion-de-archivos-urdf">
 <h2>Visualización de archivos URDF<a class="headerlink" href="#visualizacion-de-archivos-urdf" title="Link to this heading"></a></h2>
 <p>Para visualizar y manipular el archivo URDF creado se utiliza la herramienta RVIZ2.</p>
@@ -121,8 +118,11 @@ Puede utilizar la configuración realizada para este ejemplo:</p>
 <ol class="arabic simple" start="2">
 <li><p>Copiar archivos al paquete</p></li>
 </ol>
-<p>Dentro de tu paquete <code class="docutils literal notranslate"><span class="pre">mi_pkg_python</span></code>, organiza los directorios y documentos de la siguiente forma:</p>
-<p>Dentro del directorio urdf: Agregar el archivo urdf generado y dentro del subdirectorio meshes: colocar todos los archvos .STL, finalmente crear el directorio launch y dentro el archivo visualizar_rviz.launch.py</p>
+<p>Dentro del paquete <code class="docutils literal notranslate"><span class="pre">mi_pkg_python</span></code>, se debe crear los directorios: <code class="docutils literal notranslate"><span class="pre">urdf/meshes</span></code> y <code class="docutils literal notranslate"><span class="pre">launch</span></code>.</p>
+<ul class="simple">
+<li><p>Directorio urdf: agregar el archivo urdf generado y dentro del subdirectorio meshes: colocar todos los archvos STL</p></li>
+<li><p>Directorio launch: crear un archivo vacio <code class="docutils literal notranslate"><span class="pre">visualizar_rviz.launch.py</span></code></p></li>
+</ul>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>mi_pkg_python/
 ├── urdf/
 │   ├── ensamblaje.urdf
@@ -135,7 +135,9 @@ Puede utilizar la configuración realizada para este ejemplo:</p>
 │   ├── visualizar_rviz.launch.py
 </pre></div>
 </div>
-<hr class="docutils" />
+</section>
+<section id="nota-es-importante-revisar-la-correcta-escritura-de-los-diferentes-archivos">
+<h2>nota: Es importante revisar la correcta escritura de los diferentes archivos.<a class="headerlink" href="#nota-es-importante-revisar-la-correcta-escritura-de-los-diferentes-archivos" title="Link to this heading"></a></h2>
 <ol class="arabic simple" start="3">
 <li><p>Verifica y edita las rutas en el URDF</p></li>
 </ol>
@@ -143,20 +145,24 @@ Puede utilizar la configuración realizada para este ejemplo:</p>
 <div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;mesh</span><span class="w"> </span><span class="na">filename=</span><span class="s">&quot;package://mi_pkg_python/urdf/meshes/base_link.STL&quot;</span><span class="nt">/&gt;</span>
 </pre></div>
 </div>
+<p>En este punto es necesario revisar que los parámetros <limit/> sean diferentes de 0, por ejemplo:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;limit</span><span class="w"> </span><span class="na">lower=</span><span class="s">&quot;-1.57&quot;</span><span class="w"> </span><span class="na">upper=</span><span class="s">&quot;1.57&quot;</span><span class="w"> </span><span class="na">effort=</span><span class="s">&quot;1.0&quot;</span><span class="w"> </span><span class="na">velocity=</span><span class="s">&quot;1.0&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+</pre></div>
+</div>
 <hr class="docutils" />
 <ol class="arabic simple" start="4">
 <li><p>Modificar <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> para instalar los recursos</p></li>
 </ol>
-<p>Dentro de <code class="docutils literal notranslate"><span class="pre">setup.py</span></code>, asegúrate de que el bloque <code class="docutils literal notranslate"><span class="pre">data_files</span></code> contenga:</p>
+<p>Dentro de <code class="docutils literal notranslate"><span class="pre">setup.py</span></code>, realizar la modificación  del bloque <code class="docutils literal notranslate"><span class="pre">data_files</span></code> de la sigueinte forma:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">data_files</span><span class="o">=</span><span class="p">[</span>
     <span class="p">(</span><span class="s1">&#39;share/ament_index/resource_index/packages&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;resource/&#39;</span> <span class="o">+</span> <span class="n">package_name</span><span class="p">]),</span>
     <span class="p">(</span><span class="s1">&#39;share/&#39;</span> <span class="o">+</span> <span class="n">package_name</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;package.xml&#39;</span><span class="p">]),</span>
-    <span class="p">(</span><span class="s1">&#39;share/&#39;</span> <span class="o">+</span> <span class="n">package_name</span> <span class="o">+</span> <span class="s1">&#39;/urdf&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;urdf/ensamblaje1.urdf&#39;</span><span class="p">]),</span>
+    <span class="p">(</span><span class="s1">&#39;share/&#39;</span> <span class="o">+</span> <span class="n">package_name</span> <span class="o">+</span> <span class="s1">&#39;/urdf&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;urdf/ensamblaje.urdf&#39;</span><span class="p">]),</span>
     <span class="p">(</span><span class="s1">&#39;share/&#39;</span> <span class="o">+</span> <span class="n">package_name</span> <span class="o">+</span> <span class="s1">&#39;/urdf/meshes&#39;</span><span class="p">,</span> <span class="p">[</span>
         <span class="s1">&#39;urdf/meshes/base_link.STL&#39;</span><span class="p">,</span>
         <span class="s1">&#39;urdf/meshes/brazo_link.STL&#39;</span><span class="p">,</span>
         <span class="s1">&#39;urdf/meshes/antebrazo_link.STL&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;urdf/meshes/efector.STL&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;urdf/meshes/efector_link.STL&#39;</span><span class="p">,</span>
     <span class="p">]),</span>
     <span class="p">(</span><span class="s1">&#39;share/&#39;</span> <span class="o">+</span> <span class="n">package_name</span> <span class="o">+</span> <span class="s1">&#39;/launch&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;launch/visualizar_rviz.launch.py&#39;</span><span class="p">]),</span>
     <span class="p">],</span>
@@ -219,7 +225,7 @@ Puede utilizar la configuración realizada para este ejemplo:</p>
 </div>
 <p><strong>¿Por qué se usan estos nodos?</strong></p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">robot_state_publisher</span></code>: publica la descripción del robot (<code class="docutils literal notranslate"><span class="pre">robot_description</span></code>) para que RViz la use.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">robot_state_publisher</span></code>: publica la descripción del robot (<code class="docutils literal notranslate"><span class="pre">robot_description</span></code>) para que RViz2 la use.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">joint_state_publisher_gui</span></code>: permite mover las juntas manualmente mediante sliders.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">rviz2</span></code>: lanza la visualización.</p></li>
 </ul>
@@ -229,7 +235,6 @@ Puede utilizar la configuración realizada para este ejemplo:</p>
 </ol>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>~/ros2_ws
 colcon<span class="w"> </span>build<span class="w"> </span>--packages-select<span class="w"> </span>mi_pkg_python
-<span class="nb">source</span><span class="w"> </span>install/setup.bash
 ros2<span class="w"> </span>launch<span class="w"> </span>mi_pkg_python<span class="w"> </span>visualizar_rviz.launch.py
 </pre></div>
 </div>
