@@ -1,24 +1,24 @@
 # URDF
 
-Para crear archivos URDF en base a diseños personalidados de robots con solidworks, es necesario gescargar la extensión URDF.
+Para crear archivos URDF en base a diseños personalidados de robots con solidworks, es necesario descargar la extensión URDF.
 
 [Extension-Solid](https://github.com/ros/solidworks_urdf_exporter), para versiones de SolidWorks superiores a la 2021. Seleccionar la opción: SolidWorks 2021
 
-Una vez generado el solid con el que se va a trabajar es necesario configurar el arbol de juntas y eslabones del robot usando la extensión de archivos URDF.
+Una vez generado el archivo CAD con el que se va a trabajar, es necesario configurar el arbol de juntas y eslabones del robot usando la extensión de archivos URDF.
 
 ![Imagen](solid.png)
 
-Esta extensión generará una carpeta con los documentos necesarios para simular el robot. Se puede visualizar configuración obtenida utilizando [visualizador](https://gkjohnson.github.io/urdf-loaders/javascript/example/bundle/index.html), en el cual unicamente arrastrando la carpeta en la pantalla realizará una visualización rapida del modelo obtenido.
+Esta extensión generará una carpeta con los documentos necesarios para la simulación el robot. Se puede visualizar la configuración obtenida utilizando la herramienta online [viewer-urdf](https://gkjohnson.github.io/urdf-loaders/javascript/example/bundle/index.html), para usarlo, se debe arrastrar la carpeta generada por SolidWorks en la pantalla de visualizador y esta generará una interfaz de manipulación rapida del modelo obtenido.
 
 ![Ejemplo](image.png)
 
-En el siguiente enlace [Scara-URDF](https://drive.google.com/open?id=15o6Q_H6R-In0UsSA8FMnYaNj3OwC1M9L&usp=drive_fs), se encuentra el modelo base que será utilizado para configurar el visualizador RVIZ2.
+En el siguiente enlace [Scara-URDF](https://drive.google.com/open?id=15o6Q_H6R-In0UsSA8FMnYaNj3OwC1M9L&usp=drive_fs), se encuentra el modelo base que será utilizado para configurar el visualizador RVIZ2 de ROS2.
 
 ## Visualización de archivos URDF 
 
-Para visualizar y manipular el archivo URDF creado se utiliza la herramienta RVIZ2.
+Para visualizar y manipular el archivo URDF creado se utiliza la herramienta RVIZ, a continuación se muestra los pasos para su configuración.
 
-1. Instalar herramientas necesarias
+1. Instalar paquetes necesarios
 
 ```bash
 sudo apt install ros-humble-joint-state-publisher-gui
@@ -26,7 +26,7 @@ sudo apt install ros-humble-joint-state-publisher-gui
 
 ---
 
-2.  Copiar archivos al paquete
+2.  Copiar archivos al paquete 
 
 Dentro del paquete `mi_pkg_python`, se debe crear los directorios: `urdf/meshes` y `launch`.
 

@@ -98,18 +98,18 @@
              
   <section id="urdf">
 <h1>URDF<a class="headerlink" href="#urdf" title="Link to this heading"></a></h1>
-<p>Para crear archivos URDF en base a diseños personalidados de robots con solidworks, es necesario gescargar la extensión URDF.</p>
+<p>Para crear archivos URDF en base a diseños personalidados de robots con solidworks, es necesario descargar la extensión URDF.</p>
 <p><a class="reference external" href="https://github.com/ros/solidworks_urdf_exporter">Extension-Solid</a>, para versiones de SolidWorks superiores a la 2021. Seleccionar la opción: SolidWorks 2021</p>
-<p>Una vez generado el solid con el que se va a trabajar es necesario configurar el arbol de juntas y eslabones del robot usando la extensión de archivos URDF.</p>
+<p>Una vez generado el archivo CAD con el que se va a trabajar, es necesario configurar el arbol de juntas y eslabones del robot usando la extensión de archivos URDF.</p>
 <p><img alt="Imagen" src="../../_images/solid.png" /></p>
-<p>Esta extensión generará una carpeta con los documentos necesarios para simular el robot. Se puede visualizar configuración obtenida utilizando <a class="reference external" href="https://gkjohnson.github.io/urdf-loaders/javascript/example/bundle/index.html">visualizador</a>, en el cual unicamente arrastrando la carpeta en la pantalla realizará una visualización rapida del modelo obtenido.</p>
+<p>Esta extensión generará una carpeta con los documentos necesarios para la simulación el robot. Se puede visualizar la configuración obtenida utilizando la herramienta online <a class="reference external" href="https://gkjohnson.github.io/urdf-loaders/javascript/example/bundle/index.html">viewer-urdf</a>, para usarlo, se debe arrastrar la carpeta generada por SolidWorks en la pantalla de visualizador y esta generará una interfaz de manipulación rapida del modelo obtenido.</p>
 <p><img alt="Ejemplo" src="../../_images/image.png" /></p>
-<p>En el siguiente enlace <a class="reference external" href="https://drive.google.com/open?id=15o6Q_H6R-In0UsSA8FMnYaNj3OwC1M9L&amp;amp;usp=drive_fs">Scara-URDF</a>, se encuentra el modelo base que será utilizado para configurar el visualizador RVIZ2.</p>
+<p>En el siguiente enlace <a class="reference external" href="https://drive.google.com/open?id=15o6Q_H6R-In0UsSA8FMnYaNj3OwC1M9L&amp;amp;usp=drive_fs">Scara-URDF</a>, se encuentra el modelo base que será utilizado para configurar el visualizador RVIZ2 de ROS2.</p>
 <section id="visualizacion-de-archivos-urdf">
 <h2>Visualización de archivos URDF<a class="headerlink" href="#visualizacion-de-archivos-urdf" title="Link to this heading"></a></h2>
-<p>Para visualizar y manipular el archivo URDF creado se utiliza la herramienta RVIZ2.</p>
+<p>Para visualizar y manipular el archivo URDF creado se utiliza la herramienta RVIZ, a continuación se muestra los pasos para su configuración.</p>
 <ol class="arabic simple">
-<li><p>Instalar herramientas necesarias</p></li>
+<li><p>Instalar paquetes necesarios</p></li>
 </ol>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>ros-humble-joint-state-publisher-gui
 </pre></div>
