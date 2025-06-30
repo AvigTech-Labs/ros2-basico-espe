@@ -66,8 +66,10 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Conexión con dispositivos</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">URDF</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#gemelo-digital">Gemelo Digital</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">URDF</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#visualizacion-de-archivos-urdf">Visualización de archivos URDF</a></li>
+</ul>
+</li>
 </ul>
 
         </div>
@@ -95,11 +97,143 @@
              
   <section id="urdf">
 <h1>URDF<a class="headerlink" href="#urdf" title="Link to this heading"></a></h1>
-<p>Introducción Modelos URDF</p>
+<p>Para crear archivos URDF en base a diseños personalidados de robots con solidworks, es necesario gescargar la extensión URDF.</p>
+<p><a class="reference external" href="https://github.com/ros/solidworks_urdf_exporter">Extension-Solid</a>, para versiones de SolidWorks superiores a la 2021. Seleccionar la opción: SolidWorks 2021 Extensión.</p>
+<p>Una vez generado el solid con el que se va a trabajar es necesario configurar el arbol de juntas y eslabones del robot usando la extensión de archivos URDF.</p>
+<p><img alt="Imagen" src="../../_images/solid.png" /></p>
+<p>Esta extensión generará una carpeta ZIP, con los documentos necesarios para simular el robot.</p>
+<p>Se puede visualizar si se configuró bien el archivo usando el siguiente link:</p>
+<p><a class="reference external" href="https://gkjohnson.github.io/urdf-loaders/javascript/example/bundle/index.html">visualizador</a></p>
+<p>Para usar la herramienta de visualización en linea es necesario unicamente arrastrar la carpeta generada por la extensión URDF de solidWorks.
+<img alt="Ejemplo" src="../../_images/image.png" />
+Puede utilizar la configuración realizada para este ejemplo:</p>
+<p><a class="reference external" href="https://drive.google.com/open?id=15o6Q_H6R-In0UsSA8FMnYaNj3OwC1M9L&amp;amp;usp=drive_fs">Scara-URDF</a></p>
+<section id="visualizacion-de-archivos-urdf">
+<h2>Visualización de archivos URDF<a class="headerlink" href="#visualizacion-de-archivos-urdf" title="Link to this heading"></a></h2>
+<p>Para visualizar y manipular el archivo URDF creado se utiliza la herramienta RVIZ2.</p>
+<ol class="arabic simple">
+<li><p>Instalar herramientas necesarias</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>ros-humble-joint-state-publisher-gui
+</pre></div>
+</div>
+<hr class="docutils" />
+<ol class="arabic simple" start="2">
+<li><p>Copiar archivos al paquete</p></li>
+</ol>
+<p>Dentro de tu paquete <code class="docutils literal notranslate"><span class="pre">mi_pkg_python</span></code>, organiza los directorios y documentos de la siguiente forma:</p>
+<p>Dentro del directorio urdf: Agregar el archivo urdf generado y dentro del subdirectorio meshes: colocar todos los archvos .STL, finalmente crear el directorio launch y dentro el archivo visualizar_rviz.launch.py</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>mi_pkg_python/
+├── urdf/
+│   ├── ensamblaje.urdf
+│   └── meshes/
+│       ├── base_link.STL
+│       └── brazo_link.STL
+│       └── antebrazo_link.STL
+│       └── efector_link.STL
+├── launch/
+│   ├── visualizar_rviz.launch.py
+</pre></div>
+</div>
+<hr class="docutils" />
+<ol class="arabic simple" start="3">
+<li><p>Verifica y edita las rutas en el URDF</p></li>
+</ol>
+<p>Dentro de <code class="docutils literal notranslate"><span class="pre">ensamblaje.urdf</span></code>, es necesario revisar que las rutas a las mallas estén definidas con prefijo <code class="docutils literal notranslate"><span class="pre">package://</span></code>, por ejemplo:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;mesh</span><span class="w"> </span><span class="na">filename=</span><span class="s">&quot;package://mi_pkg_python/urdf/meshes/base_link.STL&quot;</span><span class="nt">/&gt;</span>
+</pre></div>
+</div>
+<hr class="docutils" />
+<ol class="arabic simple" start="4">
+<li><p>Modificar <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> para instalar los recursos</p></li>
+</ol>
+<p>Dentro de <code class="docutils literal notranslate"><span class="pre">setup.py</span></code>, asegúrate de que el bloque <code class="docutils literal notranslate"><span class="pre">data_files</span></code> contenga:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">data_files</span><span class="o">=</span><span class="p">[</span>
+    <span class="p">(</span><span class="s1">&#39;share/ament_index/resource_index/packages&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;resource/&#39;</span> <span class="o">+</span> <span class="n">package_name</span><span class="p">]),</span>
+    <span class="p">(</span><span class="s1">&#39;share/&#39;</span> <span class="o">+</span> <span class="n">package_name</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;package.xml&#39;</span><span class="p">]),</span>
+    <span class="p">(</span><span class="s1">&#39;share/&#39;</span> <span class="o">+</span> <span class="n">package_name</span> <span class="o">+</span> <span class="s1">&#39;/urdf&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;urdf/ensamblaje1.urdf&#39;</span><span class="p">]),</span>
+    <span class="p">(</span><span class="s1">&#39;share/&#39;</span> <span class="o">+</span> <span class="n">package_name</span> <span class="o">+</span> <span class="s1">&#39;/urdf/meshes&#39;</span><span class="p">,</span> <span class="p">[</span>
+        <span class="s1">&#39;urdf/meshes/base_link.STL&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;urdf/meshes/brazo_link.STL&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;urdf/meshes/antebrazo_link.STL&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;urdf/meshes/efector.STL&#39;</span><span class="p">,</span>
+    <span class="p">]),</span>
+    <span class="p">(</span><span class="s1">&#39;share/&#39;</span> <span class="o">+</span> <span class="n">package_name</span> <span class="o">+</span> <span class="s1">&#39;/launch&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;launch/visualizar_rviz.launch.py&#39;</span><span class="p">]),</span>
+    <span class="p">],</span>
+</pre></div>
+</div>
+<hr class="docutils" />
+<ol class="arabic simple" start="5">
+<li><p>Crear el archivo de lanzamiento</p></li>
+</ol>
+<p>Crea el archivo <code class="docutils literal notranslate"><span class="pre">launch/visualizar_rviz.launch.py</span></code> con el siguiente contenido:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Importa la clase principal para definir lanzamientos en ROS 2</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">launch</span><span class="w"> </span><span class="kn">import</span> <span class="n">LaunchDescription</span>
+
+<span class="c1"># Importa la acción Node para lanzar nodos ROS 2</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">launch_ros.actions</span><span class="w"> </span><span class="kn">import</span> <span class="n">Node</span>
+
+<span class="c1"># Permite obtener la ruta del directorio share de un paquete instalado</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ament_index_python.packages</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_package_share_directory</span>
+
+<span class="c1"># Módulo estándar para trabajar con rutas de archivos</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="c1"># Función principal requerida por ROS 2 para ejecutar este archivo de lanzamiento</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">generate_launch_description</span><span class="p">():</span>
+    <span class="c1"># Construye la ruta completa del archivo URDF dentro del paquete</span>
+    <span class="n">urdf_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+        <span class="n">get_package_share_directory</span><span class="p">(</span><span class="s1">&#39;mi_pkg_python&#39;</span><span class="p">),</span>  <span class="c1"># Paquete que contiene el URDF</span>
+        <span class="s1">&#39;urdf&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;ensamblaje.urdf&#39;</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Devuelve la lista de nodos a lanzar</span>
+    <span class="k">return</span> <span class="n">LaunchDescription</span><span class="p">([</span>
+
+        <span class="c1"># Nodo que publica el URDF en el topic /robot_description</span>
+        <span class="n">Node</span><span class="p">(</span>
+            <span class="n">package</span><span class="o">=</span><span class="s1">&#39;robot_state_publisher&#39;</span><span class="p">,</span>
+            <span class="n">executable</span><span class="o">=</span><span class="s1">&#39;robot_state_publisher&#39;</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="s1">&#39;robot_state_publisher&#39;</span><span class="p">,</span>
+            <span class="n">parameters</span><span class="o">=</span><span class="p">[{</span><span class="s1">&#39;robot_description&#39;</span><span class="p">:</span> <span class="nb">open</span><span class="p">(</span><span class="n">urdf_file</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()}]</span>  <span class="c1"># Carga el contenido del URDF</span>
+        <span class="p">),</span>
+
+        <span class="c1"># Nodo que abre una interfaz gráfica con sliders para mover las juntas</span>
+        <span class="n">Node</span><span class="p">(</span>
+            <span class="n">package</span><span class="o">=</span><span class="s1">&#39;joint_state_publisher_gui&#39;</span><span class="p">,</span>
+            <span class="n">executable</span><span class="o">=</span><span class="s1">&#39;joint_state_publisher_gui&#39;</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="s1">&#39;joint_state_publisher_gui&#39;</span><span class="p">,</span>
+            <span class="n">output</span><span class="o">=</span><span class="s1">&#39;screen&#39;</span>
+        <span class="p">),</span>
+
+        <span class="c1"># Nodo que lanza RViz2 para visualizar el robot</span>
+        <span class="n">Node</span><span class="p">(</span>
+            <span class="n">package</span><span class="o">=</span><span class="s1">&#39;rviz2&#39;</span><span class="p">,</span>
+            <span class="n">executable</span><span class="o">=</span><span class="s1">&#39;rviz2&#39;</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="s1">&#39;rviz2&#39;</span><span class="p">,</span>
+            <span class="n">output</span><span class="o">=</span><span class="s1">&#39;screen&#39;</span>
+        <span class="p">)</span>
+    <span class="p">])</span>
+</pre></div>
+</div>
+<p><strong>¿Por qué se usan estos nodos?</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">robot_state_publisher</span></code>: publica la descripción del robot (<code class="docutils literal notranslate"><span class="pre">robot_description</span></code>) para que RViz la use.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">joint_state_publisher_gui</span></code>: permite mover las juntas manualmente mediante sliders.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rviz2</span></code>: lanza la visualización.</p></li>
+</ul>
+<hr class="docutils" />
+<ol class="arabic simple" start="6">
+<li><p>Compilar y lanzar</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>~/ros2_ws
+colcon<span class="w"> </span>build<span class="w"> </span>--packages-select<span class="w"> </span>mi_pkg_python
+<span class="nb">source</span><span class="w"> </span>install/setup.bash
+ros2<span class="w"> </span>launch<span class="w"> </span>mi_pkg_python<span class="w"> </span>visualizar_rviz.launch.py
+</pre></div>
+</div>
 </section>
-<section id="gemelo-digital">
-<h1>Gemelo Digital<a class="headerlink" href="#gemelo-digital" title="Link to this heading"></a></h1>
-<p>Uso de los gemelos digitales</p>
 </section>
 
 

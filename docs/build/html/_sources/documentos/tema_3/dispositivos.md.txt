@@ -100,11 +100,11 @@ sudo netstat -tulnp | grep 1883
 
 En la terminal 1 
 ```bash
-mosquitto_sub -h 192.168.100.176 -t test
+mosquitto_sub -h 192.168.100.178 -t test
 ```
 En la terminal 2
 ```bash
-mosquitto_pub -h 192.168.100.176 -t test -m "ss"
+mosquitto_pub -h 192.168.100.178 -t test -m "ss"
 ```
 
 ### Ejercicios 
@@ -189,10 +189,11 @@ finally:
     client.disconnect()
     print(" Desconectado correctamente.")
 
+
 ```
 En el archivo equipo2.py
-```python
 
+```python
 import paho.mqtt.client as mqtt
 import json
 import time
@@ -240,8 +241,8 @@ client.loop_start()
 try:
     while True:
         payload = {
-            "Encoderi": 20,
-            "Encoderd": 30,
+            "EncoderI": 20,
+            "EncoderD": 30,
             }
         mensaje = json.dumps(payload)
         client.publish(TOPIC_PUB_SEN, mensaje)
@@ -359,7 +360,7 @@ const char* ssid = "CARMEN GONZALEZ_";
 const char* password = "123wa321vg";
 
 // Credenciales MQTT
-const char* mqtt_broker = "192.168.100.76";
+const char* mqtt_broker = "192.168.100.178";
 const int mqtt_port = 1883;
 const char* cliente = "rm1_esp32";
 
@@ -367,6 +368,9 @@ const char* cliente = "rm1_esp32";
 const char* tema_sub = "rm1/acciones";
 const char* tema_pub_est = "rm1/estados";
 const char* tema_pub_sen = "rm1/sensores";
+
+// Variables de control de tiempo
+unsigned long lastTime = 0;
 
 // Creacion del objeto cliente
 WiFiClient espClient;
@@ -390,19 +394,19 @@ void setup() {
 
 void loop() {
   Loop_MQTT();
-  if (activar == 1){
-    digitalWrite(pin_led, HIGH);  // Enciende el LED
+  if (millis() - lastTime >= 100){
     estado = 1;
-    encoderi = 35;
+    encoderi = encoderi+1;
     envioDatos(tema_pub_est, estado, encoderi, encoderd);
     envioDatos(tema_pub_sen, estado, encoderi, encoderd);
+    lastTime = millis();
+  }
+  if (activar == 1){
+    digitalWrite(pin_led, HIGH);  // Enciende el LED
+    
     }
   else {
     digitalWrite(pin_led, LOW);  // Enciende el LED
-    estado = 0;
-    encoderi = 30;
-    envioDatos(tema_pub_est, estado, encoderi, encoderd);
-    envioDatos(tema_pub_sen, estado, encoderi, encoderd);
   }
   
 }
@@ -468,8 +472,8 @@ void envioDatos(const char* mqtt_topic_publicar, int estado, int encoderi, int e
   }
 
   if (mqtt_topic_publicar == tema_pub_sen) {
-     mensaje["encoderi"]   = encoderi;
-     mensaje["encoderd"]   = encoderd;
+     mensaje["EncoderI"]   = encoderi;
+     mensaje["EncoderD"]   = encoderd;
      String mensaje_json;
     serializeJson(mensaje, mensaje_json);
     client.publish(mqtt_topic_publicar, mensaje_json.c_str(), 1);
@@ -514,6 +518,86 @@ client.subscribe("Carrito_1/Acciones", 0);  // QoS 0
 
 Una vez obtenida una base de MQTT para su uso en microcontroladores y equipos. Se presenta un nodo que funcionará como puente para la comunicación entre la ESP32 y ROS2.
 
+```python
+import rclpy
+from rclpy.node import Node
+from rclpy.duration import Duration
+from std_msgs.msg import Float32, Int32
+import paho.mqtt.client as mqtt
+import json
+
+class MQTTBridge(Node): 
+    def __init__(self):
+        super().__init__('mqtt_bridge')
+
+        self.pub = self.create_publisher(Float32, 'sensores', 1)
+        self.subscription = self.create_subscription(Int32, 'acciones', self.listener_callback, 10)
+
+        self.last_data = None
+        self.active = True  # control de publicación activa
+        self.last_mqtt_time = self.get_clock().now()
+
+        self.timer = self.create_timer(0.1, self.publish_sensor_data)       # Publicador (10 Hz)
+        self.timer_watchdog = self.create_timer(0.5, self.check_timeout)    # Verificador de tiempo
+
+        self.topic_sub = "rm1/sensores"
+        self.topic_pub = "rm1/acciones"
+        self.mqtt_client = mqtt.Client()
+        self.mqtt_client.on_connect = self.on_connect
+        self.mqtt_client.on_message = self.on_message
+        self.mqtt_client.connect("192.168.100.178", 1883, 60)
+        self.mqtt_client.loop_start()
+
+    def listener_callback(self, msg):
+        payload = {
+            "vel": {"u_meta": 0.34, "w_meta": 0.10},
+            "avanzar": msg.data
+        }
+        msg_mqtt = json.dumps(payload)
+        self.mqtt_client.publish(self.topic_pub, msg_mqtt)
+
+    def on_connect(self, client, userdata, flags, rc):
+        if rc == 0:
+            print("Conectado al broker MQTT")
+            client.subscribe(self.topic_sub)
+        else:
+            print(f"Error de conexión: código {rc}")
+
+    def on_message(self, client, userdata, msg):
+        try:
+            mensaje = msg.payload.decode("utf-8")
+            data = json.loads(mensaje)
+            if msg.topic == self.topic_sub:
+                self.last_data = float(data["EncoderI"])
+                self.last_mqtt_time = self.get_clock().now()  # Actualiza tiempo del último dato
+                self.active = True
+        except Exception as e:
+            print("Error procesando mensaje:", e)
+
+    def publish_sensor_data(self):
+        if self.last_data is not None and self.active:
+            ros_msg = Float32()
+            ros_msg.data = self.last_data
+            self.pub.publish(ros_msg)
+            self.get_logger().info(f"ROS2 publicó: {ros_msg.data}")
+
+    def check_timeout(self):
+        now = self.get_clock().now()
+        if now - self.last_mqtt_time > Duration(seconds=2.0):
+            if self.active:
+                self.get_logger().warn("No se reciben datos desde MQTT. Se detiene la publicación.")
+            self.active = False
+
+def main(args=None):
+    rclpy.init(args=args)
+    node = MQTTBridge()
+    try:
+        rclpy.spin(node)
+    except KeyboardInterrupt:
+        pass
+    rclpy.shutdown()
+
+```
 
 ---
 
