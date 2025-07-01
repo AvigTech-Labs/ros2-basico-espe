@@ -3,22 +3,22 @@
      Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
      For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
 <robot
-  name="Ensamblaje">
+  name="ensamblaje">
   <link
     name="base_link">
     <inertial>
       <origin
-        xyz="-0.00321786875113537 0.000191768414026703 0.0424007680338965"
+        xyz="-0.00321786875047739 -0.00080823158724886 0.0424007680273217"
         rpy="0 0 0" />
       <mass
-        value="0.38379446013465" />
+        value="0.383794460088106" />
       <inertia
-        ixx="0.00035497570792239"
-        ixy="-1.78790961115546E-12"
-        ixz="-3.95038228363483E-05"
-        iyy="0.000414666833304275"
-        iyz="8.90409269133029E-09"
-        izz="0.000335836085285438" />
+        ixx="0.000354975707917724"
+        ixy="-1.7919991807758E-12"
+        ixz="-3.95038228361589E-05"
+        iyy="0.000414666833301106"
+        iyz="8.90409246037251E-09"
+        izz="0.000335836085277629" />
     </inertial>
     <visual>
       <origin
@@ -26,7 +26,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://Ensamblaje/meshes/base_link.STL" />
+          filename="package://ensamblaje/meshes/base_link.STL" />
       </geometry>
       <material
         name="">
@@ -40,7 +40,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://Ensamblaje/meshes/base_link.STL" />
+          filename="package://ensamblaje/meshes/base_link.STL" />
       </geometry>
     </collision>
   </link>
@@ -48,17 +48,17 @@
     name="brazo_link">
     <inertial>
       <origin
-        xyz="0.105389468325162 -0.0153909934680425 0.00920941098491974"
+        xyz="0.110910810359528 0.00167888740427664 -0.0088532725179314"
         rpy="0 0 0" />
       <mass
-        value="0.464063170661603" />
+        value="0.445149570388111" />
       <inertia
-        ixx="0.00033364453694264"
-        ixy="0.000373791348771293"
-        ixz="3.75895067545634E-05"
-        iyy="0.00268211185807763"
-        iyz="-5.82954303758778E-06"
-        izz="0.00298678242804774" />
+        ixx="0.000268565645830726"
+        ixy="-3.48386010757427E-05"
+        ixz="1.17075736704278E-05"
+        iyy="0.00257429414297316"
+        iyz="1.67803960927524E-07"
+        izz="0.00282337429369454" />
     </inertial>
     <visual>
       <origin
@@ -66,7 +66,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://Ensamblaje/meshes/brazo_link.STL" />
+          filename="package://ensamblaje/meshes/brazo_link.STL" />
       </geometry>
       <material
         name="">
@@ -80,7 +80,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://Ensamblaje/meshes/brazo_link.STL" />
+          filename="package://ensamblaje/meshes/brazo_link.STL" />
       </geometry>
     </collision>
   </link>
@@ -88,7 +88,7 @@
     name="brazo_joint"
     type="revolute">
     <origin
-      xyz="0 0 0.1027"
+      xyz="0 0 0.12215"
       rpy="0 0 0" />
     <parent
       link="base_link" />
@@ -106,16 +106,16 @@
     name="antebrazo_link">
     <inertial>
       <origin
-        xyz="-0.0919762631074414 -7.63278329429795E-17 -0.001265692560218"
+        xyz="-0.0919762631074414 -1.31838984174237E-16 -0.007615692560218"
         rpy="0 0 0" />
       <mass
         value="0.366545541087837" />
       <inertia
         ixx="0.000254964409338932"
-        ixy="-1.95495204226293E-18"
-        ixz="-2.6049549415559E-06"
+        ixy="-3.03910698199432E-18"
+        ixz="-2.60495494155618E-06"
         iyy="0.00237440195054652"
-        iyz="4.9339669177563E-20"
+        iyz="-5.92175499929236E-21"
         izz="0.00261557035322773" />
     </inertial>
     <visual>
@@ -124,7 +124,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://Ensamblaje/meshes/antebrazo_link.STL" />
+          filename="package://ensamblaje/meshes/antebrazo_link.STL" />
       </geometry>
       <material
         name="">
@@ -138,7 +138,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://Ensamblaje/meshes/antebrazo_link.STL" />
+          filename="package://ensamblaje/meshes/antebrazo_link.STL" />
       </geometry>
     </collision>
   </link>
@@ -146,8 +146,8 @@
     name="antebrazo_joint"
     type="revolute">
     <origin
-      xyz="0.21344 -0.032152 -0.01325"
-      rpy="0 0 2.974" />
+      xyz="0.214 0.0032298 -0.02445"
+      rpy="0 0 -3.1416" />
     <parent
       link="brazo_link" />
     <child
@@ -164,16 +164,16 @@
     name="efector_link">
     <inertial>
       <origin
-        xyz="-1.38777878078145E-17 0 0.0410590553923853"
+        xyz="0 6.93889390390723E-18 0.0410590553923853"
         rpy="0 0 0" />
       <mass
         value="0.0259619449019234" />
       <inertia
         ixx="1.51830535770683E-05"
-        ixy="4.2351647362715E-22"
-        ixz="1.78629238292425E-21"
+        ixy="3.70576914423756E-22"
+        ixz="-6.00169316943221E-22"
         iyy="1.50430535770683E-05"
-        iyz="2.51355128293066E-21"
+        iyz="-1.26500021014201E-21"
         izz="1.67809724509617E-06" />
     </inertial>
     <visual>
@@ -182,7 +182,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://Ensamblaje/meshes/efector_link.STL" />
+          filename="package://ensamblaje/meshes/efector_link.STL" />
       </geometry>
       <material
         name="">
@@ -196,7 +196,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://Ensamblaje/meshes/efector_link.STL" />
+          filename="package://ensamblaje/meshes/efector_link.STL" />
       </geometry>
     </collision>
   </link>
@@ -204,8 +204,8 @@
     name="efector_joint"
     type="prismatic">
     <origin
-      xyz="-0.215 0 0.05135"
-      rpy="3.1416 0 1.6173" />
+      xyz="-0.215 0 0.055"
+      rpy="3.1416 0 0.046478" />
     <parent
       link="antebrazo_link" />
     <child

@@ -1,10 +1,10 @@
 <package format="2">
-  <name>Ensamblaje</name>
+  <name>ensamblaje</name>
   <version>1.0.0</version>
   <description>
-    <p>URDF Description package for Ensamblaje</p>
+    <p>URDF Description package for ensamblaje</p>
     <p>This package contains configuration data, 3D models and launch files
-for Ensamblaje robot</p>
+for ensamblaje robot</p>
   </description>
   <author>TODO</author>
   <maintainer email="TODO@email.com" />
