@@ -49,6 +49,7 @@ mi_pkg_python/
 ```
 
 nota: Es importante revisar la correcta escritura de los diferentes archivos.
+
 ---
 
 3. Verifica y edita las rutas en el URDF
@@ -142,7 +143,7 @@ def generate_launch_description():
     ])
 ```
 
-**¿Por qué se usan estos nodos?**
+***¿Por qué se usan estos nodos?***
 
 - `robot_state_publisher`: publica la descripción del robot (`robot_description`) para que RViz2 la use.
 - `joint_state_publisher_gui`: permite mover las juntas manualmente mediante sliders.
@@ -164,7 +165,7 @@ En este caso se busca crear archivos que permitan obtener  y colocar valores en 
 
 Los datos de las juntas se publican y escuchan utilizando el tipo de mensaje `JointState`
 
-###  sensor_msgs/msg/JointState 
+###  JointState 
 
 El mensaje `JointState` representa el **estado actual de las articulaciones** del robot.
 
@@ -271,6 +272,7 @@ def main(args=None):
 ```
 
 Agregar los programas en el setup.py para poder ejecutarlos con ROS2.
+
 ---
 
 ### tf2
@@ -503,6 +505,7 @@ void loop() {
 }
 ```
 
+---
 
 ### URDF + MQTT
 
