@@ -36,6 +36,6 @@ documentos/tema_3/dispositivos.md
 
 ```{toctree}
 :maxdepth: 2
-:caption: Conexión con dispositivos
+:caption: URDF y ESP32
 documentos/tema_4/visualizacion_datos.md
 ```
