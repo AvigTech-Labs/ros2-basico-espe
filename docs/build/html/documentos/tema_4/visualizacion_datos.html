@@ -68,12 +68,8 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">URDF</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#visualizacion-de-archivos-urdf">Visualización de archivos URDF</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#nota-es-importante-revisar-la-correcta-escritura-de-los-diferentes-archivos">nota: Es importante revisar la correcta escritura de los diferentes archivos.</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#manejo-de-datos-en-rviz-con-urdf">Manejo de datos en RVIZ con URDF.</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#sensor-msgs-msg-jointstate">sensor_msgs/msg/JointState</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#agregar-los-programas-en-el-setup-py-para-poder-ejecutarlos-con-ros2">Agregar los programas en el setup.py para poder ejecutarlos con ROS2.</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#jointstate">JointState</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#tf2">tf2</a></li>
 </ul>
 </li>
@@ -150,9 +146,8 @@
 │   ├── visualizar_rviz.launch.py
 </pre></div>
 </div>
-</section>
-<section id="nota-es-importante-revisar-la-correcta-escritura-de-los-diferentes-archivos">
-<h2>nota: Es importante revisar la correcta escritura de los diferentes archivos.<a class="headerlink" href="#nota-es-importante-revisar-la-correcta-escritura-de-los-diferentes-archivos" title="Link to this heading"></a></h2>
+<p>nota: Es importante revisar la correcta escritura de los diferentes archivos.</p>
+<hr class="docutils" />
 <ol class="arabic simple" start="3">
 <li><p>Verifica y edita las rutas en el URDF</p></li>
 </ol>
@@ -238,7 +233,7 @@
     <span class="p">])</span>
 </pre></div>
 </div>
-<p><strong>¿Por qué se usan estos nodos?</strong></p>
+<p><em><strong>¿Por qué se usan estos nodos?</strong></em></p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">robot_state_publisher</span></code>: publica la descripción del robot (<code class="docutils literal notranslate"><span class="pre">robot_description</span></code>) para que RViz2 la use.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">joint_state_publisher_gui</span></code>: permite mover las juntas manualmente mediante sliders.</p></li>
@@ -258,8 +253,8 @@ ros2<span class="w"> </span>launch<span class="w"> </span>mi_pkg_python<span cla
 <h2>Manejo de datos en RVIZ con URDF.<a class="headerlink" href="#manejo-de-datos-en-rviz-con-urdf" title="Link to this heading"></a></h2>
 <p>En este caso se busca crear archivos que permitan obtener  y colocar valores en las juntas del modelo URDF creado.</p>
 <p>Los datos de las juntas se publican y escuchan utilizando el tipo de mensaje <code class="docutils literal notranslate"><span class="pre">JointState</span></code></p>
-<section id="sensor-msgs-msg-jointstate">
-<h3>sensor_msgs/msg/JointState<a class="headerlink" href="#sensor-msgs-msg-jointstate" title="Link to this heading"></a></h3>
+<section id="jointstate">
+<h3>JointState<a class="headerlink" href="#jointstate" title="Link to this heading"></a></h3>
 <p>El mensaje <code class="docutils literal notranslate"><span class="pre">JointState</span></code> representa el <strong>estado actual de las articulaciones</strong> del robot.</p>
 <p><strong>Campos del mensaje</strong></p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Header</span> <span class="n">header</span>
@@ -376,10 +371,9 @@ ros2<span class="w"> </span>launch<span class="w"> </span>mi_pkg_python<span cla
 
 </pre></div>
 </div>
+<p>Agregar los programas en el setup.py para poder ejecutarlos con ROS2.</p>
 </section>
-</section>
-<section id="agregar-los-programas-en-el-setup-py-para-poder-ejecutarlos-con-ros2">
-<h2>Agregar los programas en el setup.py para poder ejecutarlos con ROS2.<a class="headerlink" href="#agregar-los-programas-en-el-setup-py-para-poder-ejecutarlos-con-ros2" title="Link to this heading"></a></h2>
+<hr class="docutils" />
 <section id="tf2">
 <h3>tf2<a class="headerlink" href="#tf2" title="Link to this heading"></a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">tf2</span></code> es el sistema que gestiona <strong>transformaciones espaciales entre los frames</strong> del robot.<br />
@@ -678,6 +672,7 @@ Vref = I_{max} \times 8 \times R_{sense}
 </pre></div>
 </div>
 </section>
+<hr class="docutils" />
 <section id="urdf-mqtt">
 <h3>URDF + MQTT<a class="headerlink" href="#urdf-mqtt" title="Link to this heading"></a></h3>
 <ol class="arabic simple">
