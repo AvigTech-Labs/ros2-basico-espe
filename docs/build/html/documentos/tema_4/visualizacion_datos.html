@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>URDF &mdash; documentación de ros2_espe - 0.1</title>
+  <title>Archivos URDF &mdash; documentación de ros2_espe - 0.1</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -66,21 +66,21 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">URDF y ESP32</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">URDF</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Archivos URDF</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#visualizacion-de-archivos-urdf">Visualización de archivos URDF</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#manejo-de-datos-en-rviz-con-urdf">Manejo de datos en RVIZ con URDF.</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#jointstate">JointState</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#tf2">tf2</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#urf-y-esp32">URF y ESP32</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#urfd-y-esp32">URFD y ESP32</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#control-de-motor-paso-a-paso-nema-17-con-esp32-y-a4988">Control de Motor Paso a Paso NEMA 17 con ESP32 y A4988</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#control-de-motores-paso-a-paso-con-accelstepper-y-esp32">Control de Motores Paso a Paso con <code class="docutils literal notranslate"><span class="pre">AccelStepper</span></code> y ESP32</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#urdf-mqtt">URDF + MQTT</a></li>
 </ul>
 </li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="#gemelo-digital">Gemelo Digital</a></li>
 </ul>
 
         </div>
@@ -97,7 +97,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">URDF</li>
+      <li class="breadcrumb-item active">Archivos URDF</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -106,8 +106,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="urdf">
-<h1>URDF<a class="headerlink" href="#urdf" title="Link to this heading"></a></h1>
+  <section id="archivos-urdf">
+<h1>Archivos URDF<a class="headerlink" href="#archivos-urdf" title="Link to this heading"></a></h1>
 <p>Prueba de actualizacion</p>
 <p>Para crear archivos URDF en base a diseños personalidados de robots con solidworks, es necesario descargar la extensión URDF.</p>
 <p><a class="reference external" href="https://github.com/ros/solidworks_urdf_exporter">Extension-Solid</a>, para versiones de SolidWorks superiores a la 2021. Seleccionar la opción: SolidWorks 2021</p>
@@ -422,37 +422,60 @@ sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> <
 <ol class="arabic simple">
 <li><p>Dentro de la carpeta mqtt_python crear el archivo <code class="docutils literal notranslate"><span class="pre">0_tf2.py</span></code></p></li>
 </ol>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tf2_ros</span><span class="w"> </span><span class="kn">import</span> <span class="n">TransformListener</span><span class="p">,</span> <span class="n">Buffer</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
+<span class="c1"># Importa las clases necesarias de tf2 para escuchar transformaciones</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tf2_ros</span><span class="w"> </span><span class="kn">import</span> <span class="n">TransformListener</span><span class="p">,</span> <span class="n">Buffer</span>
+
+<span class="c1"># Importa la API principal de ROS 2 en Python</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">rclpy</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">rclpy.node</span><span class="w"> </span><span class="kn">import</span> <span class="n">Node</span>
 
+<span class="c1"># Define una clase que extiende de Node para crear un nodo ROS 2</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">EffectorPose</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Inicializa el nodo con el nombre &#39;effector_pose&#39;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s1">&#39;effector_pose&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Crea un buffer donde se almacenan las transformaciones</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tf_buffer</span> <span class="o">=</span> <span class="n">Buffer</span><span class="p">()</span>
+
+        <span class="c1"># Crea un listener que va llenando el buffer automáticamente con los datos de /tf</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tf_listener</span> <span class="o">=</span> <span class="n">TransformListener</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tf_buffer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+
+        <span class="c1"># Crea un temporizador que llama a la función lookup_pose cada 0.5 segundos</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">timer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_timer</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">lookup_pose</span><span class="p">)</span>
 
+    <span class="c1"># Esta función se llama periódicamente para obtener la pose del efector</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">lookup_pose</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Busca la transformación desde &#39;base_link&#39; hasta &#39;efector_link&#39;</span>
+            <span class="c1"># El tiempo es &quot;now&quot;, es decir, la transformación más reciente disponible</span>
             <span class="n">t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tf_buffer</span><span class="o">.</span><span class="n">lookup_transform</span><span class="p">(</span>
-                <span class="s1">&#39;base_link&#39;</span><span class="p">,</span>  <span class="c1"># desde</span>
-                <span class="s1">&#39;efector_link&#39;</span><span class="p">,</span>  <span class="c1"># hasta</span>
-                <span class="n">rclpy</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">Time</span><span class="p">())</span>
-            
+                <span class="s1">&#39;base_link&#39;</span><span class="p">,</span>        <span class="c1"># Frame de referencia (padre)</span>
+                <span class="s1">&#39;efector_link&#39;</span><span class="p">,</span>     <span class="c1"># Frame hijo (efector final)</span>
+                <span class="n">rclpy</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">Time</span><span class="p">())</span>  <span class="c1"># Tiempo: ahora</span>
+
+            <span class="c1"># Extrae la posición y orientación de la transformación</span>
             <span class="n">pos</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">translation</span>
             <span class="n">rot</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">rotation</span>
+
+            <span class="c1"># Imprime por consola (logger) la pose actual del efector</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Pose: x=</span><span class="si">{</span><span class="n">pos</span><span class="o">.</span><span class="n">x</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">, y=</span><span class="si">{</span><span class="n">pos</span><span class="o">.</span><span class="n">y</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">, z=</span><span class="si">{</span><span class="n">pos</span><span class="o">.</span><span class="n">z</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> | q=(</span><span class="si">{</span><span class="n">rot</span><span class="o">.</span><span class="n">x</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">rot</span><span class="o">.</span><span class="n">y</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">rot</span><span class="o">.</span><span class="n">z</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">rot</span><span class="o">.</span><span class="n">w</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">)&quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;Pose: x=</span><span class="si">{</span><span class="n">pos</span><span class="o">.</span><span class="n">x</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">, y=</span><span class="si">{</span><span class="n">pos</span><span class="o">.</span><span class="n">y</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">, z=</span><span class="si">{</span><span class="n">pos</span><span class="o">.</span><span class="n">z</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> | &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;q=(</span><span class="si">{</span><span class="n">rot</span><span class="o">.</span><span class="n">x</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">rot</span><span class="o">.</span><span class="n">y</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">rot</span><span class="o">.</span><span class="n">z</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">rot</span><span class="o">.</span><span class="n">w</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">)&quot;</span>
             <span class="p">)</span>
+
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="c1"># Si ocurre algún error (ej. aún no existe la transformación), lo muestra como advertencia</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No transform: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
+<span class="c1"># Función principal que lanza el nodo</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="n">rclpy</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">)</span>
-    <span class="n">node</span> <span class="o">=</span> <span class="n">EffectorPose</span><span class="p">()</span>
-    <span class="n">rclpy</span><span class="o">.</span><span class="n">spin</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
-    <span class="n">rclpy</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
+    <span class="n">rclpy</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">)</span>          <span class="c1"># Inicializa el sistema ROS 2</span>
+    <span class="n">node</span> <span class="o">=</span> <span class="n">EffectorPose</span><span class="p">()</span>          <span class="c1"># Crea una instancia del nodo</span>
+    <span class="n">rclpy</span><span class="o">.</span><span class="n">spin</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>               <span class="c1"># Mantiene el nodo activo procesando eventos</span>
+    <span class="n">rclpy</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>              
+
 </pre></div>
 </div>
 <p>Agregar el codigo en el setup.py para poder ejercutarlo con ROS2.</p>
@@ -466,8 +489,8 @@ sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> <
 </section>
 </section>
 <hr class="docutils" />
-<section id="urf-y-esp32">
-<h2>URF y ESP32<a class="headerlink" href="#urf-y-esp32" title="Link to this heading"></a></h2>
+<section id="urfd-y-esp32">
+<h2>URFD y ESP32<a class="headerlink" href="#urfd-y-esp32" title="Link to this heading"></a></h2>
 <section id="control-de-motor-paso-a-paso-nema-17-con-esp32-y-a4988">
 <h3>Control de Motor Paso a Paso NEMA 17 con ESP32 y A4988<a class="headerlink" href="#control-de-motor-paso-a-paso-nema-17-con-esp32-y-a4988" title="Link to this heading"></a></h3>
 <ol class="arabic simple">
@@ -672,9 +695,11 @@ Vref = I_{max} \times 8 \times R_{sense}
 </pre></div>
 </div>
 </section>
+</section>
+</section>
 <hr class="docutils" />
-<section id="urdf-mqtt">
-<h3>URDF + MQTT<a class="headerlink" href="#urdf-mqtt" title="Link to this heading"></a></h3>
+<section id="gemelo-digital">
+<h1>Gemelo Digital<a class="headerlink" href="#gemelo-digital" title="Link to this heading"></a></h1>
 <ol class="arabic simple">
 <li><p>Aplicación básica de movimiento</p></li>
 </ol>
@@ -840,6 +865,7 @@ Vref = I_{max} \times 8 \times R_{sense}
 <span class="p">}</span>
 </pre></div>
 </div>
+<p>Pestaña 2</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">setup_wifi</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="c1">// Conexión Wifi</span>
 <span class="w">  </span><span class="n">delay</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
@@ -1079,8 +1105,6 @@ Vref = I_{max} \times 8 \times R_{sense}
     <span class="n">rclpy</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
 </pre></div>
 </div>
-</section>
-</section>
 </section>
 
 
