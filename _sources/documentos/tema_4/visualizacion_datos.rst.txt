@@ -1176,6 +1176,52 @@ Aplicaciones
          print("Guardado como camera_calibration.yaml")
 
 
+   .. group-tab:: Programa 3
+
+      .. code-block:: python
+
+         # Archivo para usar la calibración
+         import cv2
+         import numpy as np
+         import yaml
+
+         # Cargar parámetros desde el archivo YAML generado
+         with open("camera_calibration.yaml") as f:
+            calib_data = yaml.safe_load(f)
+
+         K = np.array(calib_data["camera_matrix"]["data"]).reshape((3, 3))
+         dist = np.array(calib_data["distortion_coefficients"]["data"])
+
+         # Captura de cámara
+         cap = cv2.VideoCapture(0)
+
+         while cap.isOpened():
+            ret, frame = cap.read()
+            if not ret:
+               break
+
+            h, w = frame.shape[:2]
+            new_camera_mtx, roi = cv2.getOptimalNewCameraMatrix(K, dist, (w, h), 1, (w, h))
+
+            # Corrección de distorsión
+            undistorted = cv2.undistort(frame, K, dist, None, new_camera_mtx)
+
+            # Mostrar ambas imágenes
+            cv2.namedWindow("Original", cv2.WINDOW_NORMAL)
+            cv2.namedWindow("Undistorted", cv2.WINDOW_NORMAL)
+            cv2.resizeWindow("Original", 640, 480)
+            cv2.resizeWindow("Undistorted", 640, 480)
+            cv2.imshow("Original", frame)
+            cv2.imshow("Undistorted", undistorted)
+
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+               break
+
+         cap.release()
+         cv2.destroyAllWindows()
+
+
+
    .. group-tab:: Programa 4
 
       .. code-block:: python
@@ -1275,6 +1321,122 @@ Aplicaciones
 
 
 
-
-
 Modificacion de archivos.
+
+Publicación de objetos en RVIZ
+
+.. code-block:: python
+
+   import rclpy
+   from rclpy.node import Node
+   from visualization_msgs.msg import Marker
+   from geometry_msgs.msg import Point
+   from std_msgs.msg import ColorRGBA
+
+   class CuboPublisher(Node):
+      def __init__(self):
+         super().__init__('cubo_publisher')
+         self.publisher = self.create_publisher(Marker, 'visualization_marker', 10)
+         self.timer = self.create_timer(1.0, self.publicar_cubos)
+
+      def publicar_cubos(self):
+         posiciones = [
+               (0.1, 0.2, 0.0),
+               (0.5, 0.3, 0.0),
+               (0.2, 0.3, 0.0)
+         ]
+
+         for i, (x, y, z) in enumerate(posiciones):
+               cubo = Marker()
+               cubo.header.frame_id = 'world'
+               cubo.header.stamp = self.get_clock().now().to_msg()
+               cubo.ns = 'cubos'
+               cubo.id = i
+               cubo.type = Marker.CUBE
+               cubo.action = Marker.ADD
+               cubo.pose.position.x = x
+               cubo.pose.position.y = y
+               cubo.pose.position.z = z + 0.015  # para que se vea encima del suelo
+               cubo.pose.orientation.x = 0.0
+               cubo.pose.orientation.y = 0.0
+               cubo.pose.orientation.z = 0.0
+               cubo.pose.orientation.w = 1.0
+               cubo.scale.x = 0.03
+               cubo.scale.y = 0.03
+               cubo.scale.z = 0.03
+               cubo.color = ColorRGBA(r=1.0, g=0.0, b=0.0, a=1.0)
+               cubo.lifetime.sec = 0  # 0 = permanente
+
+               self.publisher.publish(cubo)
+               self.get_logger().info(f'Cubo {i} publicado en ({x}, {y}, {z})')
+
+   def main(args=None):
+      rclpy.init(args=args)
+      node = CuboPublisher()
+      rclpy.spin(node)
+      node.destroy_node()
+      rclpy.shutdown()
+
+Actualización del launch visualizar_rviz.
+
+.. code-block:: python
+
+   # Importa la clase principal para definir lanzamientos en ROS 2
+   from launch import LaunchDescription
+
+   # Importa la acción Node para lanzar nodos ROS 2
+   from launch_ros.actions import Node
+
+   # Permite obtener la ruta del directorio share de un paquete instalado
+   from ament_index_python.packages import get_package_share_directory
+
+   # Módulo estándar para trabajar con rutas de archivos
+   import os
+
+   # Función principal requerida por ROS 2 para ejecutar este archivo de lanzamiento
+   def generate_launch_description():
+      # Construye la ruta completa del archivo URDF dentro del paquete
+      urdf_file = os.path.join(
+         get_package_share_directory('mi_pkg_python'),  # Paquete que contiene el URDF
+         'urdf',
+         'ensamblaje.urdf'
+      )
+
+      # Devuelve la lista de nodos a lanzar
+      return LaunchDescription([
+
+         # Nodo que publica el URDF en el topic /robot_description
+         Node(
+               package='robot_state_publisher',
+               executable='robot_state_publisher',
+               name='robot_state_publisher',
+               parameters=[{'robot_description': open(urdf_file).read()}]
+         ),
+
+         # Nodo que abre una interfaz gráfica con sliders para mover las juntas
+         Node(
+               package='joint_state_publisher_gui',
+               executable='joint_state_publisher_gui',
+               name='joint_state_publisher_gui',
+               output='screen'
+         ),
+
+         # Nodo que lanza RViz2 para visualizar el robot
+         Node(
+               package='rviz2',
+               executable='rviz2',
+               name='rviz2',
+               output='screen'
+         ),
+
+         # Nodo que agrega una transformación estática: world → base_link
+         Node(
+               package='tf2_ros',
+               executable='static_transform_publisher',
+               name='static_tf_pub',
+               arguments=['0.10', '0.10', '0.0',  # x y z (en metros)
+                        '0', '0', '0',        # roll pitch yaw (en radianes)
+                        'world', 'base_link'], # parent frame, child frame
+               output='screen'
+         )
+      ])
