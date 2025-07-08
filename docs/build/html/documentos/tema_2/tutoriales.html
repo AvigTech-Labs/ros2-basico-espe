@@ -10,6 +10,7 @@
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/tabs.css?v=a5c4661c" />
 
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
@@ -20,6 +21,7 @@
       <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../../_static/copybutton.js?v=f281be69"></script>
       <script src="../../_static/translations.js?v=f85f4cfb"></script>
+      <script src="../../_static/tabs.js?v=3030b3cb"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Índice" href="../../genindex.html" />
     <link rel="search" title="Búsqueda" href="../../search.html" />
@@ -46,39 +48,26 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">ROS2 Humble</span></p>
-<ul>
+              <p class="caption" role="heading"><span class="caption-text">Módulos</span></p>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../tema_0/intro.html">¿Qué es ROS2?</a></li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">Instalación</span></p>
-<ul>
 <li class="toctree-l1"><a class="reference internal" href="../tema_1/instalacion.html">Instalación de Ubuntu</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tema_1/maquina_virtual.html">Instalacion de Ubuntu 22.04 con VirtualBox</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tema_1/instalacionROS2.html">Instalación de ROS2 Humble</a></li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">Conceptos Básicos</span></p>
-<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="conceptos_basicos.html">Conceptos Básicos</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Tutoriales</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#creacion-de-un-espacio-de-trabajo">Creación de un espacio de trabajo</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#creacion-paquetes">Creación Paquetes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#nodos-publicador-y-suscriptor">Nodos publicador y Suscriptor</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#paquetes-con-mensajes-personalizados">Paquetes con mensajes personalizados</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#usarlo-en-un-publicador-o-suscriptor-como-cualquier-otro-mensaje">3. Usarlo en un publicador o suscriptor como cualquier otro mensaje.</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#april-tags">April-Tags</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#servicios-personalizados">Servicios personalizados</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#implementacion-de-una-accion-personalizada">Implementación de una Acción Personalizada</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id1">
-</a></li>
 </ul>
 </li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">Conexión con dispositivos</span></p>
-<ul>
 <li class="toctree-l1"><a class="reference internal" href="../tema_3/dispositivos.html">Conexión con dispositivos</a></li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">Conexión con dispositivos</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../tema_4/visualizacion_datos.html">URDF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tema_3/dispositivos.html#tabla-de-librerias-recomendadas-para-tu-proyecto-esp32-con-wifimanager-y-mqtt">Tabla de librerías recomendadas para tu proyecto ESP32 con WiFiManager y MQTT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tema_4/visualizacion_datos.html">Archivos URDF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tema_4/visualizacion_datos.html#gemelo-digital">Gemelo Digital</a></li>
 </ul>
 
@@ -109,8 +98,9 @@
 <h1>Tutoriales<a class="headerlink" href="#tutoriales" title="Link to this heading"></a></h1>
 <section id="creacion-de-un-espacio-de-trabajo">
 <h2>Creación de un espacio de trabajo<a class="headerlink" href="#creacion-de-un-espacio-de-trabajo" title="Link to this heading"></a></h2>
-<p>A continuación, se realiza la creación de un espacio de trabajo denominado <code class="docutils literal notranslate"><span class="pre">ros2_ws</span></code></p>
-<p><em><strong>Creación del espacio de trabajo</strong></em></p>
+<p>A continuación, se realiza la creación de un espacio de trabajo
+denominado <code class="docutils literal notranslate"><span class="pre">ros2_ws</span></code></p>
+<p><strong>Creación del espacio de trabajo</strong></p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir<span class="w"> </span>-p<span class="w"> </span>~/ros2_ws/src
 <span class="nb">cd</span><span class="w"> </span>~/ros2_ws
 colcon<span class="w"> </span>build
@@ -122,7 +112,9 @@ colcon<span class="w"> </span>build
 <hr class="docutils" />
 <section id="creacion-paquetes">
 <h2>Creación Paquetes<a class="headerlink" href="#creacion-paquetes" title="Link to this heading"></a></h2>
-<p>Una vez construido el espacio de trabajo, se debe realizar la construcción de un paquete de ROS2, en este caso se utilizará un paquete compatible con python, y tendrá las dependencias de <code class="docutils literal notranslate"><span class="pre">std_msgs</span></code></p>
+<p>Una vez construido el espacio de trabajo, se debe realizar la
+construcción de un paquete de ROS2, en este caso se utilizará un paquete
+compatible con python, y tendrá las dependencias de <code class="docutils literal notranslate"><span class="pre">std_msgs</span></code></p>
 <ol class="arabic simple">
 <li><p>Crear el paquete</p></li>
 </ol>
@@ -154,7 +146,8 @@ colcon<span class="w"> </span>build<span class="w"> </span>--packages-select<spa
 </section>
 <section id="nodos-publicador-y-suscriptor">
 <h2>Nodos publicador y Suscriptor<a class="headerlink" href="#nodos-publicador-y-suscriptor" title="Link to this heading"></a></h2>
-<p>Una vez compilado el paquete, se realiza la creación de los nodos publicador y suscriptor.</p>
+<p>Una vez compilado el paquete, se realiza la creación de los nodos
+publicador y suscriptor.</p>
 <ol class="arabic simple">
 <li><p>Crear el archivo del nodo publicador</p></li>
 </ol>
@@ -233,10 +226,10 @@ colcon<span class="w"> </span>build<span class="w"> </span>--packages-select<spa
 </pre></div>
 </div>
 <ol class="arabic simple" start="3">
-<li><p>Crear el nodo <code class="docutils literal notranslate"><span class="pre">suscriptor.py</span></code> en la misma dirección donde se encuentra el nodo publicador.py</p></li>
+<li><p>Crear el nodo <code class="docutils literal notranslate"><span class="pre">suscriptor.py</span></code> en la misma dirección donde se
+encuentra el nodo publicador.py</p></li>
 </ol>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
-<span class="c1"># Importa la librería principal de ROS 2 para Python</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Importa la librería principal de ROS 2 para Python</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">rclpy</span>
 
 <span class="c1"># Importa la clase base para crear nodos en ROS 2</span>
@@ -320,17 +313,22 @@ colcon<span class="w"> </span>build<span class="w"> </span>--packages-select<spa
 </section>
 <section id="paquetes-con-mensajes-personalizados">
 <h2>Paquetes con mensajes personalizados<a class="headerlink" href="#paquetes-con-mensajes-personalizados" title="Link to this heading"></a></h2>
-<p>Los mensajes personalizados permiten crear un paquete exclusivo para generar estructuras personales de mensajes en ROS2 usando <code class="docutils literal notranslate"><span class="pre">ament_cmake</span></code>, ademas de poder integrarlos a otros paquetes.</p>
-<p>Antes de continuar con la generación de mensajes es necesario revisar, que tipos de mensajes están disponibles:</p>
+<p>Los mensajes personalizados permiten crear un paquete exclusivo para
+generar estructuras personales de mensajes en ROS2 usando
+<code class="docutils literal notranslate"><span class="pre">ament_cmake</span></code>, ademas de poder integrarlos a otros paquetes.</p>
+<p>Antes de continuar con la generación de mensajes es necesario revisar,
+que tipos de mensajes están disponibles:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>interface<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>msg
 </pre></div>
 </div>
-<p>y la revisión de los parámetros del mensaje se realiza mediante el comand:</p>
+<p>y la revisión de los parámetros del mensaje se realiza mediante el
+comand:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span><span class="o">[</span>tipo<span class="w"> </span>de<span class="w"> </span>mensaje<span class="o">]</span>
 </pre></div>
 </div>
 <hr class="docutils" />
-<p>Ahora, se va a crear un paquete llamado <code class="docutils literal notranslate"><span class="pre">avig_msg</span></code> que defina un mensaje personalizado <code class="docutils literal notranslate"><span class="pre">AprilTagPixel.msg</span></code> con los siguientes campos:</p>
+<p>Ahora, se va a crear un paquete llamado <code class="docutils literal notranslate"><span class="pre">avig_msg</span></code> que defina un
+mensaje personalizado <code class="docutils literal notranslate"><span class="pre">AprilTagPixel.msg</span></code> con los siguientes campos:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">string</span> <span class="nb">id</span>
 <span class="n">int32</span> <span class="n">posx</span>
 <span class="n">int32</span> <span class="n">posy</span>
@@ -362,12 +360,14 @@ gedit<span class="w"> </span>msg/AprilTagPixel.msg
 <span class="n">float32</span> <span class="n">dist</span>
 </pre></div>
 </div>
-<p>Este archivo define un mensaje simple para enviar datos de detección de un tag.</p>
+<p>Este archivo define un mensaje simple para enviar datos de detección de
+un tag.</p>
 <hr class="docutils" />
 <ol class="arabic simple" start="3">
 <li><p>Mensajes compuestos</p></li>
 </ol>
-<p>Se puede crear mensajes que tengan anidada mas información en este caso se va a crear un array de <code class="docutils literal notranslate"><span class="pre">AprilTagPixel.msg</span></code>.</p>
+<p>Se puede crear mensajes que tengan anidada mas información en este caso
+se va a crear un array de <code class="docutils literal notranslate"><span class="pre">AprilTagPixel.msg</span></code>.</p>
 <p>Dentro del paquete <code class="docutils literal notranslate"><span class="pre">avig_msg</span></code></p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>msg
 gedit<span class="w"> </span>AprilTagPixelArray.msg
@@ -398,12 +398,10 @@ gedit<span class="w"> </span>AprilTagPixelArray.msg
 <span class="nb">ament_package</span><span class="p">()</span>
 </pre></div>
 </div>
-<p><em><strong>¿Por qué?</strong></em></p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">rosidl_default_generators</span></code> genera los bindings del mensaje.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">builtin_interfaces</span></code> es requerido si se usan tipos nativos como <code class="docutils literal notranslate"><span class="pre">string</span></code>, <code class="docutils literal notranslate"><span class="pre">int32</span></code>.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">ament_export_dependencies</span></code> permite que otros paquetes importen estos mensajes.</p></li>
-</ul>
+<p><strong>¿Por qué?</strong> - <code class="docutils literal notranslate"><span class="pre">rosidl_default_generators</span></code> genera los bindings del
+mensaje. - <code class="docutils literal notranslate"><span class="pre">builtin_interfaces</span></code> es requerido si se usan tipos nativos
+como <code class="docutils literal notranslate"><span class="pre">string</span></code>, <code class="docutils literal notranslate"><span class="pre">int32</span></code>. - <code class="docutils literal notranslate"><span class="pre">ament_export_dependencies</span></code> permite que
+otros paquetes importen estos mensajes.</p>
 <hr class="docutils" />
 <ol class="arabic simple" start="5">
 <li><p>Editar <code class="docutils literal notranslate"><span class="pre">package.xml</span></code></p></li>
@@ -415,8 +413,8 @@ gedit<span class="w"> </span>AprilTagPixelArray.msg
 <span class="nt">&lt;member_of_group&gt;</span>rosidl_interface_packages<span class="nt">&lt;/member_of_group&gt;</span>
 </pre></div>
 </div>
-<p><em><strong>¿Por qué?</strong></em>
-Estas etiquetas aseguran que el sistema de compilación de ROS 2 reconozca este paquete como generador de interfaces.</p>
+<p><strong>¿Por qué?</strong> Estas etiquetas aseguran que el sistema de compilación de
+ROS 2 reconozca este paquete como generador de interfaces.</p>
 <hr class="docutils" />
 <ol class="arabic simple" start="6">
 <li><p>Compilar e instalar</p></li>
@@ -438,7 +436,7 @@ colcon<span class="w"> </span>build<span class="w"> </span>--packages-select<spa
 <ol class="arabic simple" start="8">
 <li><p>Usar el mensaje en otro paquete</p></li>
 </ol>
-<p>En el paquete creado anteriormente de Python  <code class="docutils literal notranslate"><span class="pre">mi_pkg_python</span></code>:</p>
+<p>En el paquete creado anteriormente de Python <code class="docutils literal notranslate"><span class="pre">mi_pkg_python</span></code>:</p>
 <ol class="arabic simple">
 <li><p>En <code class="docutils literal notranslate"><span class="pre">package.xml</span></code>:</p></li>
 </ol>
@@ -451,20 +449,24 @@ colcon<span class="w"> </span>build<span class="w"> </span>--packages-select<spa
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">avig_msg.msg</span><span class="w"> </span><span class="kn">import</span> <span class="n">AprilTagPixel</span>
 </pre></div>
 </div>
-<ol class="arabic simple" start="3">
-<li><p>Usarlo en un publicador o suscriptor como cualquier otro mensaje.</p></li>
-</ol>
 </section>
-<hr class="docutils" />
+<section id="usarlo-en-un-publicador-o-suscriptor-como-cualquier-otro-mensaje">
+<h2>3. Usarlo en un publicador o suscriptor como cualquier otro mensaje.<a class="headerlink" href="#usarlo-en-un-publicador-o-suscriptor-como-cualquier-otro-mensaje" title="Link to this heading"></a></h2>
+</section>
 <section id="april-tags">
 <h2>April-Tags<a class="headerlink" href="#april-tags" title="Link to this heading"></a></h2>
-<p>Un <strong>AprilTag</strong> es un tipo de marcador visual 2D diseñado para permitir la detección robusta, precisa y rápida en entornos de visión por computadora y robótica. Fue desarrollado en el Laboratorio de Robótica de la Universidad de Michigan.</p>
+<p>Un <strong>AprilTag</strong> es un tipo de marcador visual 2D diseñado para permitir
+la detección robusta, precisa y rápida en entornos de visión por
+computadora y robótica. Fue desarrollado en el Laboratorio de Robótica
+de la Universidad de Michigan.</p>
 <p><strong>Características principales:</strong></p>
 <ul class="simple">
 <li><p>🔳 Patrón en blanco y negro con bordes codificados.</p></li>
 <li><p>📍 Cada tag tiene un <strong>ID único</strong>.</p></li>
-<li><p>🎯 Puede ser detectado desde distintos ángulos y con iluminación variable.</p></li>
-<li><p>⚡ Su detección es <strong>más rápida y robusta</strong> que QR o ARTags para propósitos robóticos.</p></li>
+<li><p>🎯 Puede ser detectado desde distintos ángulos y con iluminación
+variable.</p></li>
+<li><p>⚡ Su detección es <strong>más rápida y robusta</strong> que QR o ARTags para
+propósitos robóticos.</p></li>
 </ul>
 <hr class="docutils" />
 <p><strong>Usos comunes de AprilTags en Robótica</strong></p>
@@ -475,36 +477,51 @@ colcon<span class="w"> </span>build<span class="w"> </span>--packages-select<spa
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>📍 Localización absoluta</p></td>
-<td><p>Identificar una posición fija en el mapa mediante un tag conocido.</p></td>
+<tr class="row-even"><td><p>📍 Localización
+absoluta</p></td>
+<td><p>Identificar una posición fija en el mapa mediante
+un tag conocido.</p></td>
 </tr>
-<tr class="row-odd"><td><p>🤖 Seguimiento de objetos</p></td>
-<td><p>Seguir la posición de un tag en tiempo real (e.g. manipulación, drones).</p></td>
+<tr class="row-odd"><td><p>🤖 Seguimiento
+de objetos</p></td>
+<td><p>Seguir la posición de un tag en tiempo real
+(e.g. manipulación, drones).</p></td>
 </tr>
-<tr class="row-even"><td><p>🎯 Calibración de cámaras</p></td>
-<td><p>Calibrar parámetros intrínsecos y extrínsecos de una cámara.</p></td>
+<tr class="row-even"><td><p>🎯 Calibración
+de cámaras</p></td>
+<td><p>Calibrar parámetros intrínsecos y extrínsecos de
+una cámara.</p></td>
 </tr>
-<tr class="row-odd"><td><p>🗺️ SLAM / Navegación</p></td>
-<td><p>Complementar sensores como LiDAR o IMU en mapeo y navegación autónoma.</p></td>
+<tr class="row-odd"><td><p>🗺️ SLAM /
+Navegación</p></td>
+<td><p>Complementar sensores como LiDAR o IMU en mapeo y
+navegación autónoma.</p></td>
 </tr>
-<tr class="row-even"><td><p>🤝 Interacción humano-robot</p></td>
-<td><p>Identificar objetos, posiciones, o áreas accesibles visualmente.</p></td>
+<tr class="row-even"><td><p>🤝 Interacción
+humano-robot</p></td>
+<td><p>Identificar objetos, posiciones, o áreas
+accesibles visualmente.</p></td>
 </tr>
 </tbody>
 </table>
 <hr class="docutils" />
 <p><strong>Librería usada</strong></p>
-<p>Usamos la librería <code class="docutils literal notranslate"><span class="pre">pupil_apriltags</span></code>, una implementación rápida del detector.<br />
-Es eficiente, moderna, y puede ser utilizada en aplicaciones en tiempo real.</p>
-<p>El resto de aplicaciones de AprilTag se puede revisar en los siguintes repositorios:</p>
+<div class="line-block">
+<div class="line">Usamos la librería <code class="docutils literal notranslate"><span class="pre">pupil_apriltags</span></code>, una implementación rápida del
+detector.</div>
+<div class="line">Es eficiente, moderna, y puede ser utilizada en aplicaciones en tiempo
+real.</div>
+</div>
+<p>El resto de aplicaciones de AprilTag se puede revisar en los siguintes
+repositorios:</p>
 <p><a class="reference external" href="https://ftc-docs.firstinspires.org/en/latest/apriltag/vision_portal/apriltag_intro/apriltag-intro.html">April-Tags</a>
 <a class="reference external" href="https://github.com/rgov/apriltag-pdfs/tree/main/tag36h11/us_letter/100mm">Git-hub-Tags</a></p>
-<p><em><strong>Instalación:</strong></em></p>
+<p><strong>Instalación:</strong></p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>pupil-apriltags<span class="w"> </span>opencv-python
 </pre></div>
 </div>
 <hr class="docutils" />
-<p><em><strong>Detección en Python puro (sin ROS)</strong></em></p>
+<p><strong>Detección en Python puro (sin ROS)</strong></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">cv2</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pupil_apriltags</span><span class="w"> </span><span class="kn">import</span> <span class="n">Detector</span>
 
@@ -572,10 +589,13 @@ Es eficiente, moderna, y puede ser utilizada en aplicaciones en tiempo real.</p>
     <span class="n">main</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>Para el uso de april-tags, es importante tener en cuenta las características de la cámara.</p>
-<p><em><strong>Nodo ROS 2 que publica detección de AprilTags</strong></em></p>
-<p>Para el siguiente nodo, se utulizará los mensajes previamente creados <code class="docutils literal notranslate"><span class="pre">AprilTagPixel</span></code> y <code class="docutils literal notranslate"><span class="pre">AprilTagPixelArray</span></code></p>
-<p>Este nodo se ejecuta en ROS 2 y <strong>publica los datos detectados</strong> (ID y posición en píxeles) en un tópico llamado <code class="docutils literal notranslate"><span class="pre">/apriltag_pixels</span></code>.</p>
+<p>Para el uso de april-tags, es importante tener en cuenta las
+características de la cámara.</p>
+<p><strong>Nodo ROS 2 que publica detección de AprilTags</strong></p>
+<p>Para el siguiente nodo, se utulizará los mensajes previamente creados
+<code class="docutils literal notranslate"><span class="pre">AprilTagPixel</span></code> y <code class="docutils literal notranslate"><span class="pre">AprilTagPixelArray</span></code></p>
+<p>Este nodo se ejecuta en ROS 2 y <strong>publica los datos detectados</strong> (ID y
+posición en píxeles) en un tópico llamado <code class="docutils literal notranslate"><span class="pre">/apriltag_pixels</span></code>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">cv2</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pupil_apriltags</span><span class="w"> </span><span class="kn">import</span> <span class="n">Detector</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">rclpy</span>
@@ -661,13 +681,13 @@ Es eficiente, moderna, y puede ser utilizada en aplicaciones en tiempo real.</p>
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
     <span class="n">main</span><span class="p">()</span>
-
-
 </pre></div>
 </div>
-<p>Se puede utilizar diferentes variaciones para uso de apriltags con ROS2, para poder usar un formato compatible con las imágenes de ROS se debe utilizar el tipo de mensaje <code class="docutils literal notranslate"><span class="pre">sensor_msgs</span></code> y agregar esta dependencia en el paquete creado.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">cv2</span>
+<p>Se puede utilizar diferentes variaciones para uso de apriltags con ROS2,
+para poder usar un formato compatible con las imágenes de ROS se debe
+utilizar el tipo de mensaje <code class="docutils literal notranslate"><span class="pre">sensor_msgs</span></code> y agregar esta dependencia
+en el paquete creado.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">cv2</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pupil_apriltags</span><span class="w"> </span><span class="kn">import</span> <span class="n">Detector</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">rclpy</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">rclpy.node</span><span class="w"> </span><span class="kn">import</span> <span class="n">Node</span>
@@ -748,10 +768,14 @@ Es eficiente, moderna, y puede ser utilizada en aplicaciones en tiempo real.</p>
 </section>
 <section id="servicios-personalizados">
 <h2>Servicios personalizados<a class="headerlink" href="#servicios-personalizados" title="Link to this heading"></a></h2>
-<p>En el servicio personalizado se agrega la funcionalidad de una Heuristica al sistema de control del robot.</p>
-<p><em><strong>Definición general</strong></em>
-Una heurística es una regla, método o estrategia que simplifica la toma de decisiones y permite encontrar soluciones aproximadas en situaciones complejas, donde el cálculo exacto sería muy costoso o imposible.</p>
-<p>Para ello, se establece un servicio que tiene como requerimiento  el tipo de mensaje <code class="docutils literal notranslate"><span class="pre">AprilTagPixelArray</span></code> y como respuesta un <code class="docutils literal notranslate"><span class="pre">AprilTagPixel</span></code></p>
+<p>En el servicio personalizado se agrega la funcionalidad de una
+Heuristica al sistema de control del robot.</p>
+<p><strong>Definición general</strong> Una heurística es una regla, método o estrategia
+que simplifica la toma de decisiones y permite encontrar soluciones
+aproximadas en situaciones complejas, donde el cálculo exacto sería muy
+costoso o imposible.</p>
+<p>Para ello, se establece un servicio que tiene como requerimiento el tipo
+de mensaje <code class="docutils literal notranslate"><span class="pre">AprilTagPixelArray</span></code> y como respuesta un <code class="docutils literal notranslate"><span class="pre">AprilTagPixel</span></code></p>
 <ol class="arabic simple">
 <li><p>Creación del archivo srv</p></li>
 </ol>
@@ -767,7 +791,8 @@ gedit<span class="w"> </span>Heuristica.srv
 <span class="n">avig_msg</span><span class="o">/</span><span class="n">AprilTagPixel</span> <span class="n">tag_out</span>
 </pre></div>
 </div>
-<p>Esto indica que el servicio recibirá una lista de tags y devolverá solo uno como resultado.</p>
+<p>Esto indica que el servicio recibirá una lista de tags y devolverá solo
+uno como resultado.</p>
 <hr class="docutils" />
 <ol class="arabic simple" start="2">
 <li><p>Configurar CMakeLists.txt</p></li>
@@ -843,7 +868,7 @@ touch<span class="w"> </span>__initi__.py
         <span class="k">if</span> <span class="ow">not</span> <span class="n">tags</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;No se recibió ningún tag.&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">response</span>
-        
+
         <span class="n">tag1</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">tag</span> <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">tags</span> <span class="k">if</span> <span class="n">tag</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="mi">1</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span>
         <span class="n">tag2</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">tag</span> <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">tags</span> <span class="k">if</span> <span class="n">tag</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="mi">2</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span>
 
@@ -853,16 +878,16 @@ touch<span class="w"> </span>__initi__.py
 
 
         <span class="n">tags_ordenados</span> <span class="o">=</span> <span class="p">[</span><span class="n">tag</span> <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">tags</span> <span class="k">if</span> <span class="n">tag</span><span class="o">.</span><span class="n">id</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">tag</span><span class="o">.</span><span class="n">id</span> <span class="o">!=</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">tag</span><span class="o">.</span><span class="n">id</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">]</span>
-        
+
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">tag</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">tags_ordenados</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Revisando el tag: </span><span class="si">{</span><span class="n">tag</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="k">if</span> <span class="mi">10</span> <span class="o">&lt;=</span> <span class="n">tag</span><span class="o">.</span><span class="n">id</span> <span class="o">&lt;</span> <span class="mi">20</span><span class="p">:</span>
                 <span class="n">tag</span><span class="o">.</span><span class="n">dist</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">tag</span><span class="o">.</span><span class="n">posx</span> <span class="o">-</span> <span class="n">tag1</span><span class="o">.</span><span class="n">posx</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">tag</span><span class="o">.</span><span class="n">posy</span> <span class="o">-</span> <span class="n">tag1</span><span class="o">.</span><span class="n">posy</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">tag</span><span class="o">.</span><span class="n">dist</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">tag</span><span class="o">.</span><span class="n">posx</span> <span class="o">-</span> <span class="n">tag2</span><span class="o">.</span><span class="n">posx</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">tag</span><span class="o">.</span><span class="n">posy</span> <span class="o">-</span> <span class="n">tag2</span><span class="o">.</span><span class="n">posy</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
-            
+
             <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Distancia del Tag: </span><span class="si">{</span><span class="n">tag</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2"> es </span><span class="si">{</span><span class="n">tag</span><span class="o">.</span><span class="n">dist</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-            
+
         <span class="c1"># Heurística: devolver el tag con menor coordenada posx</span>
         <span class="n">tag_ordenado</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">tags_ordenados</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">dist</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">response</span><span class="o">.</span><span class="n">tag_out</span> <span class="o">=</span> <span class="n">tag_ordenado</span>
@@ -879,12 +904,9 @@ touch<span class="w"> </span>__initi__.py
     <span class="n">main</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>Este nodo:</p>
-<ul class="simple">
-<li><p>Se llama <code class="docutils literal notranslate"><span class="pre">srv_servidor</span></code></p></li>
-<li><p>Responde a solicitudes del servicio <code class="docutils literal notranslate"><span class="pre">Heuristica</span></code></p></li>
-<li><p>Elige el tag con menor distancia al tag 0 (<code class="docutils literal notranslate"><span class="pre">dist</span></code>)</p></li>
-</ul>
+<p>Este nodo: - Se llama <code class="docutils literal notranslate"><span class="pre">srv_servidor</span></code> - Responde a solicitudes del
+servicio <code class="docutils literal notranslate"><span class="pre">Heuristica</span></code> - Elige el tag con menor distancia al tag 0
+(<code class="docutils literal notranslate"><span class="pre">dist</span></code>)</p>
 <hr class="docutils" />
 <ol class="arabic simple" start="6">
 <li><p>Crear el Cliente</p></li>
@@ -912,7 +934,7 @@ touch<span class="w"> </span>__initi__.py
             <span class="n">tag</span><span class="o">.</span><span class="n">posx</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="mi">100</span> <span class="o">-</span> <span class="n">i</span><span class="o">*</span><span class="mi">10</span><span class="p">)</span>
             <span class="n">tag</span><span class="o">.</span><span class="n">posy</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="mi">50</span>  <span class="o">+</span> <span class="n">i</span><span class="o">*</span><span class="mi">10</span><span class="p">)</span>
             <span class="n">msg_array</span><span class="o">.</span><span class="n">tags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
-        
+
         <span class="n">tag</span> <span class="o">=</span> <span class="n">AprilTagPixel</span><span class="p">()</span>
         <span class="n">tag</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="n">tag</span><span class="o">.</span><span class="n">posx</span> <span class="o">=</span> <span class="o">-</span><span class="mf">20.0</span>
@@ -940,7 +962,7 @@ touch<span class="w"> </span>__initi__.py
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">response</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">future</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
                 <span class="n">node</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Tag seleccionado: </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">tag_out</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-                                       
+
                 <span class="n">node</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Tag ID: </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">tag_out</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2"> &quot;</span>
                                        <span class="sa">f</span><span class="s2">&quot;(</span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">tag_out</span><span class="o">.</span><span class="n">posx</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">tag_out</span><span class="o">.</span><span class="n">posy</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
             <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
@@ -953,12 +975,8 @@ touch<span class="w"> </span>__initi__.py
     <span class="n">main</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>Este nodo:</p>
-<ul class="simple">
-<li><p>Crea y envía una lista de <code class="docutils literal notranslate"><span class="pre">AprilTagPixel</span></code></p></li>
-<li><p>Solicita una respuesta del servidor</p></li>
-<li><p>Muestra el tag seleccionado</p></li>
-</ul>
+<p>Este nodo: - Crea y envía una lista de <code class="docutils literal notranslate"><span class="pre">AprilTagPixel</span></code> - Solicita una
+respuesta del servidor - Muestra el tag seleccionado</p>
 <hr class="docutils" />
 <ol class="arabic simple" start="7">
 <li><p>Registrar los nodos en setup.py</p></li>
@@ -972,36 +990,49 @@ touch<span class="w"> </span>__initi__.py
 <span class="p">},</span>
 </pre></div>
 </div>
-<hr class="docutils" />
-<ol class="arabic simple" start="8">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><ol class="arabic simple" start="8">
 <li><p>Compilar nuevamente</p></li>
 </ol>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>colcon<span class="w"> </span>build<span class="w"> </span>--packages-select<span class="w"> </span>mi_pkg_python
-<span class="nb">source</span><span class="w"> </span>install/setup.bash
-</pre></div>
-</div>
-<hr class="docutils" />
-<ol class="arabic simple" start="9">
+</th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><ol class="arabic simple" start="9">
 <li><p>Ejecutar</p></li>
 </ol>
-<p>En dos terminales diferentes:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>run<span class="w"> </span>mi_pkg_python<span class="w"> </span>servidor
-</pre></div>
-</div>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>run<span class="w"> </span>mi_pkg_python<span class="w"> </span>cliente
-</pre></div>
-</div>
-</section>
-<section id="implementacion-de-una-accion-personalizada">
-<h2>Implementación de una Acción Personalizada<a class="headerlink" href="#implementacion-de-una-accion-personalizada" title="Link to this heading"></a></h2>
-<p>En esta <strong>acción personalizada</strong> llamada <code class="docutils literal notranslate"><span class="pre">MoverA</span></code> se simula el movimiento de un robot hacia una posición <code class="docutils literal notranslate"><span class="pre">(x,</span> <span class="pre">y)</span></code> objetivo, utilizando el sistema de acciones de ROS 2.</p>
-<p>La acción representa como el robot se mueve gradualmente en línea recta hacia la meta, acercándose poco a poco hasta que la distancia sea menor a un umbral (por ejemplo, 0.1).</p>
-<p>La trayectoría que se simularña en este ejercicio obedece los siguientes puntos:</p>
-</section>
-<section id="id1">
-<h2><img alt="mat" src="../../_images/matematica.png" />
-<img alt="gif" src="../../_images/mov.gif" /><a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
-<p><em><strong>Estructura general</strong></em></p>
+</td>
+</tr>
+<tr class="row-odd"><td><p>En dos terminales diferentes:</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">bash</span> <span class="pre">ros2</span> <span class="pre">run</span> <span class="pre">mi_pkg_python</span> <span class="pre">servidor</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">bash</span> <span class="pre">ros2</span> <span class="pre">run</span> <span class="pre">mi_pkg_python</span> <span class="pre">cliente</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>## Implementación de una Acción
+Personalizada</p></td>
+</tr>
+<tr class="row-odd"><td><p>En esta <strong>acción personalizada</strong> llamada
+<code class="docutils literal notranslate"><span class="pre">MoverA</span></code> se simula el movimiento de un
+robot hacia una posición <code class="docutils literal notranslate"><span class="pre">(x,</span> <span class="pre">y)</span></code>
+objetivo, utilizando el sistema de
+acciones de ROS 2.</p></td>
+</tr>
+<tr class="row-even"><td><p>La acción representa como el robot se
+mueve gradualmente en línea recta hacia
+la meta, acercándose poco a poco hasta
+que la distancia sea menor a un umbral
+(por ejemplo, 0.1).</p></td>
+</tr>
+<tr class="row-odd"><td><p>La trayectoría que se simularña en este
+ejercicio obedece los siguientes puntos:</p></td>
+</tr>
+<tr class="row-even"><td><p><a href="#id1"><span class="problematic" id="id2">|mat|</span></a> <a href="#id3"><span class="problematic" id="id4">|gif|</span></a></p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Estructura general</strong></p>
 <ul class="simple">
 <li><p><strong>Paquete de mensajes:</strong> <code class="docutils literal notranslate"><span class="pre">avig_msg</span></code></p></li>
 <li><p><strong>Archivo de acción:</strong> <code class="docutils literal notranslate"><span class="pre">MoverA.action</span></code></p></li>
@@ -1054,11 +1085,12 @@ ament_export_dependencies(rosidl_default_runtime)
 </div>
 <hr class="docutils" />
 <ol class="arabic simple" start="4">
-<li><p>Servidor de acción (<code class="docutils literal notranslate"><span class="pre">action_server.py</span></code> en <code class="docutils literal notranslate"><span class="pre">mi_pkg_python/acciones</span></code>)
-Este nodo:</p></li>
+<li><p>Servidor de acción (<code class="docutils literal notranslate"><span class="pre">action_server.py</span></code> en
+<code class="docutils literal notranslate"><span class="pre">mi_pkg_python/acciones</span></code>) Este nodo:</p></li>
 </ol>
 <ul class="simple">
-<li><p>Recibe un objetivo de la posición inicial<code class="docutils literal notranslate"><span class="pre">(x,</span> <span class="pre">y)</span></code> y de la posición objetivo <code class="docutils literal notranslate"><span class="pre">(x,</span> <span class="pre">y)</span></code>.</p></li>
+<li><p>Recibe un objetivo de la posición inicial<code class="docutils literal notranslate"><span class="pre">(x,</span> <span class="pre">y)</span></code> y de la posición
+objetivo <code class="docutils literal notranslate"><span class="pre">(x,</span> <span class="pre">y)</span></code>.</p></li>
 <li><p>Simula el movimiento hacia la meta.</p></li>
 <li><p>Envía <code class="docutils literal notranslate"><span class="pre">feedback</span></code> de la distancia restante.</p></li>
 <li><p>Devuelve <code class="docutils literal notranslate"><span class="pre">success</span> <span class="pre">=</span> <span class="pre">true</span></code> si llega al destino.</p></li>
@@ -1170,7 +1202,8 @@ Este nodo:</p></li>
     <span class="n">main</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>Es importante agregar el archivo <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code> en el direccitorio <code class="docutils literal notranslate"><span class="pre">mi_pkg_python/acciones</span></code></p>
+<p>Es importante agregar el archivo <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code> en el direccitorio
+<code class="docutils literal notranslate"><span class="pre">mi_pkg_python/acciones</span></code></p>
 <ol class="arabic simple" start="5">
 <li><p>Cliente de acción (<code class="docutils literal notranslate"><span class="pre">action_client.py</span></code> en <code class="docutils literal notranslate"><span class="pre">mi_pkg_python</span></code>)</p></li>
 </ol>
@@ -1260,19 +1293,18 @@ Este nodo:</p></li>
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
     <span class="n">main</span><span class="p">()</span>
-
 </pre></div>
 </div>
 <p>Este nodo:</p>
 <ul class="simple">
-<li><p>Envía un objetivo <code class="docutils literal notranslate"><span class="pre">(x,</span> <span class="pre">y)</span></code> con la posición inicial y  un objetivo <code class="docutils literal notranslate"><span class="pre">(x,</span> <span class="pre">y)</span></code> con la posición meta al servidor.</p></li>
+<li><p>Envía un objetivo <code class="docutils literal notranslate"><span class="pre">(x,</span> <span class="pre">y)</span></code> con la posición inicial y un objetivo
+<code class="docutils literal notranslate"><span class="pre">(x,</span> <span class="pre">y)</span></code> con la posición meta al servidor.</p></li>
 <li><p>Imprime el feedback recibido.</p></li>
 <li><p>Muestra el resultado final.</p></li>
 </ul>
 <hr class="docutils" />
 <ol class="arabic simple" start="6">
-<li><p>setup.py
-Registrar scripts en el <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> de <code class="docutils literal notranslate"><span class="pre">acciones</span></code>:</p></li>
+<li><p>setup.py Registrar scripts en el <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> de <code class="docutils literal notranslate"><span class="pre">acciones</span></code>:</p></li>
 </ol>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">entry_points</span><span class="o">=</span><span class="p">{</span>
     <span class="s1">&#39;console_scripts&#39;</span><span class="p">:</span> <span class="p">[</span>
@@ -1287,7 +1319,7 @@ Registrar scripts en el <code class="docutils literal notranslate"><span class="
 <li><p>Compilación</p></li>
 </ol>
 <p>Desde la raíz del workspace:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>colcon<span class="w"> </span>build<span class="w"> </span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>colcon<span class="w"> </span>build
 <span class="nb">source</span><span class="w"> </span>install/setup.bash
 </pre></div>
 </div>
@@ -1303,6 +1335,17 @@ Registrar scripts en el <code class="docutils literal notranslate"><span class="
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>run<span class="w"> </span>mi_pkg_python<span class="w"> </span>action_client
 </pre></div>
 </div>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-0-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-0-0-0" name="0-0" role="tab" tabindex="0">Linux</button><button aria-controls="panel-0-0-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-1" name="0-1" role="tab" tabindex="-1">macOS</button><button aria-controls="panel-0-0-2" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-2" name="0-2" role="tab" tabindex="-1">Windows</button></div><div aria-labelledby="tab-0-0-0" class="sphinx-tabs-panel" id="panel-0-0-0" name="0-0" role="tabpanel" tabindex="0"><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;source ~/ros2_install/ros2-linux/setup.bash&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>~/.bashrc
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-0-0-1" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-1" name="0-1" role="tabpanel" tabindex="0"><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;source ~/ros2_install/ros2-osx/setup.bash&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>~/.bash_profile
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-0-0-2" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-2" name="0-2" role="tabpanel" tabindex="0"><div class="highlight-batch notranslate"><div class="highlight"><pre><span></span><span class="k">call</span> C:\ros2_install\ros2-windows\setup.bat
+</pre></div>
+</div>
+</div></div>
 </section>
 </section>
 

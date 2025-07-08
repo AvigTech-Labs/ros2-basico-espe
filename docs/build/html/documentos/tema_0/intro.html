@@ -46,7 +46,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">ROS2 Humble</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Módulos</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">¿Qué es ROS2?</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#ecosistema-ros-2">Ecosistema ROS 2</a></li>
@@ -54,25 +54,14 @@
 <li class="toctree-l2"><a class="reference internal" href="#plumbing-capabilities">Plumbing &amp; Capabilities</a></li>
 </ul>
 </li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">Instalación</span></p>
-<ul>
 <li class="toctree-l1"><a class="reference internal" href="../tema_1/instalacion.html">Instalación de Ubuntu</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tema_1/maquina_virtual.html">Instalacion de Ubuntu 22.04 con VirtualBox</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tema_1/instalacionROS2.html">Instalación de ROS2 Humble</a></li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">Conceptos Básicos</span></p>
-<ul>
 <li class="toctree-l1"><a class="reference internal" href="../tema_2/conceptos_basicos.html">Conceptos Básicos</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tema_2/tutoriales.html">Tutoriales</a></li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">Conexión con dispositivos</span></p>
-<ul>
 <li class="toctree-l1"><a class="reference internal" href="../tema_3/dispositivos.html">Conexión con dispositivos</a></li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">Conexión con dispositivos</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../tema_4/visualizacion_datos.html">URDF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tema_3/dispositivos.html#tabla-de-librerias-recomendadas-para-tu-proyecto-esp32-con-wifimanager-y-mqtt">Tabla de librerías recomendadas para tu proyecto ESP32 con WiFiManager y MQTT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tema_4/visualizacion_datos.html">Archivos URDF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tema_4/visualizacion_datos.html#gemelo-digital">Gemelo Digital</a></li>
 </ul>
 
@@ -101,26 +90,38 @@
              
   <section id="que-es-ros2">
 <h1>¿Qué es ROS2?<a class="headerlink" href="#que-es-ros2" title="Link to this heading"></a></h1>
-<p>ROS 2 (<strong>Robot Operating System 2</strong>) es la evolución del sistema original ROS. Aporta mejoras clave en seguridad, rendimiento, escalabilidad y soporte para sistemas distribuidos. ROS 2 está diseñado para producción en entornos industriales y robótica avanzada.</p>
-<p>Aunque su nombre sugiere que es un sistema operativo, <strong>ROS 2 no es un sistema operativo tradicional</strong>, sino una capa de software que corre sobre uno (como Ubuntu Linux), utilizando el middleware DDS como base para la comunicación entre procesos.</p>
+<p>ROS 2 (<strong>Robot Operating System 2</strong>) es la evolución del sistema
+original ROS. Aporta mejoras clave en seguridad, rendimiento,
+escalabilidad y soporte para sistemas distribuidos. ROS 2 está diseñado
+para producción en entornos industriales y robótica avanzada.</p>
+<p>Aunque su nombre sugiere que es un sistema operativo, <strong>ROS 2 no es un
+sistema operativo tradicional</strong>, sino una capa de software que corre
+sobre uno (como Ubuntu Linux), utilizando el middleware DDS como base
+para la comunicación entre procesos.</p>
 <hr class="docutils" />
 <section id="ecosistema-ros-2">
 <h2>Ecosistema ROS 2<a class="headerlink" href="#ecosistema-ros-2" title="Link to this heading"></a></h2>
 <p>El ecosistema de ROS 2 incluye:</p>
 <ul class="simple">
-<li><p><strong>Paquetes (packages):</strong> Componentes de software reutilizables que contienen nodos, configuraciones, interfaces, etc.</p></li>
+<li><p><strong>Paquetes (packages):</strong> Componentes de software reutilizables que
+contienen nodos, configuraciones, interfaces, etc.</p></li>
 <li><p><strong>Nodos (nodes):</strong> Programas individuales que se comunican entre sí.</p></li>
 <li><p><strong>Topics:</strong> Canales para mensajes unidireccionales y asíncronos.</p></li>
 <li><p><strong>Services:</strong> Para llamadas sincrónicas tipo request-response.</p></li>
-<li><p><strong>Actions:</strong> Para tareas que pueden tomar tiempo y requieren feedback (como mover un brazo).</p></li>
-<li><p><strong>Launch files (Python):</strong> Permiten iniciar múltiples nodos con configuraciones específicas.</p></li>
-<li><p><strong>Rosbags (ros2 bag):</strong> Graba y reproduce datos de topics para pruebas y análisis.</p></li>
+<li><p><strong>Actions:</strong> Para tareas que pueden tomar tiempo y requieren feedback
+(como mover un brazo).</p></li>
+<li><p><strong>Launch files (Python):</strong> Permiten iniciar múltiples nodos con
+configuraciones específicas.</p></li>
+<li><p><strong>Rosbags (ros2 bag):</strong> Graba y reproduce datos de topics para pruebas
+y análisis.</p></li>
 </ul>
 </section>
 <hr class="docutils" />
 <section id="arquitectura-de-ros-2">
 <h2>Arquitectura de ROS 2<a class="headerlink" href="#arquitectura-de-ros-2" title="Link to this heading"></a></h2>
-<p>ROS 2 está basado en una arquitectura distribuida sobre DDS (<strong>Data Distribution Service</strong>), eliminando la dependencia del nodo maestro (<code class="docutils literal notranslate"><span class="pre">roscore</span></code> ya no existe). Componentes clave incluyen:</p>
+<p>ROS 2 está basado en una arquitectura distribuida sobre DDS (<strong>Data
+Distribution Service</strong>), eliminando la dependencia del nodo maestro
+(<code class="docutils literal notranslate"><span class="pre">roscore</span></code> ya no existe). Componentes clave incluyen:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">ros2</span> <span class="pre">run</span></code>: Ejecuta un nodo de un paquete</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">ros2</span> <span class="pre">topic</span></code>: Inspecciona y publica topics</p></li>
@@ -135,8 +136,10 @@
 <section id="plumbing-capabilities">
 <h2>Plumbing &amp; Capabilities<a class="headerlink" href="#plumbing-capabilities" title="Link to this heading"></a></h2>
 <ul class="simple">
-<li><p><strong>Plumbing:</strong> Comunicación de bajo nivel — nodos, topics, services, actions.</p></li>
-<li><p><strong>Capabilities:</strong> Habilidades de más alto nivel construidas sobre lo anterior:</p></li>
+<li><p><strong>Plumbing:</strong> Comunicación de bajo nivel — nodos, topics, services,
+actions.</p></li>
+<li><p><strong>Capabilities:</strong> Habilidades de más alto nivel construidas sobre lo
+anterior:</p></li>
 <li><p><strong>Nav2:</strong> Sistema de navegación autónoma para robots móviles</p></li>
 <li><p><strong>SLAM Toolbox:</strong> Localización y mapeo simultáneo</p></li>
 <li><p><strong>MoveIt 2:</strong> Planificación y control de brazos robóticos</p></li>
@@ -151,8 +154,10 @@
 <li><p>Integrarse con microcontroladores, sistemas distribuidos y la nube.</p></li>
 </ul>
 <p>Para una introducción visual a ROS 2 en Español:</p>
-<p><a class="reference external" href="https://www.youtube.com/watch?v=3xf1fHEJ48s">¿ROS Aplicaciones? - (articular)</a></p>
-<p><a class="reference external" href="https://www.youtube.com/watch?v=wrlJyO5UkaE">¿ROS Aplicaciones? - (movil)</a></p>
+<p><a class="reference external" href="https://www.youtube.com/watch?v=3xf1fHEJ48s">¿ROS Aplicaciones? -
+(articular)</a></p>
+<p><a class="reference external" href="https://www.youtube.com/watch?v=wrlJyO5UkaE">¿ROS Aplicaciones? -
+(movil)</a></p>
 </section>
 </section>
 

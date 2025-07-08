@@ -19,7 +19,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install sphinx myst-parser sphinx_rtd_theme sphinx-copybutton
+          pip install sphinx sphinx_rtd_theme sphinx-copybutton sphinx-tabs
 
       - name: Build docs
         run: |

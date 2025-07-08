@@ -46,28 +46,17 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">ROS2 Humble</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../tema_0/intro.html">¿Qué es ROS2?</a></li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">Instalación</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Módulos</span></p>
 <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../tema_0/intro.html">¿Qué es ROS2?</a></li>
 <li class="toctree-l1"><a class="reference internal" href="instalacion.html">Instalación de Ubuntu</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Instalacion de Ubuntu 22.04 con VirtualBox</a></li>
 <li class="toctree-l1"><a class="reference internal" href="instalacionROS2.html">Instalación de ROS2 Humble</a></li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">Conceptos Básicos</span></p>
-<ul>
 <li class="toctree-l1"><a class="reference internal" href="../tema_2/conceptos_basicos.html">Conceptos Básicos</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tema_2/tutoriales.html">Tutoriales</a></li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">Conexión con dispositivos</span></p>
-<ul>
 <li class="toctree-l1"><a class="reference internal" href="../tema_3/dispositivos.html">Conexión con dispositivos</a></li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">Conexión con dispositivos</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../tema_4/visualizacion_datos.html">URDF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tema_3/dispositivos.html#tabla-de-librerias-recomendadas-para-tu-proyecto-esp32-con-wifimanager-y-mqtt">Tabla de librerías recomendadas para tu proyecto ESP32 con WiFiManager y MQTT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tema_4/visualizacion_datos.html">Archivos URDF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tema_4/visualizacion_datos.html#gemelo-digital">Gemelo Digital</a></li>
 </ul>
 
@@ -97,33 +86,88 @@
   <section id="instalacion-de-ubuntu-22-04-con-virtualbox">
 <h1>Instalacion de Ubuntu 22.04 con VirtualBox<a class="headerlink" href="#instalacion-de-ubuntu-22-04-con-virtualbox" title="Link to this heading"></a></h1>
 <ol class="arabic simple">
-<li><p><a class="reference external" href="https://www.oracle.com/virtualization/technologies/vm/downloads/virtualbox-downloads.html">Descargar VirtualBox</a></p></li>
+<li><p><a class="reference external" href="https://www.oracle.com/virtualization/technologies/vm/downloads/virtualbox-downloads.html">Descargar
+VirtualBox</a></p></li>
 </ol>
-<p><img alt="Seleccion" src="../../_images/0-VB0.jpeg" /></p>
+<figure class="align-default" id="id1">
+<img alt="Seleccion" src="../../_images/0-VB0.jpeg" />
+<figcaption>
+<p><span class="caption-text">Seleccion</span><a class="headerlink" href="#id1" title="Link to this image"></a></p>
+</figcaption>
+</figure>
 <ol class="arabic simple" start="3">
 <li><p>Configuracion de VirtualBOX</p></li>
 </ol>
-<p>Selecciono la opción «nueva»</p>
-<p><img alt="Seleccion" src="../../_images/0-VB1.jpeg" /></p>
+<p>Selecciono la opción “nueva”</p>
+<figure class="align-default" id="id2">
+<img alt="Seleccion" src="../../_images/0-VB1.jpeg" />
+<figcaption>
+<p><span class="caption-text">Seleccion</span><a class="headerlink" href="#id2" title="Link to this image"></a></p>
+</figcaption>
+</figure>
 <p>Coloco un nombre para la máquina virtual</p>
-<p><img alt="Seleccion" src="../../_images/0-VB2.jpeg" /></p>
+<figure class="align-default" id="id3">
+<img alt="Seleccion" src="../../_images/0-VB2.jpeg" />
+<figcaption>
+<p><span class="caption-text">Seleccion</span><a class="headerlink" href="#id3" title="Link to this image"></a></p>
+</figcaption>
+</figure>
 <p>Cargo la imagen ISO</p>
-<p><img alt="Seleccion" src="../../_images/0-VB3.jpeg" /></p>
-<p><img alt="Seleccion" src="../../_images/0-VB4.jpeg" /></p>
+<figure class="align-default" id="id4">
+<img alt="Seleccion" src="../../_images/0-VB3.jpeg" />
+<figcaption>
+<p><span class="caption-text">Seleccion</span><a class="headerlink" href="#id4" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-default" id="id5">
+<img alt="Seleccion" src="../../_images/0-VB4.jpeg" />
+<figcaption>
+<p><span class="caption-text">Seleccion</span><a class="headerlink" href="#id5" title="Link to this image"></a></p>
+</figcaption>
+</figure>
 <p>Agrego un Usuario y contraseña para la máquina virtual</p>
-<p><img alt="Seleccion" src="../../_images/0-VB5.jpeg" /></p>
-<p>Congifuro la memoria ram y el número de nucleos (se recomienda utilizar el 50% de la memoria RAM Física)</p>
-<p><img alt="Seleccion" src="../../_images/0-VB6.jpeg" /></p>
+<figure class="align-default" id="id6">
+<img alt="Seleccion" src="../../_images/0-VB5.jpeg" />
+<figcaption>
+<p><span class="caption-text">Seleccion</span><a class="headerlink" href="#id6" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>Congifuro la memoria ram y el número de nucleos (se recomienda utilizar
+el 50% de la memoria RAM Física)</p>
+<figure class="align-default" id="id7">
+<img alt="Seleccion" src="../../_images/0-VB6.jpeg" />
+<figcaption>
+<p><span class="caption-text">Seleccion</span><a class="headerlink" href="#id7" title="Link to this image"></a></p>
+</figcaption>
+</figure>
 <p>Para un uso básico se recomienda un total de 30 GB de memoria</p>
-<p><img alt="Seleccion" src="../../_images/0-VB7.jpeg" /></p>
+<figure class="align-default" id="id8">
+<img alt="Seleccion" src="../../_images/0-VB7.jpeg" />
+<figcaption>
+<p><span class="caption-text">Seleccion</span><a class="headerlink" href="#id8" title="Link to this image"></a></p>
+</figcaption>
+</figure>
 <p>Finalizo la configuración</p>
-<p><img alt="Seleccion" src="../../_images/0-VB8.jpeg" /></p>
-<p>Arrancar Máquina virtual - Al iniciar la máquina de forma automática comenzará la instalación</p>
-<p><img alt="Seleccion" src="../../_images/0-VB9.jpeg" /></p>
+<figure class="align-default" id="id9">
+<img alt="Seleccion" src="../../_images/0-VB8.jpeg" />
+<figcaption>
+<p><span class="caption-text">Seleccion</span><a class="headerlink" href="#id9" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>Arrancar Máquina virtual - Al iniciar la máquina de forma automática
+comenzará la instalación</p>
+<figure class="align-default" id="id10">
+<img alt="Seleccion" src="../../_images/0-VB9.jpeg" />
+<figcaption>
+<p><span class="caption-text">Seleccion</span><a class="headerlink" href="#id10" title="Link to this image"></a></p>
+</figcaption>
+</figure>
 <ol class="arabic simple" start="4">
 <li><p>Instalación de locales</p></li>
 </ol>
-<p>Al realizarse la instalación utilizando una Máquina virtual es posible que no podamos acceder a la terminal de ubuntu, por lo cual es necesario realizar la configuración de forma manual de los <em>locales</em></p>
+<p>Al realizarse la instalación utilizando una Máquina virtual es posible
+que no podamos acceder a la terminal de ubuntu, por lo cual es necesario
+realizar la configuración de forma manual de los <em>locales</em></p>
 <p>Presionamos las teclas ctrl+alt+F3</p>
 <p>Ingresamos nuestras credenciales</p>
 <p>Accedemos al super usuario</p>
@@ -132,14 +176,14 @@
 </div>
 <p>la contraseña es la misma que usamos para nuestro usuario regular.</p>
 <p>a continuación realizamos la configuración de los locales.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">locale</span> 
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">locale</span>
 
 <span class="n">sudo</span> <span class="n">apt</span> <span class="n">update</span> <span class="o">&amp;&amp;</span> <span class="n">sudo</span> <span class="n">apt</span> <span class="n">install</span> <span class="n">locales</span>
 <span class="n">sudo</span> <span class="n">locale</span><span class="o">-</span><span class="n">gen</span> <span class="n">en_US</span> <span class="n">en_US</span><span class="o">.</span><span class="n">UTF</span><span class="o">-</span><span class="mi">8</span>
 <span class="n">sudo</span> <span class="n">update</span><span class="o">-</span><span class="n">locale</span> <span class="n">LC_ALL</span><span class="o">=</span><span class="n">en_US</span><span class="o">.</span><span class="n">UTF</span><span class="o">-</span><span class="mi">8</span> <span class="n">LANG</span><span class="o">=</span><span class="n">en_US</span><span class="o">.</span><span class="n">UTF</span><span class="o">-</span><span class="mi">8</span>
 <span class="n">export</span> <span class="n">LANG</span><span class="o">=</span><span class="n">en_US</span><span class="o">.</span><span class="n">UTF</span><span class="o">-</span><span class="mi">8</span>
 
-<span class="n">locale</span>  
+<span class="n">locale</span>
 </pre></div>
 </div>
 <p>y reiniciamos el sistema</p>
@@ -149,23 +193,33 @@
 <ol class="arabic simple" start="5">
 <li><p>Actualizar software</p></li>
 </ol>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span> <span class="n">upgrade</span> <span class="o">-</span><span class="n">y</span> 
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span> <span class="n">upgrade</span> <span class="o">-</span><span class="n">y</span>
 </pre></div>
 </div>
 <ol class="arabic simple" start="5">
 <li><p>Habilitar portapapeles Bidireccional</p></li>
 </ol>
-<p>Para habilitar el portapapeles bidireccional se debe configurar la máquina virtual de la siguiente forma:</p>
-<p><img alt="Seleccion" src="../../_images/0-VB10.jpg" /></p>
+<p>Para habilitar el portapapeles bidireccional se debe configurar la
+máquina virtual de la siguiente forma:</p>
+<figure class="align-default" id="id11">
+<img alt="Seleccion" src="../../_images/0-VB10.jpg" />
+<figcaption>
+<p><span class="caption-text">Seleccion</span><a class="headerlink" href="#id11" title="Link to this image"></a></p>
+</figcaption>
+</figure>
 <p>montar el CD de complemento de invitado</p>
-<p><img alt="Seleccion" src="../../_images/0-VB11.jpg" /></p>
+<figure class="align-default" id="id12">
+<img alt="Seleccion" src="../../_images/0-VB11.jpg" />
+<figcaption>
+<p><span class="caption-text">Seleccion</span><a class="headerlink" href="#id12" title="Link to this image"></a></p>
+</figcaption>
+</figure>
 <p>ejecutar autorun.sh y reiniciar el sistema.</p>
-<p><em><strong>Posibles Errores</strong></em> -</p>
+<p><strong>Posibles Errores</strong> -</p>
 <ol class="arabic simple">
 <li><p><strong>Tu Usuario</strong> no está en el archivo sudousers</p></li>
 </ol>
-<p><strong>solucion</strong>
-en la terminal colocar</p>
+<p><strong>solucion</strong> en la terminal colocar</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">su</span> <span class="o">-</span>
 </pre></div>
 </div>
@@ -174,8 +228,9 @@ en la terminal colocar</p>
 </pre></div>
 </div>
 <ol class="arabic simple" start="2">
-<li><p>Al momento de ejecutar la máquina virtual
-NOT IN A HYPERVISOR PARTITION (HVP =0 ) <a class="reference external" href="https://www.youtube.com/watch?v=XkLHhqOZmmY&amp;amp;t=5s">solucion</a></p></li>
+<li><p>Al momento de ejecutar la máquina virtual NOT IN A HYPERVISOR
+PARTITION (HVP =0 )
+<a class="reference external" href="https://www.youtube.com/watch?v=XkLHhqOZmmY&amp;t=5s">solucion</a></p></li>
 </ol>
 </section>
 

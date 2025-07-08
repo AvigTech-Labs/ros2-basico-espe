@@ -15,9 +15,9 @@ release = '0.1'
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
 extensions = [
-    'myst_parser',
     'sphinx_copybutton',
     'sphinx.ext.mathjax',
+    'sphinx_tabs.tabs',
 ]
 templates_path = ['_templates']
 exclude_patterns = []
@@ -33,6 +33,5 @@ html_show_sourcelink = False
 
 source_suffix = {
     '.rst': 'restructuredtext',
-    '.md': 'markdown',
 }
 
