@@ -8,16 +8,16 @@
     name="base_link">
     <inertial>
       <origin
-        xyz="0.086808 0.12 0.042401"
+        xyz="-0.0031922 5.2125E-10 0.042401"
         rpy="0 0 0" />
       <mass
         value="0.38379" />
       <inertia
         ixx="0.0003549"
-        ixy="1.7879E-12"
+        ixy="1.7886E-12"
         ixz="-3.9495E-05"
         iyy="0.00041474"
-        iyz="6.1954E-13"
+        iyz="6.195E-13"
         izz="0.00033584" />
     </inertial>
     <visual>
@@ -88,7 +88,7 @@
     name="brazo_joint"
     type="revolute">
     <origin
-      xyz="0.09 0.12 0.1077"
+      xyz="0 0 0.1077"
       rpy="0 0 0" />
     <parent
       link="base_link" />
@@ -97,16 +97,16 @@
     <axis
       xyz="0 0 1" />
     <limit
-      lower="-1"
-      upper="1"
+      lower="-1.5707"
+      upper="1.5707"
       effort="0"
-      velocity="3" />
+      velocity="1" />
   </joint>
   <link
     name="antebrazo_link">
     <inertial>
       <origin
-        xyz="0.096735 3.7289E-06 -0.0075366"
+        xyz="0.096735 3.7289E-06 0.0074634"
         rpy="0 0 0" />
       <mass
         value="0.37688" />
@@ -146,8 +146,8 @@
     name="antebrazo_joint"
     type="revolute">
     <origin
-      xyz="0.21502 0 -0.005"
-      rpy="0 0 0.001599" />
+      xyz="0.21502 0 -0.02"
+      rpy="0 0 0" />
     <parent
       link="brazo_link" />
     <child
@@ -155,25 +155,25 @@
     <axis
       xyz="0 0 1" />
     <limit
-      lower="-1"
-      upper="1"
+      lower="-1.5707"
+      upper="1.5707"
       effort="0"
-      velocity="3" />
+      velocity="1" />
   </joint>
   <link
     name="efector_link">
     <inertial>
       <origin
-        xyz="0 -5.421E-20 -0.037471"
+        xyz="0 -4.0612E-06 -0.037471"
         rpy="0 0 0" />
       <mass
         value="0.025072" />
       <inertia
         ixx="1.3992E-05"
         ixy="-2.1453E-24"
-        ixz="4.1862E-22"
+        ixz="2.8726E-22"
         iyy="1.3999E-05"
-        iyz="4.9988E-24"
+        iyz="3.8969E-24"
         izz="1.2444E-06" />
     </inertial>
     <visual>
@@ -204,8 +204,8 @@
     name="efector_joint"
     type="prismatic">
     <origin
-      xyz="0.215 0 -0.072"
-      rpy="3.1416 0 -0.001599" />
+      xyz="0.215 0 -0.01"
+      rpy="3.1416 0 0" />
     <parent
       link="antebrazo_link" />
     <child
@@ -213,9 +213,9 @@
     <axis
       xyz="0 0 1" />
     <limit
-      lower="-0.07"
-      upper="0"
+      lower="0"
+      upper="0.05"
       effort="0"
-      velocity="2" />
+      velocity="1" />
   </joint>
 </robot>
