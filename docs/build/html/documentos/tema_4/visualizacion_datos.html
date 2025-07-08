@@ -1201,7 +1201,7 @@ robot real, se aplica la combinación de los códigos de <code class="docutils l
 <li><p>Integración con nodos de ROS 2 para transformar coordenadas de cámara</p></li>
 </ul>
 <div class="sphinx-tabs docutils container">
-<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-UHJvZ3JhbWEgMQ==" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-0-UHJvZ3JhbWEgMQ==" name="UHJvZ3JhbWEgMQ==" role="tab" tabindex="0">Programa 1</button><button aria-controls="panel-0-UHJvZ3JhbWEgMg==" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-0-UHJvZ3JhbWEgMg==" name="UHJvZ3JhbWEgMg==" role="tab" tabindex="-1">Programa 2</button><button aria-controls="panel-0-UHJvZ3JhbWEgNA==" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-0-UHJvZ3JhbWEgNA==" name="UHJvZ3JhbWEgNA==" role="tab" tabindex="-1">Programa 4</button></div><div aria-labelledby="tab-0-UHJvZ3JhbWEgMQ==" class="sphinx-tabs-panel group-tab" id="panel-0-UHJvZ3JhbWEgMQ==" name="UHJvZ3JhbWEgMQ==" role="tabpanel" tabindex="0"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">cv2</span>
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-UHJvZ3JhbWEgMQ==" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-0-UHJvZ3JhbWEgMQ==" name="UHJvZ3JhbWEgMQ==" role="tab" tabindex="0">Programa 1</button><button aria-controls="panel-0-UHJvZ3JhbWEgMg==" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-0-UHJvZ3JhbWEgMg==" name="UHJvZ3JhbWEgMg==" role="tab" tabindex="-1">Programa 2</button><button aria-controls="panel-0-UHJvZ3JhbWEgMw==" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-0-UHJvZ3JhbWEgMw==" name="UHJvZ3JhbWEgMw==" role="tab" tabindex="-1">Programa 3</button><button aria-controls="panel-0-UHJvZ3JhbWEgNA==" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-0-UHJvZ3JhbWEgNA==" name="UHJvZ3JhbWEgNA==" role="tab" tabindex="-1">Programa 4</button></div><div aria-labelledby="tab-0-UHJvZ3JhbWEgMQ==" class="sphinx-tabs-panel group-tab" id="panel-0-UHJvZ3JhbWEgMQ==" name="UHJvZ3JhbWEgMQ==" role="tabpanel" tabindex="0"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">cv2</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 
 <span class="n">cap</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">VideoCapture</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
@@ -1286,6 +1286,47 @@ robot real, se aplica la combinación de los códigos de <code class="docutils l
    <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">default_flow_style</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Guardado como camera_calibration.yaml&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-0-UHJvZ3JhbWEgMw==" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-0-UHJvZ3JhbWEgMw==" name="UHJvZ3JhbWEgMw==" role="tabpanel" tabindex="0"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Archivo para usar la calibración</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">cv2</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">yaml</span>
+
+<span class="c1"># Cargar parámetros desde el archivo YAML generado</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;camera_calibration.yaml&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+   <span class="n">calib_data</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+<span class="n">K</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">calib_data</span><span class="p">[</span><span class="s2">&quot;camera_matrix&quot;</span><span class="p">][</span><span class="s2">&quot;data&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="n">dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">calib_data</span><span class="p">[</span><span class="s2">&quot;distortion_coefficients&quot;</span><span class="p">][</span><span class="s2">&quot;data&quot;</span><span class="p">])</span>
+
+<span class="c1"># Captura de cámara</span>
+<span class="n">cap</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">VideoCapture</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="k">while</span> <span class="n">cap</span><span class="o">.</span><span class="n">isOpened</span><span class="p">():</span>
+   <span class="n">ret</span><span class="p">,</span> <span class="n">frame</span> <span class="o">=</span> <span class="n">cap</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+   <span class="k">if</span> <span class="ow">not</span> <span class="n">ret</span><span class="p">:</span>
+      <span class="k">break</span>
+
+   <span class="n">h</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span>
+   <span class="n">new_camera_mtx</span><span class="p">,</span> <span class="n">roi</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">getOptimalNewCameraMatrix</span><span class="p">(</span><span class="n">K</span><span class="p">,</span> <span class="n">dist</span><span class="p">,</span> <span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">))</span>
+
+   <span class="c1"># Corrección de distorsión</span>
+   <span class="n">undistorted</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">undistort</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">dist</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">new_camera_mtx</span><span class="p">)</span>
+
+   <span class="c1"># Mostrar ambas imágenes</span>
+   <span class="n">cv2</span><span class="o">.</span><span class="n">namedWindow</span><span class="p">(</span><span class="s2">&quot;Original&quot;</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">WINDOW_NORMAL</span><span class="p">)</span>
+   <span class="n">cv2</span><span class="o">.</span><span class="n">namedWindow</span><span class="p">(</span><span class="s2">&quot;Undistorted&quot;</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">WINDOW_NORMAL</span><span class="p">)</span>
+   <span class="n">cv2</span><span class="o">.</span><span class="n">resizeWindow</span><span class="p">(</span><span class="s2">&quot;Original&quot;</span><span class="p">,</span> <span class="mi">640</span><span class="p">,</span> <span class="mi">480</span><span class="p">)</span>
+   <span class="n">cv2</span><span class="o">.</span><span class="n">resizeWindow</span><span class="p">(</span><span class="s2">&quot;Undistorted&quot;</span><span class="p">,</span> <span class="mi">640</span><span class="p">,</span> <span class="mi">480</span><span class="p">)</span>
+   <span class="n">cv2</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="s2">&quot;Original&quot;</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
+   <span class="n">cv2</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="s2">&quot;Undistorted&quot;</span><span class="p">,</span> <span class="n">undistorted</span><span class="p">)</span>
+
+   <span class="k">if</span> <span class="n">cv2</span><span class="o">.</span><span class="n">waitKey</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xFF</span> <span class="o">==</span> <span class="nb">ord</span><span class="p">(</span><span class="s1">&#39;q&#39;</span><span class="p">):</span>
+      <span class="k">break</span>
+
+<span class="n">cap</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
+<span class="n">cv2</span><span class="o">.</span><span class="n">destroyAllWindows</span><span class="p">()</span>
 </pre></div>
 </div>
 </div><div aria-labelledby="tab-0-UHJvZ3JhbWEgNA==" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-0-UHJvZ3JhbWEgNA==" name="UHJvZ3JhbWEgNA==" role="tabpanel" tabindex="0"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">cv2</span>
@@ -1384,6 +1425,120 @@ robot real, se aplica la combinación de los códigos de <code class="docutils l
 </div>
 </div></div>
 <p>Modificacion de archivos.</p>
+<p>Publicación de objetos en RVIZ</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">rclpy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rclpy.node</span><span class="w"> </span><span class="kn">import</span> <span class="n">Node</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">visualization_msgs.msg</span><span class="w"> </span><span class="kn">import</span> <span class="n">Marker</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">geometry_msgs.msg</span><span class="w"> </span><span class="kn">import</span> <span class="n">Point</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">std_msgs.msg</span><span class="w"> </span><span class="kn">import</span> <span class="n">ColorRGBA</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">CuboPublisher</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
+   <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s1">&#39;cubo_publisher&#39;</span><span class="p">)</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">publisher</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_publisher</span><span class="p">(</span><span class="n">Marker</span><span class="p">,</span> <span class="s1">&#39;visualization_marker&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">timer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_timer</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">publicar_cubos</span><span class="p">)</span>
+
+   <span class="k">def</span><span class="w"> </span><span class="nf">publicar_cubos</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="n">posiciones</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+      <span class="p">]</span>
+
+      <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">posiciones</span><span class="p">):</span>
+            <span class="n">cubo</span> <span class="o">=</span> <span class="n">Marker</span><span class="p">()</span>
+            <span class="n">cubo</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">frame_id</span> <span class="o">=</span> <span class="s1">&#39;world&#39;</span>
+            <span class="n">cubo</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">stamp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_clock</span><span class="p">()</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">to_msg</span><span class="p">()</span>
+            <span class="n">cubo</span><span class="o">.</span><span class="n">ns</span> <span class="o">=</span> <span class="s1">&#39;cubos&#39;</span>
+            <span class="n">cubo</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">i</span>
+            <span class="n">cubo</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">Marker</span><span class="o">.</span><span class="n">CUBE</span>
+            <span class="n">cubo</span><span class="o">.</span><span class="n">action</span> <span class="o">=</span> <span class="n">Marker</span><span class="o">.</span><span class="n">ADD</span>
+            <span class="n">cubo</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">x</span>
+            <span class="n">cubo</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">y</span>
+            <span class="n">cubo</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="n">z</span> <span class="o">+</span> <span class="mf">0.015</span>  <span class="c1"># para que se vea encima del suelo</span>
+            <span class="n">cubo</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">orientation</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="mf">0.0</span>
+            <span class="n">cubo</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">orientation</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="mf">0.0</span>
+            <span class="n">cubo</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">orientation</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="mf">0.0</span>
+            <span class="n">cubo</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">orientation</span><span class="o">.</span><span class="n">w</span> <span class="o">=</span> <span class="mf">1.0</span>
+            <span class="n">cubo</span><span class="o">.</span><span class="n">scale</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="mf">0.03</span>
+            <span class="n">cubo</span><span class="o">.</span><span class="n">scale</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="mf">0.03</span>
+            <span class="n">cubo</span><span class="o">.</span><span class="n">scale</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="mf">0.03</span>
+            <span class="n">cubo</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="n">ColorRGBA</span><span class="p">(</span><span class="n">r</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">g</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+            <span class="n">cubo</span><span class="o">.</span><span class="n">lifetime</span><span class="o">.</span><span class="n">sec</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># 0 = permanente</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">publisher</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">cubo</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Cubo </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1"> publicado en (</span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">y</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">z</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+   <span class="n">rclpy</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">)</span>
+   <span class="n">node</span> <span class="o">=</span> <span class="n">CuboPublisher</span><span class="p">()</span>
+   <span class="n">rclpy</span><span class="o">.</span><span class="n">spin</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+   <span class="n">node</span><span class="o">.</span><span class="n">destroy_node</span><span class="p">()</span>
+   <span class="n">rclpy</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Actualización del launch visualizar_rviz.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Importa la clase principal para definir lanzamientos en ROS 2</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">launch</span><span class="w"> </span><span class="kn">import</span> <span class="n">LaunchDescription</span>
+
+<span class="c1"># Importa la acción Node para lanzar nodos ROS 2</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">launch_ros.actions</span><span class="w"> </span><span class="kn">import</span> <span class="n">Node</span>
+
+<span class="c1"># Permite obtener la ruta del directorio share de un paquete instalado</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ament_index_python.packages</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_package_share_directory</span>
+
+<span class="c1"># Módulo estándar para trabajar con rutas de archivos</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="c1"># Función principal requerida por ROS 2 para ejecutar este archivo de lanzamiento</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">generate_launch_description</span><span class="p">():</span>
+   <span class="c1"># Construye la ruta completa del archivo URDF dentro del paquete</span>
+   <span class="n">urdf_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+      <span class="n">get_package_share_directory</span><span class="p">(</span><span class="s1">&#39;mi_pkg_python&#39;</span><span class="p">),</span>  <span class="c1"># Paquete que contiene el URDF</span>
+      <span class="s1">&#39;urdf&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;ensamblaje.urdf&#39;</span>
+   <span class="p">)</span>
+
+   <span class="c1"># Devuelve la lista de nodos a lanzar</span>
+   <span class="k">return</span> <span class="n">LaunchDescription</span><span class="p">([</span>
+
+      <span class="c1"># Nodo que publica el URDF en el topic /robot_description</span>
+      <span class="n">Node</span><span class="p">(</span>
+            <span class="n">package</span><span class="o">=</span><span class="s1">&#39;robot_state_publisher&#39;</span><span class="p">,</span>
+            <span class="n">executable</span><span class="o">=</span><span class="s1">&#39;robot_state_publisher&#39;</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="s1">&#39;robot_state_publisher&#39;</span><span class="p">,</span>
+            <span class="n">parameters</span><span class="o">=</span><span class="p">[{</span><span class="s1">&#39;robot_description&#39;</span><span class="p">:</span> <span class="nb">open</span><span class="p">(</span><span class="n">urdf_file</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()}]</span>
+      <span class="p">),</span>
+
+      <span class="c1"># Nodo que abre una interfaz gráfica con sliders para mover las juntas</span>
+      <span class="n">Node</span><span class="p">(</span>
+            <span class="n">package</span><span class="o">=</span><span class="s1">&#39;joint_state_publisher_gui&#39;</span><span class="p">,</span>
+            <span class="n">executable</span><span class="o">=</span><span class="s1">&#39;joint_state_publisher_gui&#39;</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="s1">&#39;joint_state_publisher_gui&#39;</span><span class="p">,</span>
+            <span class="n">output</span><span class="o">=</span><span class="s1">&#39;screen&#39;</span>
+      <span class="p">),</span>
+
+      <span class="c1"># Nodo que lanza RViz2 para visualizar el robot</span>
+      <span class="n">Node</span><span class="p">(</span>
+            <span class="n">package</span><span class="o">=</span><span class="s1">&#39;rviz2&#39;</span><span class="p">,</span>
+            <span class="n">executable</span><span class="o">=</span><span class="s1">&#39;rviz2&#39;</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="s1">&#39;rviz2&#39;</span><span class="p">,</span>
+            <span class="n">output</span><span class="o">=</span><span class="s1">&#39;screen&#39;</span>
+      <span class="p">),</span>
+
+      <span class="c1"># Nodo que agrega una transformación estática: world → base_link</span>
+      <span class="n">Node</span><span class="p">(</span>
+            <span class="n">package</span><span class="o">=</span><span class="s1">&#39;tf2_ros&#39;</span><span class="p">,</span>
+            <span class="n">executable</span><span class="o">=</span><span class="s1">&#39;static_transform_publisher&#39;</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="s1">&#39;static_tf_pub&#39;</span><span class="p">,</span>
+            <span class="n">arguments</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;0.10&#39;</span><span class="p">,</span> <span class="s1">&#39;0.10&#39;</span><span class="p">,</span> <span class="s1">&#39;0.0&#39;</span><span class="p">,</span>  <span class="c1"># x y z (en metros)</span>
+                     <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span>        <span class="c1"># roll pitch yaw (en radianes)</span>
+                     <span class="s1">&#39;world&#39;</span><span class="p">,</span> <span class="s1">&#39;base_link&#39;</span><span class="p">],</span> <span class="c1"># parent frame, child frame</span>
+            <span class="n">output</span><span class="o">=</span><span class="s1">&#39;screen&#39;</span>
+      <span class="p">)</span>
+   <span class="p">])</span>
+</pre></div>
+</div>
 </section>
 </section>
 
