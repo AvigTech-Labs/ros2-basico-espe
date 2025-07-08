@@ -1030,3 +1030,251 @@ robot real, se aplica la combinación de los códigos de ``mqtt_bridge`` y
 
 .. |alt text| image:: image-1.png
 .. |image1| image:: circuit_image-1.png
+
+
+Calibración de Cámara
+=====================
+
+Este módulo contiene el proceso completo para la calibración de una cámara utilizando OpenCV, desde la captura de imágenes hasta la corrección de distorsión y detección de AprilTags. Es compatible con ROS 2 y produce un archivo de calibración `camera_calibration.yaml` listo para usarse.
+
+Requisitos
+----------
+- OpenCV (`pip install opencv-python`)
+- PyYAML (`pip install pyyaml`)
+- pupil-apriltags (`pip install pupil-apriltags`) para detección de tags
+
+Etapas del proceso
+------------------
+
+1. **Captura de Imágenes del Tablero**
+   - Archivo: ``0_captura.py``
+   - Abre la cámara, muestra una vista previa y guarda imágenes al presionar ``c``.
+   - Las imágenes se guardan en la carpeta ``calib_imgs/``.
+
+2. **Calibración con Tablero de Ajedrez**
+   - Archivo: ``1_calib.py``
+   - Utiliza las imágenes para detectar esquinas de un tablero de 10x7.
+   - Genera un archivo ``camera_calibration.yaml`` con la matriz intrínseca y coeficientes de distorsión.
+
+3. **Visualización de Corrección**
+   - Archivo: ``3_cam.py``
+   - Muestra la imagen original y la corregida en tiempo real utilizando la calibración.
+
+4. **Detección de AprilTags**
+   - Archivo: ``4_apriltag.py``
+   - Usa ``pupil_apriltags`` para detectar tags y calcular sus poses.
+   - Imprime la distancia entre el tag de referencia (ID 0) y los demás.
+
+Parámetros
+----------
+- Tablero de calibración: 10 x 7 esquinas internas
+- Tamaño de cuadrado: 25 mm (0.025 m)
+- Distancia y pose se muestran en milímetros
+- Salida: `camera_calibration.yaml` (compatible con ROS)
+
+Aplicaciones
+------------
+- Visión por computadora
+- Calibración previa para detección de objetos, SLAM o localización
+- Integración con nodos de ROS 2 para transformar coordenadas de cámara
+
+
+
+.. tabs::
+
+   .. group-tab:: Programa 1
+
+      .. code-block:: python
+
+         import cv2
+         import os
+
+         cap = cv2.VideoCapture(0)
+         output_dir = "calib_imgs"
+         os.makedirs(output_dir, exist_ok=True)
+         count = 0
+
+         cv2.namedWindow("Calibración", cv2.WINDOW_NORMAL)  # Habilita cambio de tamaño
+         cv2.resizeWindow("Calibración", 800, 600)           # Establece el tamaño deseado
+
+         while True:
+             ret, frame = cap.read()
+             if not ret:
+                 break
+             cv2.imshow("Calibración", frame) 
+             key = cv2.waitKey(1) & 0xFF
+             if key == ord('c'):  # presiona 'c' para capturar
+                 fname = os.path.join(output_dir, f"img_{count:02d}.jpg")
+                 cv2.imwrite(fname, frame)
+                 print("Imagen guardada:", fname)
+                 count += 1
+             elif key == ord('q'):  # presiona 'q' para salir
+                 break
+
+         cap.release()
+         cv2.destroyAllWindows()
+
+   .. group-tab:: Programa 2
+
+      .. code-block:: python
+
+         # Calibración (guardar archivo camera_calibration.yaml)
+         import cv2
+         import numpy as np
+         import os
+         import yaml
+
+         # Parámetros del tablero
+         CHECKERBOARD = (10, 7)  # esquinas internas: columnas x filas (10x7 → 11x8 cuadrados)
+         SQUARE_SIZE = 0.025  # tamaño del cuadrado en metros
+
+         criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 0.001)
+
+         objp = np.zeros((CHECKERBOARD[0] * CHECKERBOARD[1], 3), np.float32)
+         objp[:, :2] = np.mgrid[0:CHECKERBOARD[0], 0:CHECKERBOARD[1]].T.reshape(-1, 2)
+         objp *= SQUARE_SIZE
+
+         objpoints = []
+         imgpoints = []
+
+         img_dir = "calib_imgs"
+         images = [os.path.join(img_dir, f) for f in os.listdir(img_dir) if f.endswith((".jpg", ".png"))]
+
+         for fname in images:
+            img = cv2.imread(fname)
+            gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+            ret, corners = cv2.findChessboardCorners(gray, CHECKERBOARD,
+                                                      cv2.CALIB_CB_ADAPTIVE_THRESH +
+                                                      cv2.CALIB_CB_NORMALIZE_IMAGE +
+                                                      cv2.CALIB_CB_FAST_CHECK)
+            if ret:
+               objpoints.append(objp)
+               corners2 = cv2.cornerSubPix(gray, corners, (11, 11), (-1, -1), criteria)
+               imgpoints.append(corners2)
+               cv2.drawChessboardCorners(img, CHECKERBOARD, corners2, ret)
+               cv2.namedWindow('Corners', cv2.WINDOW_NORMAL)
+               cv2.resizeWindow('Corners', 800, 600)
+               cv2.imshow('Corners', img)
+               cv2.waitKey(500)
+
+         cv2.destroyAllWindows()
+
+         ret, K, dist, rvecs, tvecs = cv2.calibrateCamera(objpoints, imgpoints, gray.shape[::-1], None, None)
+
+         # Guarda en formato YAML compatible con ROS
+         data = {
+            'image_width': int(gray.shape[1]),
+            'image_height': int(gray.shape[0]),
+            'camera_matrix': {'rows': 3, 'cols': 3, 'data': K.flatten().tolist()},
+            'distortion_model': 'plumb_bob',
+            'distortion_coefficients': {'rows': 1, 'cols': len(dist.flatten()), 'data': dist.flatten().tolist()},
+         }
+
+         with open('camera_calibration.yaml', 'w') as f:
+            yaml.dump(data, f, default_flow_style=False)
+
+         print("Guardado como camera_calibration.yaml")
+
+
+   .. group-tab:: Programa 4
+
+      .. code-block:: python
+
+         import cv2
+         import numpy as np
+         import yaml
+         import time
+
+         # --- Cargar parámetros de calibración desde YAML ---
+         with open("camera_calibration.yaml", 'r') as f:
+            calib_data = yaml.safe_load(f)
+
+         K = np.array(calib_data['camera_matrix']['data']).reshape(3, 3)
+         dist = np.array(calib_data['distortion_coefficients']['data'])
+
+         # --- Inicializar detección de AprilTags ---
+         try:
+            from pupil_apriltags import Detector
+            at_detector = Detector(families='tag36h11')
+         except ImportError:
+            raise ImportError("Instala pupil_apriltags con: pip install pupil-apriltags")
+
+         # --- Parámetros del tag ---
+         tag_size = 0.08  # Tamaño del tag en metros (100 mm)
+
+         # --- Captura desde la cámara ---
+         cap = cv2.VideoCapture(0)
+         cv2.namedWindow("AprilTag Detection", cv2.WINDOW_NORMAL)
+         cv2.resizeWindow("AprilTag Detection", 800, 600)
+
+         last_print_time = time.time()
+
+         while True:
+            ret, frame = cap.read()
+            if not ret:
+               break
+
+            # Corregir distorsión
+            h, w = frame.shape[:2]
+            newcameramtx, _ = cv2.getOptimalNewCameraMatrix(K, dist, (w, h), 1, (w, h))
+            undistorted = cv2.undistort(frame, K, dist, None, newcameramtx)
+
+            # Convertir a escala de grises
+            gray = cv2.cvtColor(undistorted, cv2.COLOR_BGR2GRAY)
+
+            # Detección
+            tags = at_detector.detect(
+               gray,
+               estimate_tag_pose=True,
+               camera_params=(K[0, 0], K[1, 1], K[0, 2], K[1, 2]),
+               tag_size=tag_size
+            )
+
+            tag_poses = {}
+            tag_centers = {}
+
+            for tag in tags:
+               id = tag.tag_id
+               corners = np.int32(tag.corners)
+               center = np.mean(corners, axis=0).astype(int)
+
+               cv2.polylines(undistorted, [corners], True, (0, 255, 0), 2)
+               cv2.putText(undistorted, f"ID: {id}", tuple(center), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 0, 0), 2)
+
+               t = tag.pose_t.flatten() * 1000  # Convertir a mm
+               tag_poses[id] = t
+               tag_centers[id] = tuple(center)
+
+            if 0 in tag_poses:
+               ref = tag_poses[0]
+               ref_center = tag_centers[0]
+               for id, pos in tag_poses.items():
+                     if id != 0:
+                        rel = pos - ref
+                        dist_mm = np.linalg.norm(rel)
+                        cv2.putText(undistorted, f"0->{id}: {dist_mm:.1f} mm", (10, 30 + 30 * id),
+                                    cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 255), 2)
+                        if id in tag_centers:
+                           cv2.line(undistorted, ref_center, tag_centers[id], (255, 0, 255), 2)
+
+               # Imprimir en terminal cada segundo
+               if time.time() - last_print_time >= 1.0:
+                     print("\nPosiciones relativas (en mm) con respecto al tag 0:")
+                     for id, pos in tag_poses.items():
+                        if id != 0:
+                           rel = pos - ref
+                           print(f"Tag {id}: ΔX={rel[0]:.1f}, ΔY={rel[1]:.1f}, ΔZ={rel[2]:.1f}")
+                     last_print_time = time.time()
+
+            cv2.imshow("AprilTag Detection", undistorted)
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+               break
+
+         cap.release()
+         cv2.destroyAllWindows()
+
+
+
+
+
+Modificacion de archivos.

@@ -1314,23 +1314,3 @@ En otra terminal, ejecutar el cliente:
 
    ros2 run mi_pkg_python action_client
 
-
-.. tabs::
-
-   .. tab:: Linux
-
-      .. code-block:: bash
-
-         echo "source ~/ros2_install/ros2-linux/setup.bash" >> ~/.bashrc
-
-   .. tab:: macOS
-
-      .. code-block:: bash
-
-         echo "source ~/ros2_install/ros2-osx/setup.bash" >> ~/.bash_profile
-
-   .. tab:: Windows
-
-      .. code-block:: batch
-
-         call C:\ros2_install\ros2-windows\setup.bat

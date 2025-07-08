@@ -10,6 +10,7 @@
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/tabs.css?v=a5c4661c" />
 
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
@@ -20,6 +21,7 @@
       <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../../_static/copybutton.js?v=f281be69"></script>
       <script src="../../_static/translations.js?v=f85f4cfb"></script>
+      <script src="../../_static/tabs.js?v=3030b3cb"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Índice" href="../../genindex.html" />
     <link rel="search" title="Búsqueda" href="../../search.html" />
@@ -54,7 +56,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../tema_2/conceptos_basicos.html">Conceptos Básicos</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tema_2/tutoriales.html">Tutoriales</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tema_3/dispositivos.html">Conexión con dispositivos</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tema_3/dispositivos.html#tabla-de-librerias-recomendadas-para-tu-proyecto-esp32-con-wifimanager-y-mqtt">Tabla de librerías recomendadas para tu proyecto ESP32 con WiFiManager y MQTT</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Archivos URDF</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#visualizacion-de-archivos-urdf">Visualización de archivos URDF</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#manejo-de-datos-en-rviz-con-urdf">Manejo de datos en RVIZ con URDF.</a><ul>
@@ -70,6 +71,13 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="#gemelo-digital">Gemelo Digital</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#calibracion-de-camara">Calibración de Cámara</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#requisitos">Requisitos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#etapas-del-proceso">Etapas del proceso</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#parametros">Parámetros</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#aplicaciones">Aplicaciones</a></li>
+</ul>
+</li>
 </ul>
 
         </div>
@@ -1144,6 +1152,239 @@ robot real, se aplica la combinación de los códigos de <code class="docutils l
     <span class="n">rclpy</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
 </pre></div>
 </div>
+</section>
+<section id="calibracion-de-camara">
+<h1>Calibración de Cámara<a class="headerlink" href="#calibracion-de-camara" title="Link to this heading"></a></h1>
+<p>Este módulo contiene el proceso completo para la calibración de una cámara utilizando OpenCV, desde la captura de imágenes hasta la corrección de distorsión y detección de AprilTags. Es compatible con ROS 2 y produce un archivo de calibración <cite>camera_calibration.yaml</cite> listo para usarse.</p>
+<section id="requisitos">
+<h2>Requisitos<a class="headerlink" href="#requisitos" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>OpenCV (<cite>pip install opencv-python</cite>)</p></li>
+<li><p>PyYAML (<cite>pip install pyyaml</cite>)</p></li>
+<li><p>pupil-apriltags (<cite>pip install pupil-apriltags</cite>) para detección de tags</p></li>
+</ul>
+</section>
+<section id="etapas-del-proceso">
+<h2>Etapas del proceso<a class="headerlink" href="#etapas-del-proceso" title="Link to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p><strong>Captura de Imágenes del Tablero</strong>
+- Archivo: <code class="docutils literal notranslate"><span class="pre">0_captura.py</span></code>
+- Abre la cámara, muestra una vista previa y guarda imágenes al presionar <code class="docutils literal notranslate"><span class="pre">c</span></code>.
+- Las imágenes se guardan en la carpeta <code class="docutils literal notranslate"><span class="pre">calib_imgs/</span></code>.</p></li>
+<li><p><strong>Calibración con Tablero de Ajedrez</strong>
+- Archivo: <code class="docutils literal notranslate"><span class="pre">1_calib.py</span></code>
+- Utiliza las imágenes para detectar esquinas de un tablero de 10x7.
+- Genera un archivo <code class="docutils literal notranslate"><span class="pre">camera_calibration.yaml</span></code> con la matriz intrínseca y coeficientes de distorsión.</p></li>
+<li><p><strong>Visualización de Corrección</strong>
+- Archivo: <code class="docutils literal notranslate"><span class="pre">3_cam.py</span></code>
+- Muestra la imagen original y la corregida en tiempo real utilizando la calibración.</p></li>
+<li><p><strong>Detección de AprilTags</strong>
+- Archivo: <code class="docutils literal notranslate"><span class="pre">4_apriltag.py</span></code>
+- Usa <code class="docutils literal notranslate"><span class="pre">pupil_apriltags</span></code> para detectar tags y calcular sus poses.
+- Imprime la distancia entre el tag de referencia (ID 0) y los demás.</p></li>
+</ol>
+</section>
+<section id="parametros">
+<h2>Parámetros<a class="headerlink" href="#parametros" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Tablero de calibración: 10 x 7 esquinas internas</p></li>
+<li><p>Tamaño de cuadrado: 25 mm (0.025 m)</p></li>
+<li><p>Distancia y pose se muestran en milímetros</p></li>
+<li><p>Salida: <cite>camera_calibration.yaml</cite> (compatible con ROS)</p></li>
+</ul>
+</section>
+<section id="aplicaciones">
+<h2>Aplicaciones<a class="headerlink" href="#aplicaciones" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Visión por computadora</p></li>
+<li><p>Calibración previa para detección de objetos, SLAM o localización</p></li>
+<li><p>Integración con nodos de ROS 2 para transformar coordenadas de cámara</p></li>
+</ul>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-UHJvZ3JhbWEgMQ==" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-0-UHJvZ3JhbWEgMQ==" name="UHJvZ3JhbWEgMQ==" role="tab" tabindex="0">Programa 1</button><button aria-controls="panel-0-UHJvZ3JhbWEgMg==" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-0-UHJvZ3JhbWEgMg==" name="UHJvZ3JhbWEgMg==" role="tab" tabindex="-1">Programa 2</button><button aria-controls="panel-0-UHJvZ3JhbWEgNA==" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-0-UHJvZ3JhbWEgNA==" name="UHJvZ3JhbWEgNA==" role="tab" tabindex="-1">Programa 4</button></div><div aria-labelledby="tab-0-UHJvZ3JhbWEgMQ==" class="sphinx-tabs-panel group-tab" id="panel-0-UHJvZ3JhbWEgMQ==" name="UHJvZ3JhbWEgMQ==" role="tabpanel" tabindex="0"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">cv2</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="n">cap</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">VideoCapture</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">output_dir</span> <span class="o">=</span> <span class="s2">&quot;calib_imgs&quot;</span>
+<span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="n">cv2</span><span class="o">.</span><span class="n">namedWindow</span><span class="p">(</span><span class="s2">&quot;Calibración&quot;</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">WINDOW_NORMAL</span><span class="p">)</span>  <span class="c1"># Habilita cambio de tamaño</span>
+<span class="n">cv2</span><span class="o">.</span><span class="n">resizeWindow</span><span class="p">(</span><span class="s2">&quot;Calibración&quot;</span><span class="p">,</span> <span class="mi">800</span><span class="p">,</span> <span class="mi">600</span><span class="p">)</span>           <span class="c1"># Establece el tamaño deseado</span>
+
+<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+    <span class="n">ret</span><span class="p">,</span> <span class="n">frame</span> <span class="o">=</span> <span class="n">cap</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">ret</span><span class="p">:</span>
+        <span class="k">break</span>
+    <span class="n">cv2</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="s2">&quot;Calibración&quot;</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
+    <span class="n">key</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">waitKey</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xFF</span>
+    <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="nb">ord</span><span class="p">(</span><span class="s1">&#39;c&#39;</span><span class="p">):</span>  <span class="c1"># presiona &#39;c&#39; para capturar</span>
+        <span class="n">fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;img_</span><span class="si">{</span><span class="n">count</span><span class="si">:</span><span class="s2">02d</span><span class="si">}</span><span class="s2">.jpg&quot;</span><span class="p">)</span>
+        <span class="n">cv2</span><span class="o">.</span><span class="n">imwrite</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Imagen guardada:&quot;</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span>
+        <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="nb">ord</span><span class="p">(</span><span class="s1">&#39;q&#39;</span><span class="p">):</span>  <span class="c1"># presiona &#39;q&#39; para salir</span>
+        <span class="k">break</span>
+
+<span class="n">cap</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
+<span class="n">cv2</span><span class="o">.</span><span class="n">destroyAllWindows</span><span class="p">()</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-0-UHJvZ3JhbWEgMg==" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-0-UHJvZ3JhbWEgMg==" name="UHJvZ3JhbWEgMg==" role="tabpanel" tabindex="0"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Calibración (guardar archivo camera_calibration.yaml)</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">cv2</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">yaml</span>
+
+<span class="c1"># Parámetros del tablero</span>
+<span class="n">CHECKERBOARD</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span>  <span class="c1"># esquinas internas: columnas x filas (10x7 → 11x8 cuadrados)</span>
+<span class="n">SQUARE_SIZE</span> <span class="o">=</span> <span class="mf">0.025</span>  <span class="c1"># tamaño del cuadrado en metros</span>
+
+<span class="n">criteria</span> <span class="o">=</span> <span class="p">(</span><span class="n">cv2</span><span class="o">.</span><span class="n">TERM_CRITERIA_EPS</span> <span class="o">+</span> <span class="n">cv2</span><span class="o">.</span><span class="n">TERM_CRITERIA_MAX_ITER</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mf">0.001</span><span class="p">)</span>
+
+<span class="n">objp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">CHECKERBOARD</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">CHECKERBOARD</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">3</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<span class="n">objp</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mgrid</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">CHECKERBOARD</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">0</span><span class="p">:</span><span class="n">CHECKERBOARD</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">objp</span> <span class="o">*=</span> <span class="n">SQUARE_SIZE</span>
+
+<span class="n">objpoints</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">imgpoints</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="n">img_dir</span> <span class="o">=</span> <span class="s2">&quot;calib_imgs&quot;</span>
+<span class="n">images</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">img_dir</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">img_dir</span><span class="p">)</span> <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">endswith</span><span class="p">((</span><span class="s2">&quot;.jpg&quot;</span><span class="p">,</span> <span class="s2">&quot;.png&quot;</span><span class="p">))]</span>
+
+<span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">images</span><span class="p">:</span>
+   <span class="n">img</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
+   <span class="n">gray</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">cvtColor</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">COLOR_BGR2GRAY</span><span class="p">)</span>
+   <span class="n">ret</span><span class="p">,</span> <span class="n">corners</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">findChessboardCorners</span><span class="p">(</span><span class="n">gray</span><span class="p">,</span> <span class="n">CHECKERBOARD</span><span class="p">,</span>
+                                             <span class="n">cv2</span><span class="o">.</span><span class="n">CALIB_CB_ADAPTIVE_THRESH</span> <span class="o">+</span>
+                                             <span class="n">cv2</span><span class="o">.</span><span class="n">CALIB_CB_NORMALIZE_IMAGE</span> <span class="o">+</span>
+                                             <span class="n">cv2</span><span class="o">.</span><span class="n">CALIB_CB_FAST_CHECK</span><span class="p">)</span>
+   <span class="k">if</span> <span class="n">ret</span><span class="p">:</span>
+      <span class="n">objpoints</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">objp</span><span class="p">)</span>
+      <span class="n">corners2</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">cornerSubPix</span><span class="p">(</span><span class="n">gray</span><span class="p">,</span> <span class="n">corners</span><span class="p">,</span> <span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">11</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">criteria</span><span class="p">)</span>
+      <span class="n">imgpoints</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">corners2</span><span class="p">)</span>
+      <span class="n">cv2</span><span class="o">.</span><span class="n">drawChessboardCorners</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">CHECKERBOARD</span><span class="p">,</span> <span class="n">corners2</span><span class="p">,</span> <span class="n">ret</span><span class="p">)</span>
+      <span class="n">cv2</span><span class="o">.</span><span class="n">namedWindow</span><span class="p">(</span><span class="s1">&#39;Corners&#39;</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">WINDOW_NORMAL</span><span class="p">)</span>
+      <span class="n">cv2</span><span class="o">.</span><span class="n">resizeWindow</span><span class="p">(</span><span class="s1">&#39;Corners&#39;</span><span class="p">,</span> <span class="mi">800</span><span class="p">,</span> <span class="mi">600</span><span class="p">)</span>
+      <span class="n">cv2</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="s1">&#39;Corners&#39;</span><span class="p">,</span> <span class="n">img</span><span class="p">)</span>
+      <span class="n">cv2</span><span class="o">.</span><span class="n">waitKey</span><span class="p">(</span><span class="mi">500</span><span class="p">)</span>
+
+<span class="n">cv2</span><span class="o">.</span><span class="n">destroyAllWindows</span><span class="p">()</span>
+
+<span class="n">ret</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">dist</span><span class="p">,</span> <span class="n">rvecs</span><span class="p">,</span> <span class="n">tvecs</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">calibrateCamera</span><span class="p">(</span><span class="n">objpoints</span><span class="p">,</span> <span class="n">imgpoints</span><span class="p">,</span> <span class="n">gray</span><span class="o">.</span><span class="n">shape</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+<span class="c1"># Guarda en formato YAML compatible con ROS</span>
+<span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+   <span class="s1">&#39;image_width&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">gray</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+   <span class="s1">&#39;image_height&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">gray</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+   <span class="s1">&#39;camera_matrix&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;rows&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;cols&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="n">K</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">()},</span>
+   <span class="s1">&#39;distortion_model&#39;</span><span class="p">:</span> <span class="s1">&#39;plumb_bob&#39;</span><span class="p">,</span>
+   <span class="s1">&#39;distortion_coefficients&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;rows&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;cols&#39;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">dist</span><span class="o">.</span><span class="n">flatten</span><span class="p">()),</span> <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="n">dist</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">()},</span>
+<span class="p">}</span>
+
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;camera_calibration.yaml&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+   <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">default_flow_style</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Guardado como camera_calibration.yaml&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-0-UHJvZ3JhbWEgNA==" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-0-UHJvZ3JhbWEgNA==" name="UHJvZ3JhbWEgNA==" role="tabpanel" tabindex="0"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">cv2</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">yaml</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+
+<span class="c1"># --- Cargar parámetros de calibración desde YAML ---</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;camera_calibration.yaml&quot;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+   <span class="n">calib_data</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+<span class="n">K</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">calib_data</span><span class="p">[</span><span class="s1">&#39;camera_matrix&#39;</span><span class="p">][</span><span class="s1">&#39;data&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">calib_data</span><span class="p">[</span><span class="s1">&#39;distortion_coefficients&#39;</span><span class="p">][</span><span class="s1">&#39;data&#39;</span><span class="p">])</span>
+
+<span class="c1"># --- Inicializar detección de AprilTags ---</span>
+<span class="k">try</span><span class="p">:</span>
+   <span class="kn">from</span><span class="w"> </span><span class="nn">pupil_apriltags</span><span class="w"> </span><span class="kn">import</span> <span class="n">Detector</span>
+   <span class="n">at_detector</span> <span class="o">=</span> <span class="n">Detector</span><span class="p">(</span><span class="n">families</span><span class="o">=</span><span class="s1">&#39;tag36h11&#39;</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+   <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="s2">&quot;Instala pupil_apriltags con: pip install pupil-apriltags&quot;</span><span class="p">)</span>
+
+<span class="c1"># --- Parámetros del tag ---</span>
+<span class="n">tag_size</span> <span class="o">=</span> <span class="mf">0.08</span>  <span class="c1"># Tamaño del tag en metros (100 mm)</span>
+
+<span class="c1"># --- Captura desde la cámara ---</span>
+<span class="n">cap</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">VideoCapture</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">cv2</span><span class="o">.</span><span class="n">namedWindow</span><span class="p">(</span><span class="s2">&quot;AprilTag Detection&quot;</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">WINDOW_NORMAL</span><span class="p">)</span>
+<span class="n">cv2</span><span class="o">.</span><span class="n">resizeWindow</span><span class="p">(</span><span class="s2">&quot;AprilTag Detection&quot;</span><span class="p">,</span> <span class="mi">800</span><span class="p">,</span> <span class="mi">600</span><span class="p">)</span>
+
+<span class="n">last_print_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+   <span class="n">ret</span><span class="p">,</span> <span class="n">frame</span> <span class="o">=</span> <span class="n">cap</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+   <span class="k">if</span> <span class="ow">not</span> <span class="n">ret</span><span class="p">:</span>
+      <span class="k">break</span>
+
+   <span class="c1"># Corregir distorsión</span>
+   <span class="n">h</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span>
+   <span class="n">newcameramtx</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">getOptimalNewCameraMatrix</span><span class="p">(</span><span class="n">K</span><span class="p">,</span> <span class="n">dist</span><span class="p">,</span> <span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">))</span>
+   <span class="n">undistorted</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">undistort</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">dist</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">newcameramtx</span><span class="p">)</span>
+
+   <span class="c1"># Convertir a escala de grises</span>
+   <span class="n">gray</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">cvtColor</span><span class="p">(</span><span class="n">undistorted</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">COLOR_BGR2GRAY</span><span class="p">)</span>
+
+   <span class="c1"># Detección</span>
+   <span class="n">tags</span> <span class="o">=</span> <span class="n">at_detector</span><span class="o">.</span><span class="n">detect</span><span class="p">(</span>
+      <span class="n">gray</span><span class="p">,</span>
+      <span class="n">estimate_tag_pose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+      <span class="n">camera_params</span><span class="o">=</span><span class="p">(</span><span class="n">K</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">K</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">K</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">K</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]),</span>
+      <span class="n">tag_size</span><span class="o">=</span><span class="n">tag_size</span>
+   <span class="p">)</span>
+
+   <span class="n">tag_poses</span> <span class="o">=</span> <span class="p">{}</span>
+   <span class="n">tag_centers</span> <span class="o">=</span> <span class="p">{}</span>
+
+   <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">tags</span><span class="p">:</span>
+      <span class="nb">id</span> <span class="o">=</span> <span class="n">tag</span><span class="o">.</span><span class="n">tag_id</span>
+      <span class="n">corners</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">(</span><span class="n">tag</span><span class="o">.</span><span class="n">corners</span><span class="p">)</span>
+      <span class="n">center</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">corners</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+
+      <span class="n">cv2</span><span class="o">.</span><span class="n">polylines</span><span class="p">(</span><span class="n">undistorted</span><span class="p">,</span> <span class="p">[</span><span class="n">corners</span><span class="p">],</span> <span class="kc">True</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
+      <span class="n">cv2</span><span class="o">.</span><span class="n">putText</span><span class="p">(</span><span class="n">undistorted</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;ID: </span><span class="si">{</span><span class="nb">id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">center</span><span class="p">),</span> <span class="n">cv2</span><span class="o">.</span><span class="n">FONT_HERSHEY_SIMPLEX</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
+
+      <span class="n">t</span> <span class="o">=</span> <span class="n">tag</span><span class="o">.</span><span class="n">pose_t</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span> <span class="o">*</span> <span class="mi">1000</span>  <span class="c1"># Convertir a mm</span>
+      <span class="n">tag_poses</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span> <span class="o">=</span> <span class="n">t</span>
+      <span class="n">tag_centers</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">center</span><span class="p">)</span>
+
+   <span class="k">if</span> <span class="mi">0</span> <span class="ow">in</span> <span class="n">tag_poses</span><span class="p">:</span>
+      <span class="n">ref</span> <span class="o">=</span> <span class="n">tag_poses</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+      <span class="n">ref_center</span> <span class="o">=</span> <span class="n">tag_centers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+      <span class="k">for</span> <span class="nb">id</span><span class="p">,</span> <span class="n">pos</span> <span class="ow">in</span> <span class="n">tag_poses</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">id</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+               <span class="n">rel</span> <span class="o">=</span> <span class="n">pos</span> <span class="o">-</span> <span class="n">ref</span>
+               <span class="n">dist_mm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">rel</span><span class="p">)</span>
+               <span class="n">cv2</span><span class="o">.</span><span class="n">putText</span><span class="p">(</span><span class="n">undistorted</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;0-&gt;</span><span class="si">{</span><span class="nb">id</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">dist_mm</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> mm&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">30</span> <span class="o">+</span> <span class="mi">30</span> <span class="o">*</span> <span class="nb">id</span><span class="p">),</span>
+                           <span class="n">cv2</span><span class="o">.</span><span class="n">FONT_HERSHEY_SIMPLEX</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
+               <span class="k">if</span> <span class="nb">id</span> <span class="ow">in</span> <span class="n">tag_centers</span><span class="p">:</span>
+                  <span class="n">cv2</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="n">undistorted</span><span class="p">,</span> <span class="n">ref_center</span><span class="p">,</span> <span class="n">tag_centers</span><span class="p">[</span><span class="nb">id</span><span class="p">],</span> <span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
+
+      <span class="c1"># Imprimir en terminal cada segundo</span>
+      <span class="k">if</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">last_print_time</span> <span class="o">&gt;=</span> <span class="mf">1.0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Posiciones relativas (en mm) con respecto al tag 0:&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="nb">id</span><span class="p">,</span> <span class="n">pos</span> <span class="ow">in</span> <span class="n">tag_poses</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+               <span class="k">if</span> <span class="nb">id</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                  <span class="n">rel</span> <span class="o">=</span> <span class="n">pos</span> <span class="o">-</span> <span class="n">ref</span>
+                  <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Tag </span><span class="si">{</span><span class="nb">id</span><span class="si">}</span><span class="s2">: ΔX=</span><span class="si">{</span><span class="n">rel</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">, ΔY=</span><span class="si">{</span><span class="n">rel</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">, ΔZ=</span><span class="si">{</span><span class="n">rel</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">last_print_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+   <span class="n">cv2</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="s2">&quot;AprilTag Detection&quot;</span><span class="p">,</span> <span class="n">undistorted</span><span class="p">)</span>
+   <span class="k">if</span> <span class="n">cv2</span><span class="o">.</span><span class="n">waitKey</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xFF</span> <span class="o">==</span> <span class="nb">ord</span><span class="p">(</span><span class="s1">&#39;q&#39;</span><span class="p">):</span>
+      <span class="k">break</span>
+
+<span class="n">cap</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
+<span class="n">cv2</span><span class="o">.</span><span class="n">destroyAllWindows</span><span class="p">()</span>
+</pre></div>
+</div>
+</div></div>
+<p>Modificacion de archivos.</p>
+</section>
 </section>
 
 
