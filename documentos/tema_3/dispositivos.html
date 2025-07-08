@@ -46,23 +46,14 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">ROS2 Humble</span></p>
-<ul>
+              <p class="caption" role="heading"><span class="caption-text">Módulos</span></p>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../tema_0/intro.html">¿Qué es ROS2?</a></li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">Instalación</span></p>
-<ul>
 <li class="toctree-l1"><a class="reference internal" href="../tema_1/instalacion.html">Instalación de Ubuntu</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tema_1/maquina_virtual.html">Instalacion de Ubuntu 22.04 con VirtualBox</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tema_1/instalacionROS2.html">Instalación de ROS2 Humble</a></li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">Conceptos Básicos</span></p>
-<ul>
 <li class="toctree-l1"><a class="reference internal" href="../tema_2/conceptos_basicos.html">Conceptos Básicos</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tema_2/tutoriales.html">Tutoriales</a></li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">Conexión con dispositivos</span></p>
-<ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Conexión con dispositivos</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#mqtt">MQTT</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#instalacion">Instalación</a></li>
@@ -70,16 +61,13 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#arduino-ide-2-x">Arduino IDE 2.x</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id1">Instalación</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#ejemplos-de-uso">Ejemplos de Uso.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#instalacion-1">Instalación</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#ejemplos-de-uso">Ejemplos de Uso.</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#puente-mqtt-ros2">Puente MQTT - ROS2</a></li>
 </ul>
 </li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">URDF y ESP32</span></p>
-<ul>
 <li class="toctree-l1"><a class="reference internal" href="../tema_4/visualizacion_datos.html">Archivos URDF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tema_4/visualizacion_datos.html#gemelo-digital">Gemelo Digital</a></li>
 </ul>
@@ -111,14 +99,13 @@
 <h1>Conexión con dispositivos<a class="headerlink" href="#conexion-con-dispositivos" title="Enlace permanente a este encabezado"></a></h1>
 <section id="mqtt">
 <h2>MQTT<a class="headerlink" href="#mqtt" title="Enlace permanente a este encabezado"></a></h2>
-<p><strong>MQTT (Message Queuing Telemetry Transport)</strong> es un protocolo de mensajería ligero diseñado para dispositivos con recursos limitados y redes de baja calidad. Es ideal para aplicaciones <strong>IoT (Internet de las cosas)</strong> como sensores, actuadores o microcontroladores.</p>
-<p>Ventajas de MQTT:</p>
-<ul class="simple">
-<li><p>Bajo consumo de ancho de banda</p></li>
-<li><p>Arquitectura <strong>publish/subscribe</strong></p></li>
-<li><p>Soporta calidad de servicio (QoS)</p></li>
-<li><p>Uso extendido en la comunidad de microcontroladores (ESP32, ESP8266)</p></li>
-</ul>
+<p><strong>MQTT (Message Queuing Telemetry Transport)</strong> es un protocolo de
+mensajería ligero diseñado para dispositivos con recursos limitados y
+redes de baja calidad. Es ideal para aplicaciones <strong>IoT (Internet de las
+cosas)</strong> como sensores, actuadores o microcontroladores.</p>
+<p>Ventajas de MQTT: - Bajo consumo de ancho de banda - Arquitectura
+<strong>publish/subscribe</strong> - Soporta calidad de servicio (QoS) - Uso
+extendido en la comunidad de microcontroladores (ESP32, ESP8266)</p>
 <p>Niveles de QoS</p>
 <table class="docutils align-default">
 <thead>
@@ -148,17 +135,17 @@
 <ol class="arabic simple">
 <li><p>Instalación del broker</p></li>
 </ol>
-<p>El <strong>broker MQTT</strong> es el servidor encargado de gestionar los mensajes que envían y reciben los dispositivos. Para este caso se usará <strong>Mosquitto</strong>, un broker ligero y ampliamente utilizado.</p>
+<p>El <strong>broker MQTT</strong> es el servidor encargado de gestionar los mensajes
+que envían y reciben los dispositivos. Para este caso se usará
+<strong>Mosquitto</strong>, un broker ligero y ampliamente utilizado.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt<span class="w"> </span>update
 sudo<span class="w"> </span>apt<span class="w"> </span>upgrade
 sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>mosquitto<span class="w"> </span>mosquitto-clients
 </pre></div>
 </div>
-<p>Esto instalará:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">mosquitto</span></code>: el servicio que actuará como broker</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">mosquitto_pub</span></code> y <code class="docutils literal notranslate"><span class="pre">mosquitto_sub</span></code>: herramientas para publicar/suscribirse a tópicos MQTT desde consola</p></li>
-</ul>
+<p>Esto instalará: - <code class="docutils literal notranslate"><span class="pre">mosquitto</span></code>: el servicio que actuará como broker -
+<code class="docutils literal notranslate"><span class="pre">mosquitto_pub</span></code> y <code class="docutils literal notranslate"><span class="pre">mosquitto_sub</span></code>: herramientas para
+publicar/suscribirse a tópicos MQTT desde consola</p>
 <ol class="arabic simple" start="2">
 <li><p>Arranque de mosquitto</p></li>
 </ol>
@@ -181,7 +168,8 @@ sudo<span class="w"> </span>ss<span class="w"> </span>-tulnp<span class="w"> </s
 pip<span class="w"> </span>install<span class="w"> </span>paho-mqtt
 </pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">paho-mqtt</span></code> es una biblioteca mantenida por Eclipse que permite conectarse a brokers MQTT desde Python.</p>
+<p><code class="docutils literal notranslate"><span class="pre">paho-mqtt</span></code> es una biblioteca mantenida por Eclipse que permite
+conectarse a brokers MQTT desde Python.</p>
 <ol class="arabic simple" start="4">
 <li><p>Pruebas del servidor</p></li>
 </ol>
@@ -196,8 +184,9 @@ pip<span class="w"> </span>install<span class="w"> </span>paho-mqtt
 <ol class="arabic simple" start="5">
 <li><p>Configuración del Broker Mosquitto</p></li>
 </ol>
-<p>Para aceptar conexiones externas (por ejemplo, desde un ESP32), debemos configurar Mosquitto.</p>
-<p><em><strong>Editar archivo de configuración:</strong></em></p>
+<p>Para aceptar conexiones externas (por ejemplo, desde un ESP32), debemos
+configurar Mosquitto.</p>
+<p><strong>Editar archivo de configuración:</strong></p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>nano<span class="w"> </span>/etc/mosquitto/conf.d/default.conf
 </pre></div>
 </div>
@@ -208,20 +197,20 @@ pip<span class="w"> </span>install<span class="w"> </span>paho-mqtt
 </div>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">listener</span> <span class="pre">1883</span></code>: habilita el puerto por defecto de MQTT</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">allow_anonymous</span> <span class="pre">true</span></code>: permite conexiones sin autenticación (ideal para pruebas locales)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">allow_anonymous</span> <span class="pre">true</span></code>: permite conexiones sin autenticación (ideal
+para pruebas locales)</p></li>
 </ul>
-<p><em><strong>Habilitar el puerto en el firewall de ser necesario</strong></em></p>
+<p><strong>Habilitar el puerto en el firewall de ser necesario</strong></p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>ufw<span class="w"> </span>allow<span class="w"> </span><span class="m">1883</span>
 </pre></div>
 </div>
-<p><em><strong>Reiniciar Mosquitto</strong></em>
-sudo systemctl restart mosquitto
-sudo systemctl status mosquitto</p>
-<p><em><strong>Verificar que está escuchando</strong></em></p>
+<p><strong>Reiniciar Mosquitto</strong> sudo systemctl restart mosquitto sudo systemctl
+status mosquitto</p>
+<p><strong>Verificar que está escuchando</strong></p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>netstat<span class="w"> </span>-tulnp<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="m">1883</span>
 </pre></div>
 </div>
-<p><em><strong>Pruebas de funcionamiento</strong></em></p>
+<p><strong>Pruebas de funcionamiento</strong></p>
 <p>En la terminal 1</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mosquitto_sub<span class="w"> </span>-h<span class="w"> </span><span class="m">192</span>.168.100.178<span class="w"> </span>-t<span class="w"> </span><span class="nb">test</span>
 </pre></div>
@@ -233,7 +222,8 @@ sudo systemctl status mosquitto</p>
 </section>
 <section id="ejercicios">
 <h3>Ejercicios<a class="headerlink" href="#ejercicios" title="Enlace permanente a este encabezado"></a></h3>
-<p>Para revisar el funcionamiento de MQTT, simularemos el intercambio de información entre 2 equipos:</p>
+<p>Para revisar el funcionamiento de MQTT, simularemos el intercambio de
+información entre 2 equipos:</p>
 <p>Dentro del paquete mi_pkg_python crear el directorio <code class="docutils literal notranslate"><span class="pre">mqtt</span></code></p>
 <p>En el archivo equipo1.py</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">paho.mqtt.client</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mqtt</span>
@@ -264,7 +254,7 @@ sudo systemctl status mosquitto</p>
         <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">mensaje</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">msg</span><span class="o">.</span><span class="n">topic</span> <span class="o">==</span> <span class="n">TOPIC_SUB_SEN</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Mensaje recido del Equipo2 EncoderI:&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;EncoderI&quot;</span><span class="p">])</span>
-        
+
         <span class="k">if</span> <span class="n">msg</span><span class="o">.</span><span class="n">topic</span> <span class="o">==</span> <span class="n">TOPIC_SUB_EST</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Mensaje recido del Equipo2 Estado:&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;Estado&quot;</span><span class="p">])</span>
 
@@ -309,8 +299,6 @@ sudo systemctl status mosquitto</p>
     <span class="n">client</span><span class="o">.</span><span class="n">loop_stop</span><span class="p">()</span>
     <span class="n">client</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; Desconectado correctamente.&quot;</span><span class="p">)</span>
-
-
 </pre></div>
 </div>
 <p>En el archivo equipo2.py</p>
@@ -390,14 +378,17 @@ sudo systemctl status mosquitto</p>
 <hr class="docutils" />
 <section id="arduino-ide-2-x">
 <h2>Arduino IDE 2.x<a class="headerlink" href="#arduino-ide-2-x" title="Enlace permanente a este encabezado"></a></h2>
-<p>Una vez configurado mosquitto, es necesario descargar arduino IDE, el programa que se utilazará para programar la ESP32.</p>
-<section id="id1">
-<h3>Instalación<a class="headerlink" href="#id1" title="Enlace permanente a este encabezado"></a></h3>
+<p>Una vez configurado mosquitto, es necesario descargar arduino IDE, el
+programa que se utilazará para programar la ESP32.</p>
+<section id="instalacion-1">
+<span id="id1"></span><h3>Instalación<a class="headerlink" href="#instalacion-1" title="Enlace permanente a este encabezado"></a></h3>
 <ol class="arabic simple">
-<li><p><em><strong>Descargar Arduino IDE</strong></em></p></li>
+<li><p><strong>Descargar Arduino IDE</strong></p></li>
 </ol>
-<p>Enlace de descargar, AppImage <a class="reference external" href="https://www.arduino.cc/en/software/">arduino</a></p>
-<p>En la carpeta donde se descargó el AppImage, cambiar el nombre al archivo descargado por <code class="docutils literal notranslate"><span class="pre">arduino-ide</span></code></p>
+<p>Enlace de descargar, AppImage
+<a class="reference external" href="https://www.arduino.cc/en/software/">arduino</a></p>
+<p>En la carpeta donde se descargó el AppImage, cambiar el nombre al
+archivo descargado por <code class="docutils literal notranslate"><span class="pre">arduino-ide</span></code></p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt<span class="w"> </span>update
 sudo<span class="w"> </span>apt<span class="w"> </span>upgrade
 sudo<span class="w"> </span>install<span class="w"> </span>libfuse2
@@ -406,7 +397,7 @@ sudo<span class="w"> </span>chmod<span class="w"> </span>+x<span class="w"> </sp
 </pre></div>
 </div>
 <ol class="arabic" start="2">
-<li><p><em><strong>Instalar soporte para ESP32</strong></em></p>
+<li><p><strong>Instalar soporte para ESP32</strong></p>
 <ol class="arabic simple">
 <li><p>Ir a <code class="docutils literal notranslate"><span class="pre">Archivo</span> <span class="pre">→</span> <span class="pre">Preferencias</span></code></p></li>
 <li><p>En el campo <strong>URLs adicionales para tarjetas</strong>, agregar:</p></li>
@@ -425,7 +416,9 @@ sudo<span class="w"> </span>chmod<span class="w"> </span>+x<span class="w"> </sp
 <ol class="arabic simple" start="3">
 <li><p>Acceso a puertos USB***</p></li>
 </ol>
-<p>El ESP32 se conecta como un dispositivo serie (<code class="docutils literal notranslate"><span class="pre">/dev/ttyUSB*</span></code> o <code class="docutils literal notranslate"><span class="pre">/dev/ttyACM*</span></code>) generalmente la conexión se realiza en el puerto ttyUSB. Para acceder sin sudo:</p>
+<p>El ESP32 se conecta como un dispositivo serie (<code class="docutils literal notranslate"><span class="pre">/dev/ttyUSB*</span></code> o
+<code class="docutils literal notranslate"><span class="pre">/dev/ttyACM*</span></code>) generalmente la conexión se realiza en el puerto
+ttyUSB. Para acceder sin sudo:</p>
 <p>Añadir usuario a grupo dialout**</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>usermod<span class="w"> </span>-aG<span class="w"> </span>dialout<span class="w"> </span><span class="nv">$USER</span>
 </pre></div>
@@ -445,10 +438,16 @@ sudo<span class="w"> </span>chmod<span class="w"> </span>+x<span class="w"> </sp
 </ol>
 <p>Tabla de librerías recomendadas para tu proyecto ESP32 con WiFiManager y MQTT</p>
 <table class="docutils align-default">
+<colgroup>
+<col style="width: 13.0%" />
+<col style="width: 17.4%" />
+<col style="width: 17.4%" />
+<col style="width: 52.2%" />
+</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Librería</p></th>
 <th class="head"><p>Autor</p></th>
-<th class="head"><p>Versión  recomendada</p></th>
+<th class="head"><p>Versión recomendada</p></th>
 <th class="head"><p>Notas importantes</p></th>
 </tr>
 </thead>
@@ -476,19 +475,19 @@ sudo<span class="w"> </span>chmod<span class="w"> </span>+x<span class="w"> </sp
 <tr class="row-even"><td><p>ArduinoJson</p></td>
 <td><p>Benoit Blanchon</p></td>
 <td><p>7.x.x</p></td>
-<td><p>Usa DynamicJsonDocument y StaticJsonDocument</p></td>
+<td><p>Usa DynamicJsonDocument y StaticJsonDocument.</p></td>
 </tr>
 </tbody>
 </table>
 </section>
-<hr class="docutils" />
+</section>
 <section id="ejemplos-de-uso">
-<h3>Ejemplos de Uso.<a class="headerlink" href="#ejemplos-de-uso" title="Enlace permanente a este encabezado"></a></h3>
+<h2>Ejemplos de Uso.<a class="headerlink" href="#ejemplos-de-uso" title="Enlace permanente a este encabezado"></a></h2>
 <ol class="arabic simple">
 <li><p>Uso de MQTT desde Arduino</p></li>
 </ol>
 <p>Crear 2 pestañas: <code class="docutils literal notranslate"><span class="pre">Esp32_mqtt</span></code> y <code class="docutils literal notranslate"><span class="pre">Conf_mqtt</span></code></p>
-<p><em><strong>Pestaña 1 ESP32_mqtt</strong></em></p>
+<p><strong>Pestaña 1 ESP32_mqtt</strong></p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;PubSubClient.h&gt;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;WiFi.h&gt;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ArduinoJson.h&gt;</span>
@@ -502,7 +501,7 @@ sudo<span class="w"> </span>chmod<span class="w"> </span>+x<span class="w"> </sp
 <span class="c1">// GPIO de salidad Digital</span>
 <span class="kt">int</span><span class="w"> </span><span class="n">pin_led</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
 
-<span class="c1">//  Credenciales Wifi </span>
+<span class="c1">//  Credenciales Wifi</span>
 <span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">ssid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;CARMEN GONZALEZ_&quot;</span><span class="p">;</span>
 <span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">password</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;123wa321vg&quot;</span><span class="p">;</span>
 
@@ -535,8 +534,8 @@ sudo<span class="w"> </span>chmod<span class="w"> </span>+x<span class="w"> </sp
 <span class="w">  </span><span class="c1">// Setup MQTT</span>
 <span class="w">  </span><span class="n">conexion</span><span class="p">();</span>
 <span class="w">  </span><span class="c1">// Manejo del rele</span>
-<span class="w">  </span><span class="n">pinMode</span><span class="p">(</span><span class="n">pin_led</span><span class="p">,</span><span class="w"> </span><span class="n">OUTPUT</span><span class="p">);</span><span class="w">     </span>
-<span class="w">  </span>
+<span class="w">  </span><span class="n">pinMode</span><span class="p">(</span><span class="n">pin_led</span><span class="p">,</span><span class="w"> </span><span class="n">OUTPUT</span><span class="p">);</span>
+
 <span class="p">}</span>
 
 <span class="kt">void</span><span class="w"> </span><span class="nf">loop</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
@@ -550,16 +549,16 @@ sudo<span class="w"> </span>chmod<span class="w"> </span>+x<span class="w"> </sp
 <span class="w">  </span><span class="p">}</span>
 <span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">activar</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">){</span>
 <span class="w">    </span><span class="n">digitalWrite</span><span class="p">(</span><span class="n">pin_led</span><span class="p">,</span><span class="w"> </span><span class="n">HIGH</span><span class="p">);</span><span class="w">  </span><span class="c1">// Enciende el LED</span>
-<span class="w">    </span>
+
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">digitalWrite</span><span class="p">(</span><span class="n">pin_led</span><span class="p">,</span><span class="w"> </span><span class="n">LOW</span><span class="p">);</span><span class="w">  </span><span class="c1">// Enciende el LED</span>
 <span class="w">  </span><span class="p">}</span>
-<span class="w">  </span>
+
 <span class="p">}</span>
 </pre></div>
 </div>
-<p><em><strong>Pestaña 2 Conf_Mqtt</strong></em></p>
+<p><strong>Pestaña 2 Conf_Mqtt</strong></p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">setup_wifi</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="c1">// Conexión Wifi</span>
 <span class="w">  </span><span class="n">delay</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
@@ -600,7 +599,7 @@ sudo<span class="w"> </span>chmod<span class="w"> </span>+x<span class="w"> </sp
 <span class="p">}</span>
 
 <span class="kt">void</span><span class="w"> </span><span class="nf">Loop_MQTT</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="c1">// Manejo MQTT </span>
+<span class="w">  </span><span class="c1">// Manejo MQTT</span>
 <span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">client</span><span class="p">.</span><span class="n">connected</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">reconnect</span><span class="p">();</span>
 <span class="w">  </span><span class="p">}</span>
@@ -624,8 +623,8 @@ sudo<span class="w"> </span>chmod<span class="w"> </span>+x<span class="w"> </sp
 <span class="w">    </span><span class="n">serializeJson</span><span class="p">(</span><span class="n">mensaje</span><span class="p">,</span><span class="w"> </span><span class="n">mensaje_json</span><span class="p">);</span>
 <span class="w">    </span><span class="n">client</span><span class="p">.</span><span class="n">publish</span><span class="p">(</span><span class="n">mqtt_topic_publicar</span><span class="p">,</span><span class="w"> </span><span class="n">mensaje_json</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
 <span class="w">  </span><span class="p">}</span>
-<span class="w">  </span>
-<span class="w">  </span>
+
+
 <span class="p">}</span>
 
 <span class="kt">void</span><span class="w"> </span><span class="nf">callback</span><span class="p">(</span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">topic</span><span class="p">,</span><span class="w"> </span><span class="n">byte</span><span class="o">*</span><span class="w"> </span><span class="n">payload</span><span class="p">,</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">length</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
@@ -649,20 +648,20 @@ sudo<span class="w"> </span>chmod<span class="w"> </span>+x<span class="w"> </sp
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>Notas adicionales:
-<em><strong>Publicar mensaje:</strong></em></p>
+<p>Notas adicionales: <strong>Publicar mensaje:</strong></p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">client</span><span class="p">.</span><span class="n">publish</span><span class="p">(</span><span class="s">&quot;topic&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">mensaje_json</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span><span class="w">  </span><span class="c1">// QoS 1</span>
 </pre></div>
 </div>
-<p><em><strong>Suscribirse a un tópico:</strong></em></p>
+<p><strong>Suscribirse a un tópico:</strong></p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">client</span><span class="p">.</span><span class="n">subscribe</span><span class="p">(</span><span class="s">&quot;Carrito_1/Acciones&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span><span class="w">  </span><span class="c1">// QoS 0</span>
 </pre></div>
 </div>
 </section>
-</section>
 <section id="puente-mqtt-ros2">
 <h2>Puente MQTT - ROS2<a class="headerlink" href="#puente-mqtt-ros2" title="Enlace permanente a este encabezado"></a></h2>
-<p>Una vez obtenida una base de MQTT para su uso en microcontroladores y equipos. Se presenta un nodo que funcionará como puente para la comunicación entre la ESP32 y ROS2.</p>
+<p>Una vez obtenida una base de MQTT para su uso en microcontroladores y
+equipos. Se presenta un nodo que funcionará como puente para la
+comunicación entre la ESP32 y ROS2.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">rclpy</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">rclpy.node</span><span class="w"> </span><span class="kn">import</span> <span class="n">Node</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">rclpy.duration</span><span class="w"> </span><span class="kn">import</span> <span class="n">Duration</span>
@@ -670,7 +669,7 @@ sudo<span class="w"> </span>chmod<span class="w"> </span>+x<span class="w"> </sp
 <span class="kn">import</span><span class="w"> </span><span class="nn">paho.mqtt.client</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mqtt</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
 
-<span class="k">class</span><span class="w"> </span><span class="nc">MQTTBridge</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span> 
+<span class="k">class</span><span class="w"> </span><span class="nc">MQTTBridge</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s1">&#39;mqtt_bridge&#39;</span><span class="p">)</span>
 
@@ -740,16 +739,17 @@ sudo<span class="w"> </span>chmod<span class="w"> </span>+x<span class="w"> </sp
     <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
         <span class="k">pass</span>
     <span class="n">rclpy</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
-
 </pre></div>
 </div>
 <hr class="docutils" />
-<p><em><strong>Nota</strong></em></p>
-<p>Existe la posibilidad de utilizar ros2 en microcontroladores, sin embargo se necesitan versiones de nucleo de tarjetas específicas.</p>
-<p>Para revisar mas contenido relacionado se puede revisar los siguientes links:</p>
+<p><strong>Nota</strong></p>
+<p>Existe la posibilidad de utilizar ros2 en microcontroladores, sin
+embargo se necesitan versiones de nucleo de tarjetas específicas.</p>
+<p>Para revisar mas contenido relacionado se puede revisar los siguientes
+links:</p>
 <ul class="simple">
-<li><p>micro-ROS oficial: https://micro.ros.org/</p></li>
-<li><p>Repositorio Arduino: https://github.com/micro-ROS/micro_ros_arduino</p></li>
+<li><p>micro-ROS oficial: <a class="reference external" href="https://micro.ros.org/">https://micro.ros.org/</a></p></li>
+<li><p>Repositorio Arduino: <a class="reference external" href="https://github.com/micro-ROS/micro_ros_arduino">https://github.com/micro-ROS/micro_ros_arduino</a></p></li>
 </ul>
 </section>
 </section>

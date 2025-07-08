@@ -46,18 +46,12 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">ROS2 Humble</span></p>
-<ul>
+              <p class="caption" role="heading"><span class="caption-text">Módulos</span></p>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../tema_0/intro.html">¿Qué es ROS2?</a></li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">Instalación</span></p>
-<ul>
 <li class="toctree-l1"><a class="reference internal" href="../tema_1/instalacion.html">Instalación de Ubuntu</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tema_1/maquina_virtual.html">Instalacion de Ubuntu 22.04 con VirtualBox</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tema_1/instalacionROS2.html">Instalación de ROS2 Humble</a></li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">Conceptos Básicos</span></p>
-<ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Conceptos Básicos</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#espacio-de-trabajo">Espacio de trabajo</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#que-es-un-espacio-de-trabajo-en-ros-2">¿Qué es un espacio de trabajo en ROS 2?</a></li>
@@ -75,13 +69,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="tutoriales.html">Tutoriales</a></li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">Conexión con dispositivos</span></p>
-<ul>
 <li class="toctree-l1"><a class="reference internal" href="../tema_3/dispositivos.html">Conexión con dispositivos</a></li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">URDF y ESP32</span></p>
-<ul>
 <li class="toctree-l1"><a class="reference internal" href="../tema_4/visualizacion_datos.html">Archivos URDF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tema_4/visualizacion_datos.html#gemelo-digital">Gemelo Digital</a></li>
 </ul>
@@ -115,15 +103,21 @@
 <h2>Espacio de trabajo<a class="headerlink" href="#espacio-de-trabajo" title="Enlace permanente a este encabezado"></a></h2>
 <section id="que-es-un-espacio-de-trabajo-en-ros-2">
 <h3>¿Qué es un espacio de trabajo en ROS 2?<a class="headerlink" href="#que-es-un-espacio-de-trabajo-en-ros-2" title="Enlace permanente a este encabezado"></a></h3>
-<p>Un <strong>espacio de trabajo (workspace)</strong> en ROS 2 es una carpeta estructurada que contiene paquetes ROS 2, los cuales pueden estar escritos en Python o C++. Todos los paquetes se compilan y organizan dentro del workspace.</p>
-<p><em><strong>¿Qué es colcon?</strong></em></p>
-<p><code class="docutils literal notranslate"><span class="pre">colcon</span></code> es la herramienta oficial y recomendada para <strong>construir, compilar y organizar workspaces en ROS 2</strong>.</p>
-<p>Proviene de «COmplex LOgic CONstructor» y fue diseñado para reemplazar herramientas anteriores como <code class="docutils literal notranslate"><span class="pre">catkin_make</span></code> o <code class="docutils literal notranslate"><span class="pre">ament_tools</span></code>.</p>
+<p>Un <strong>espacio de trabajo (workspace)</strong> en ROS 2 es una carpeta
+estructurada que contiene paquetes ROS 2, los cuales pueden estar
+escritos en Python o C++. Todos los paquetes se compilan y organizan
+dentro del workspace.</p>
+<p><strong>¿Qué es colcon?</strong></p>
+<p><code class="docutils literal notranslate"><span class="pre">colcon</span></code> es la herramienta oficial y recomendada para <strong>construir,
+compilar y organizar workspaces en ROS 2</strong>.</p>
+<p>Proviene de “COmplex LOgic CONstructor” y fue diseñado para reemplazar
+herramientas anteriores como <code class="docutils literal notranslate"><span class="pre">catkin_make</span></code> o <code class="docutils literal notranslate"><span class="pre">ament_tools</span></code>.</p>
 <hr class="docutils" />
-<p><em><strong>Características de colcon</strong></em></p>
+<p><strong>Características de colcon</strong></p>
 <ul class="simple">
 <li><p>Compila múltiples paquetes de forma <strong>paralela</strong>.</p></li>
-<li><p>Detecta <strong>dependencias entre paquetes</strong> y respeta el orden de compilación.</p></li>
+<li><p>Detecta <strong>dependencias entre paquetes</strong> y respeta el orden de
+compilación.</p></li>
 <li><p>Separa los archivos construidos en carpetas específicas.</p></li>
 <li><p>Es <strong>extensible</strong> mediante plugins.</p></li>
 </ul>
@@ -133,7 +127,7 @@
 </pre></div>
 </div>
 <hr class="docutils" />
-<p><em><strong>Comandos principales de colcon</strong></em></p>
+<p><strong>Comandos principales de colcon</strong></p>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Comando</p></th>
@@ -142,27 +136,43 @@
 </thead>
 <tbody>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">colcon</span> <span class="pre">build</span></code></p></td>
-<td><p>Compila todos los paquetes en <code class="docutils literal notranslate"><span class="pre">src/</span></code></p></td>
+<td><p>Compila todos
+los paquetes en
+<code class="docutils literal notranslate"><span class="pre">src/</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">colcon</span> <span class="pre">build</span> <span class="pre">--packages-select</span> <span class="pre">nombre</span></code></p></td>
-<td><p>Compila solo un paquete específico</p></td>
+<td><p>Compila solo un
+paquete
+específico</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">colcon</span> <span class="pre">list</span></code></p></td>
-<td><p>Muestra todos los paquetes del workspace</p></td>
+<td><p>Muestra todos
+los paquetes
+del workspace</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">colcon</span> <span class="pre">test</span></code></p></td>
-<td><p>Ejecuta pruebas definidas en los paquetes</p></td>
+<td><p>Ejecuta pruebas
+definidas en
+los paquetes</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">colcon</span> <span class="pre">clean</span></code></p></td>
-<td><p>Limpia las carpetas <code class="docutils literal notranslate"><span class="pre">build/</span></code>, <code class="docutils literal notranslate"><span class="pre">install/</span></code> y <code class="docutils literal notranslate"><span class="pre">log/</span></code></p></td>
+<td><p>Limpia las
+carpetas
+<code class="docutils literal notranslate"><span class="pre">build/</span></code>,
+<code class="docutils literal notranslate"><span class="pre">install/</span></code> y
+<code class="docutils literal notranslate"><span class="pre">log/</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">colcon</span> <span class="pre">build</span> <span class="pre">--symlink-install</span></code></p></td>
-<td><p>En paquetes Python, enlaza código para no recompilar cada vez</p></td>
+<td><p>En paquetes
+Python, enlaza
+código para no
+recompilar cada
+vez</p></td>
 </tr>
 </tbody>
 </table>
 <hr class="docutils" />
-<p><em><strong>Directorios creados por colcon al compilar</strong></em></p>
+<p><strong>Directorios creados por colcon al compilar</strong></p>
 <p>Al ejecutar <code class="docutils literal notranslate"><span class="pre">colcon</span> <span class="pre">build</span></code>, se generan 3 carpetas principales:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>ros2_ws/
 ├── build/
@@ -178,18 +188,24 @@
 </thead>
 <tbody>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">build/</span></code></p></td>
-<td><p>Archivos temporales de compilación. ROS 2 genera aquí el código intermedio.</p></td>
+<td><p>Archivos temporales de compilación. ROS 2
+genera aquí el código intermedio.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">install/</span></code></p></td>
-<td><p>Aquí se instalan los ejecutables, scripts, bibliotecas y archivos generados. Es lo que usas con <code class="docutils literal notranslate"><span class="pre">source</span> <span class="pre">install/setup.bash</span></code>.</p></td>
+<td><p>Aquí se instalan los ejecutables,
+scripts, bibliotecas y archivos
+generados. Es lo que usas con
+<code class="docutils literal notranslate"><span class="pre">source</span> <span class="pre">install/setup.bash</span></code>.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">log/</span></code></p></td>
-<td><p>Archivos de salida, advertencias y errores de compilación. Útil para depuración.</p></td>
+<td><p>Archivos de salida, advertencias y
+errores de compilación. Útil para
+depuración.</p></td>
 </tr>
 </tbody>
 </table>
 <hr class="docutils" />
-<p><em><strong>Limpieza de la build</strong></em></p>
+<p><strong>Limpieza de la build</strong></p>
 <p>Si es necesario limpiar el workspace por completo:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>colcon<span class="w"> </span>build<span class="w"> </span>--packages-select<span class="w"> </span>my_package<span class="w"> </span>--cmake-clean-cache
 </pre></div>
@@ -203,14 +219,16 @@
 <hr class="docutils" />
 <section id="paquetes">
 <h2>Paquetes<a class="headerlink" href="#paquetes" title="Enlace permanente a este encabezado"></a></h2>
-<p><em><strong>¿Qué son los paquetes?</strong></em></p>
-<p>Un paquete es la unidad mínima de construcción en ROS 2. Contiene código fuente, archivos de lanzamiento, configuraciones, y puede ser en Python o C++.</p>
+<p><strong>¿Qué son los paquetes?</strong></p>
+<p>Un paquete es la unidad mínima de construcción en ROS 2. Contiene código
+fuente, archivos de lanzamiento, configuraciones, y puede ser en Python
+o C++.</p>
 <p>¿Qué tipos de paquetes existen?</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">ament_cmake</span></code> → para paquetes en C++</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">ament_python</span></code> → para paquetes en Python</p></li>
 </ul>
-<p><em><strong>Diferencias entre paquetes en Python y C++</strong></em></p>
+<p><strong>Diferencias entre paquetes en Python y C++</strong></p>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Característica</p></th>
@@ -234,9 +252,10 @@
 </tbody>
 </table>
 <hr class="docutils" />
-<p><em><strong>Crear un paquete Python desde cero</strong></em></p>
-<p>Para crear un paquete usamos el comando <code class="docutils literal notranslate"><span class="pre">ros2</span> <span class="pre">pkg</span> <span class="pre">create</span></code> y añadiños las siguientes argumentos :</p>
-<p><em><strong>Descripción de opciones:</strong></em></p>
+<p><strong>Crear un paquete Python desde cero</strong></p>
+<p>Para crear un paquete usamos el comando <code class="docutils literal notranslate"><span class="pre">ros2</span> <span class="pre">pkg</span> <span class="pre">create</span></code> y añadiños
+las siguientes argumentos :</p>
+<p><strong>Descripción de opciones:</strong></p>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Parte</p></th>
@@ -254,15 +273,17 @@
 <td><p>Agrega la licencia al package.xml</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">--node-name</span></code></p></td>
-<td><p>No crea nodo por defecto, se ignora usualmente</p></td>
+<td><p>No crea nodo por defecto, se ignora
+usualmente</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--description</span></code></p></td>
-<td><p>Agrega la descripción del paquete, se ignora usualmente</p></td>
+<td><p>Agrega la descripción del paquete, se
+ignora usualmente</p></td>
 </tr>
 </tbody>
 </table>
 <hr class="docutils" />
-<p><em><strong>Resumen para crear un paquete Python completo</strong></em></p>
+<p><strong>Resumen para crear un paquete Python completo</strong></p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>pkg<span class="w"> </span>create<span class="w"> </span>py_listener_pkg<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--build-type<span class="w"> </span>ament_python<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--dependencies<span class="w"> </span>rclpy<span class="w"> </span>std_msgs<span class="w"> </span><span class="se">\</span>
@@ -274,13 +295,13 @@
 <hr class="docutils" />
 <section id="nodos">
 <h2>Nodos<a class="headerlink" href="#nodos" title="Enlace permanente a este encabezado"></a></h2>
-<p>Un <strong>nodo</strong> es una entidad computacional que ejecuta una función específica, como mover una tortuga, leer sensores, o calcular trayectorias.</p>
-<p>Ejemplo:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">turtlesim_node</span></code>: renderiza la tortuga y ejecuta sus acciones.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">turtle_teleop_key</span></code>: interpreta teclas y publica comandos de velocidad.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">teleop_twist_keyboard</span></code>: interpreta teclas y publica comandos de velocidad.</p></li>
-</ul>
+<p>Un <strong>nodo</strong> es una entidad computacional que ejecuta una función
+específica, como mover una tortuga, leer sensores, o calcular
+trayectorias.</p>
+<p>Ejemplo: - <code class="docutils literal notranslate"><span class="pre">turtlesim_node</span></code>: renderiza la tortuga y ejecuta sus
+acciones. - <code class="docutils literal notranslate"><span class="pre">turtle_teleop_key</span></code>: interpreta teclas y publica comandos
+de velocidad. - <code class="docutils literal notranslate"><span class="pre">teleop_twist_keyboard</span></code>: interpreta teclas y publica
+comandos de velocidad.</p>
 <p>Listar nodos activos:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>node<span class="w"> </span>list
 </pre></div>
@@ -289,43 +310,49 @@
 <hr class="docutils" />
 <section id="temas">
 <h2>Temas<a class="headerlink" href="#temas" title="Enlace permanente a este encabezado"></a></h2>
-<p>Un <strong>tema</strong> es un canal por el cual los nodos publican o reciben datos. Es <strong>unidireccional y asincrónico</strong>.</p>
-<p>Ejemplo:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">/turtle1/cmd_vel</span></code>: donde se publican los comandos de velocidad lineal y angular.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">/turtle1/pose</span></code>: donde se publica la posición actual de la tortuga.</p></li>
-</ul>
+<p>Un <strong>tema</strong> es un canal por el cual los nodos publican o reciben datos.
+Es <strong>unidireccional y asincrónico</strong>.</p>
+<p>Ejemplo: - <code class="docutils literal notranslate"><span class="pre">/turtle1/cmd_vel</span></code>: donde se publican los comandos de
+velocidad lineal y angular. - <code class="docutils literal notranslate"><span class="pre">/turtle1/pose</span></code>: donde se publica la
+posición actual de la tortuga.</p>
 <p>Ver temas activos:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>topic<span class="w"> </span>list
 </pre></div>
 </div>
 <hr class="docutils" />
-<p><img alt="Seleccion" src="../../_images/temas.gif" /></p>
+<figure class="align-default" id="id1">
+<img alt="Seleccion" src="../../_images/temas.gif" />
+<figcaption>
+<p><span class="caption-text">Seleccion</span><a class="headerlink" href="#id1" title="Enlace permanente a esta imagen"></a></p>
+</figcaption>
+</figure>
 </section>
 <section id="ejemplos-de-lanzamiento-y-control-de-turtlesim-en-ros-2">
 <h2>Ejemplos de Lanzamiento y Control de Turtlesim en ROS 2<a class="headerlink" href="#ejemplos-de-lanzamiento-y-control-de-turtlesim-en-ros-2" title="Enlace permanente a este encabezado"></a></h2>
-<p>En este ejemplo se muestra cómo lanzar el nodo de <code class="docutils literal notranslate"><span class="pre">turtlesim</span></code> y controlar su movimiento mediante el teclado. También se explica cómo utilizar otro nodo de teleoperación genérico (<code class="docutils literal notranslate"><span class="pre">teleop_twist_keyboard</span></code>) haciendo uso de <strong>remapeo de temas</strong> en ROS 2.</p>
-<p><em><strong>Paso 1: Instalación de paquetes necesarios</strong></em></p>
+<p>En este ejemplo se muestra cómo lanzar el nodo de <code class="docutils literal notranslate"><span class="pre">turtlesim</span></code> y
+controlar su movimiento mediante el teclado. También se explica cómo
+utilizar otro nodo de teleoperación genérico (<code class="docutils literal notranslate"><span class="pre">teleop_twist_keyboard</span></code>)
+haciendo uso de <strong>remapeo de temas</strong> en ROS 2.</p>
+<p><strong>Paso 1: Instalación de paquetes necesarios</strong></p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt<span class="w"> </span>update
 sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>ros-humble-turtlesim<span class="w"> </span>ros-humble-teleop-twist-keyboard
 </pre></div>
 </div>
-<p><em><strong>Paso 2: Lanzar la ventana del simulador</strong></em></p>
+<p><strong>Paso 2: Lanzar la ventana del simulador</strong></p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>run<span class="w"> </span>turtlesim<span class="w"> </span>turtlesim_node
 </pre></div>
 </div>
-<p>Este comando lanza el nodo que genera la ventana de simulación con la tortuga inicial (<code class="docutils literal notranslate"><span class="pre">/turtle1</span></code>).</p>
-<p><em><strong>Paso 3: Controlar la tortuga con el teclado (teleop integrado)</strong></em></p>
+<p>Este comando lanza el nodo que genera la ventana de simulación con la
+tortuga inicial (<code class="docutils literal notranslate"><span class="pre">/turtle1</span></code>).</p>
+<p><strong>Paso 3: Controlar la tortuga con el teclado (teleop integrado)</strong></p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>run<span class="w"> </span>turtlesim<span class="w"> </span>turtle_teleop_key
 </pre></div>
 </div>
 <hr class="docutils" />
-<p><em><strong>Paso 4: Control con un nodo genérico de teleoperación</strong></em></p>
-<p>En este ejemplo se usa el nodo <code class="docutils literal notranslate"><span class="pre">teleop_twist_keyboard</span></code> del paquete <code class="docutils literal notranslate"><span class="pre">teleop_twist_keyboard</span></code>. Este nodo:</p>
-<ul class="simple">
-<li><p>Lee las teclas del teclado</p></li>
-<li><p>Publica mensajes del tipo <code class="docutils literal notranslate"><span class="pre">geometry_msgs/msg/Twist</span></code></p></li>
-</ul>
+<p><strong>Paso 4: Control con un nodo genérico de teleoperación</strong></p>
+<p>En este ejemplo se usa el nodo <code class="docutils literal notranslate"><span class="pre">teleop_twist_keyboard</span></code> del paquete
+<code class="docutils literal notranslate"><span class="pre">teleop_twist_keyboard</span></code>. Este nodo: - Lee las teclas del teclado -
+Publica mensajes del tipo <code class="docutils literal notranslate"><span class="pre">geometry_msgs/msg/Twist</span></code></p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>run<span class="w"> </span>teleop_twist_keyboard<span class="w"> </span>teleop_twist_keyboard
 </pre></div>
 </div>
@@ -338,10 +365,11 @@ sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> <
 </pre></div>
 </div>
 <hr class="docutils" />
-<p><em><strong>¿Cómo solucionar esto?</strong></em></p>
+<p><strong>¿Cómo solucionar esto?</strong></p>
 <section id="remapeo-de-temas">
 <h3>Remapeo de temas<a class="headerlink" href="#remapeo-de-temas" title="Enlace permanente a este encabezado"></a></h3>
-<p>ROS 2 permite redirigir («remapear») los nombres de los temas <strong>sin necesidad de cambiar el código</strong> del nodo. Para hacerlo se usa:</p>
+<p>ROS 2 permite redirigir (“remapear”) los nombres de los temas <strong>sin
+necesidad de cambiar el código</strong> del nodo. Para hacerlo se usa:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>--ros-args<span class="w"> </span>-r<span class="w"> </span><span class="o">[</span>tema_origen<span class="o">]</span>:<span class="o">=[</span>tema_destino<span class="o">]</span>
 </pre></div>
 </div>
@@ -351,29 +379,34 @@ sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> <
 </div>
 <p>Esto se entiende como:</p>
 <blockquote>
-<div><p>«Cuando este nodo publique en <code class="docutils literal notranslate"><span class="pre">/cmd_vel</span></code>, en realidad envíalo a <code class="docutils literal notranslate"><span class="pre">/turtle1/cmd_vel</span></code>.»</p>
+<div><p>“Cuando este nodo publique en <code class="docutils literal notranslate"><span class="pre">/cmd_vel</span></code>, en realidad envíalo a
+<code class="docutils literal notranslate"><span class="pre">/turtle1/cmd_vel</span></code>.”</p>
 </div></blockquote>
 <hr class="docutils" />
 <p>¿Por qué es útil el remapeo?</p>
 <ul class="simple">
 <li><p>Evita modificar el código fuente de los nodos.</p></li>
-<li><p>Permite <strong>reutilizar nodos genéricos</strong> con distintos robots o simuladores.</p></li>
+<li><p>Permite <strong>reutilizar nodos genéricos</strong> con distintos robots o
+simuladores.</p></li>
 <li><p>Facilita pruebas rápidas con distintos sistemas.</p></li>
 </ul>
 </section>
 </section>
 <section id="servicios">
 <h2>Servicios<a class="headerlink" href="#servicios" title="Enlace permanente a este encabezado"></a></h2>
-<p>Un <strong>servicio</strong> en ROS 2 es una operación remota que sigue un patrón de <strong>llamada y respuesta</strong> (request-response).</p>
-<p><em><strong>Componentes de un servicio:</strong></em></p>
+<p>Un <strong>servicio</strong> en ROS 2 es una operación remota que sigue un patrón de
+<strong>llamada y respuesta</strong> (request-response).</p>
+<p><strong>Componentes de un servicio:</strong></p>
 <ul class="simple">
 <li><p><strong>Cliente</strong>: el nodo que inicia la solicitud.</p></li>
 <li><p><strong>Servidor</strong>: el nodo que atiende la solicitud y envía la respuesta.</p></li>
-<li><p><strong>Tipo de servicio</strong>: define la estructura de los datos solicitados y respondidos.</p></li>
+<li><p><strong>Tipo de servicio</strong>: define la estructura de los datos solicitados y
+respondidos.</p></li>
 </ul>
 <hr class="docutils" />
-<p><em><strong>Estructura de un Servicio</strong></em></p>
-<p>Los servicios están definidos por archivos <code class="docutils literal notranslate"><span class="pre">.srv</span></code>, que contienen dos partes separadas por <code class="docutils literal notranslate"><span class="pre">---</span></code>:</p>
+<p><strong>Estructura de un Servicio</strong></p>
+<p>Los servicios están definidos por archivos <code class="docutils literal notranslate"><span class="pre">.srv</span></code>, que contienen dos
+partes separadas por <code class="docutils literal notranslate"><span class="pre">---</span></code>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Ejemplo: example_interfaces/srv/AddTwoInts</span>
 
 <span class="n">int64</span> <span class="n">a</span>
@@ -382,15 +415,11 @@ sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> <
 <span class="n">int64</span> <span class="nb">sum</span>
 </pre></div>
 </div>
-<p>Esto significa que:</p>
-<ul class="simple">
-<li><p>El <strong>cliente</strong> enviará dos enteros <code class="docutils literal notranslate"><span class="pre">a</span></code> y <code class="docutils literal notranslate"><span class="pre">b</span></code></p></li>
-<li><p>El <strong>servidor</strong> responderá con un entero <code class="docutils literal notranslate"><span class="pre">sum</span></code></p></li>
-</ul>
+<p>Esto significa que: - El <strong>cliente</strong> enviará dos enteros <code class="docutils literal notranslate"><span class="pre">a</span></code> y <code class="docutils literal notranslate"><span class="pre">b</span></code> -
+El <strong>servidor</strong> responderá con un entero <code class="docutils literal notranslate"><span class="pre">sum</span></code></p>
 <hr class="docutils" />
-<p><em><strong>Comunicación Cliente-Servidor</strong></em></p>
-<p>La interacción funciona así:
-<img alt="Seleccion" src="../../_images/servicios.gif" /></p>
+<p><strong>Comunicación Cliente-Servidor</strong></p>
+<p>La interacción funciona así: <img alt="Seleccion" src="../../_images/servicios.gif" /></p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span> <span class="n">Cliente</span> <span class="p">]</span> <span class="o">--</span> <span class="n">Request</span> <span class="o">--&gt;</span> <span class="p">[</span> <span class="n">Servidor</span> <span class="p">]</span>
 <span class="p">[</span> <span class="n">Cliente</span> <span class="p">]</span> <span class="o">&lt;--</span> <span class="n">Response</span> <span class="o">--</span> <span class="p">[</span> <span class="n">Servidor</span> <span class="p">]</span>
 </pre></div>
@@ -400,7 +429,7 @@ sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> <
 <li><p>Se usa para tareas <strong>puntuales</strong>, <strong>deterministas</strong> y de <strong>control</strong>.</p></li>
 </ul>
 <hr class="docutils" />
-<p><em><strong>¿Cuándo usar un Servicio?</strong></em></p>
+<p><strong>¿Cuándo usar un Servicio?</strong></p>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Situación</p></th>
@@ -426,22 +455,24 @@ sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> <
 </tbody>
 </table>
 <hr class="docutils" />
-<p><em><strong>Ventajas del uso de servicios</strong></em></p>
+<p><strong>Ventajas del uso de servicios</strong></p>
 <ul class="simple">
 <li><p>Comunicación clara de solicitud y respuesta.</p></li>
 <li><p>Ideal para operaciones atómicas.</p></li>
-<li><p>Bajo acoplamiento: los nodos solo necesitan conocer el tipo del servicio.</p></li>
+<li><p>Bajo acoplamiento: los nodos solo necesitan conocer el tipo del
+servicio.</p></li>
 <li><p>Facilita control de errores: se sabe si hubo respuesta o no.</p></li>
 </ul>
 <hr class="docutils" />
-<p><em><strong>Consideraciones técnicas</strong></em></p>
+<p><strong>Consideraciones técnicas</strong></p>
 <ul class="simple">
 <li><p>La espera por la respuesta puede bloquear el nodo (sin <code class="docutils literal notranslate"><span class="pre">async</span></code>).</p></li>
 <li><p>Los servicios <strong>no están diseñados</strong> para flujos continuos de datos.</p></li>
-<li><p>Si necesitas emitir múltiples respuestas a una sola solicitud → usa <strong>acciones</strong>.</p></li>
+<li><p>Si necesitas emitir múltiples respuestas a una sola solicitud → usa
+<strong>acciones</strong>.</p></li>
 </ul>
 <hr class="docutils" />
-<p><em><strong>Ejemplos de servicios comunes en ROS 2</strong></em></p>
+<p><strong>Ejemplos de servicios comunes en ROS 2</strong></p>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Servicio</p></th>
@@ -452,23 +483,27 @@ sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> <
 <tbody>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">/clear</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">std_srvs/Empty</span></code></p></td>
-<td><p>Borrar pantalla de simuladores como turtlesim</p></td>
+<td><p>Borrar pantalla de
+simuladores como
+turtlesim</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">/reset</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">std_srvs/Empty</span></code></p></td>
-<td><p>Reiniciar el estado de un nodo</p></td>
+<td><p>Reiniciar el estado
+de un nodo</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">/add_two_ints</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">example_interfaces/srv/AddTwoInts</span></code></p></td>
 <td><p>Sumar dos números</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">/spawn</span></code> (turtlesim)</p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">/spawn</span></code>
+(turtlesim)</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">turtlesim/srv/Spawn</span></code></p></td>
 <td><p>Crear nueva tortuga</p></td>
 </tr>
 </tbody>
 </table>
-<p><em><strong>Comandos útiles</strong></em></p>
+<p><strong>Comandos útiles</strong></p>
 <p>Listar servicios disponibles:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>service<span class="w"> </span>list
 </pre></div>
@@ -488,16 +523,19 @@ sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> <
 </section>
 <section id="acciones">
 <h2>Acciones<a class="headerlink" href="#acciones" title="Enlace permanente a este encabezado"></a></h2>
-<p><em><strong>¿Qué es una Acción en ROS 2?</strong></em></p>
-<p>En ROS 2, una <strong>acción</strong> (<code class="docutils literal notranslate"><span class="pre">action</span></code>) es una estructura de comunicación que permite la ejecución de tareas <strong>a largo plazo</strong>, donde se necesita:</p>
+<p><strong>¿Qué es una Acción en ROS 2?</strong></p>
+<p>En ROS 2, una <strong>acción</strong> (<code class="docutils literal notranslate"><span class="pre">action</span></code>) es una estructura de comunicación
+que permite la ejecución de tareas <strong>a largo plazo</strong>, donde se necesita:</p>
 <ul class="simple">
-<li><p>Enviar un <strong>objetivo (goal)</strong> desde un nodo cliente a un nodo servidor.</p></li>
+<li><p>Enviar un <strong>objetivo (goal)</strong> desde un nodo cliente a un nodo
+servidor.</p></li>
 <li><p>Recibir <strong>retroalimentación (feedback)</strong> mientras se ejecuta la tarea.</p></li>
 <li><p>Obtener un <strong>resultado (result)</strong> cuando finaliza la acción.</p></li>
-<li><p>Tener la posibilidad de <strong>cancelar la ejecución</strong> en cualquier momento.</p></li>
+<li><p>Tener la posibilidad de <strong>cancelar la ejecución</strong> en cualquier
+momento.</p></li>
 </ul>
 <hr class="docutils" />
-<p><em><strong>¿Por qué usar acciones y no servicios o tópicos?</strong></em></p>
+<p><strong>¿Por qué usar acciones y no servicios o tópicos?</strong></p>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Característica</p></th>
@@ -534,9 +572,10 @@ sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> <
 </tr>
 </tbody>
 </table>
-<p>En <strong>Conclusión:</strong> Las acciones combinan lo mejor de los servicios y tópicos, permitiendo tareas de larga duración con control dinámico.</p>
+<p>En <strong>Conclusión:</strong> Las acciones combinan lo mejor de los servicios y
+tópicos, permitiendo tareas de larga duración con control dinámico.</p>
 <hr class="docutils" />
-<p><em><strong>Estructura de un archivo <code class="docutils literal notranslate"><span class="pre">.action</span></code></strong></em></p>
+<p><strong>Estructura de un archivo ``.action``</strong></p>
 <p>Un archivo <code class="docutils literal notranslate"><span class="pre">.action</span></code> define tres partes:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Objetivo (Goal)</span>
 <span class="n">int32</span> <span class="n">x</span>
@@ -550,16 +589,17 @@ sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> <
 </pre></div>
 </div>
 <hr class="docutils" />
-<p><em><strong>Componentes Clave</strong></em></p>
+<p><strong>Componentes Clave</strong></p>
 <ul class="simple">
 <li><p><strong>Cliente de acción:</strong> Nodo que solicita ejecutar una acción.</p></li>
-<li><p><strong>Servidor de acción:</strong> Nodo que ejecuta la acción y responde con resultados o feedback.</p></li>
+<li><p><strong>Servidor de acción:</strong> Nodo que ejecuta la acción y responde con
+resultados o feedback.</p></li>
 <li><p><strong>Goal:</strong> Datos de entrada que representan la tarea.</p></li>
 <li><p><strong>Result:</strong> Salida final cuando se completa la acción.</p></li>
 <li><p><strong>Feedback:</strong> Información de progreso enviada mientras se ejecuta.</p></li>
 </ul>
 <hr class="docutils" />
-<p><em><strong>Flujo de Ejecución</strong></em></p>
+<p><strong>Flujo de Ejecución</strong></p>
 <ol class="arabic simple">
 <li><p>El cliente envía un <strong>objetivo (goal)</strong>.</p></li>
 <li><p>El servidor <strong>acepta o rechaza</strong> el objetivo.</p></li>
@@ -568,8 +608,13 @@ sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> <
 <li><p>Cuando termina, se envía un <strong>resultado</strong>.</p></li>
 <li><p>El cliente puede <strong>cancelar</strong> la acción si es necesario.´</p></li>
 </ol>
-<p><img alt="gif" src="../../_images/acciones.gif" /></p>
-<p><em><strong>Casos de Uso Típicos</strong></em></p>
+<figure class="align-default" id="id2">
+<img alt="gif" src="../../_images/acciones.gif" />
+<figcaption>
+<p><span class="caption-text">gif</span><a class="headerlink" href="#id2" title="Enlace permanente a esta imagen"></a></p>
+</figcaption>
+</figure>
+<p><strong>Casos de Uso Típicos</strong></p>
 <ul class="simple">
 <li><p>Navegar a una posición (navegación autónoma).</p></li>
 <li><p>Ejecutar trayectorias robóticas.</p></li>
@@ -578,7 +623,7 @@ sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> <
 <li><p>Controlar movimiento con retroalimentación.</p></li>
 </ul>
 <hr class="docutils" />
-<p><em><strong>Ejemplos de acciones existentes</strong></em></p>
+<p><strong>Ejemplos de acciones existentes</strong></p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">nav2_msgs/action/NavigateToPose</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">control_msgs/action/FollowJointTrajectory</span></code></p></li>
