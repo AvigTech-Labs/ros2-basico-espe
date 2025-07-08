@@ -457,259 +457,264 @@ repositorios:
 
 --------------
 
-**Detección en Python puro (sin ROS)**
+Ejemplos 
 
-.. code:: python
 
-   import cv2
-   from pupil_apriltags import Detector
+.. tabs::
 
-   def main():
-       # Abre la cámara (0 = cámara predeterminada)
-       cap = cv2.VideoCapture(0)
+   .. group-tab:: Programa 1
 
-       if not cap.isOpened():
-           print("No se pudo acceder a la cámara.")
-           return
+      **Detección en Python puro (sin ROS)**
 
-       # Configurar el detector de AprilTags
-       at_detector = Detector(
-           families='tag36h11',
-           nthreads=1,
-           quad_decimate=1.0,
-           quad_sigma=0.0,
-           refine_edges=True,
-           decode_sharpening=0.25,
-           debug=False
-       )
+      .. code-block:: python
 
-       # Nombre de la ventana
-       window_name = 'AprilTag Detector - tag36h11'
+         import cv2
+            from pupil_apriltags import Detector
 
-       # Hacer la ventana redimensionable
-       cv2.namedWindow(window_name, cv2.WINDOW_NORMAL)
-       cv2.resizeWindow(window_name, 800, 600)  # Ancho x Alto en píxeles
+            def main():
+               # Abre la cámara (0 = cámara predeterminada)
+               cap = cv2.VideoCapture(0)
 
-       print("Cámara activa. Presiona 'q' para salir.")
+               if not cap.isOpened():
+                  print("No se pudo acceder a la cámara.")
+                  return
 
-       while True:
-           ret, frame = cap.read()
-           if not ret:
-               print("No se pudo leer el frame.")
-               break
+               # Configurar el detector de AprilTags
+               at_detector = Detector(
+                  families='tag36h11',
+                  nthreads=1,
+                  quad_decimate=1.0,
+                  quad_sigma=0.0,
+                  refine_edges=True,
+                  decode_sharpening=0.25,
+                  debug=False
+               )
 
-           # Convertir imagen a escala de grises
-           gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+               # Nombre de la ventana
+               window_name = 'AprilTag Detector - tag36h11'
 
-           # Detectar etiquetas AprilTag
-           detections = at_detector.detect(gray)
+               # Hacer la ventana redimensionable
+               cv2.namedWindow(window_name, cv2.WINDOW_NORMAL)
+               cv2.resizeWindow(window_name, 800, 600)  # Ancho x Alto en píxeles
 
-           for detection in detections:
-               tag_id = detection.tag_id
-               print(f"Tag detectado: {tag_id}")
+               print("Cámara activa. Presiona 'q' para salir.")
 
-               # Dibujar un círculo en el centro del tag
-               center = (int(detection.center[0]), int(detection.center[1]))
-               cv2.circle(frame, center, 10, (0, 255, 0), 2)
+               while True:
+                  ret, frame = cap.read()
+                  if not ret:
+                        print("No se pudo leer el frame.")
+                        break
 
-           # Mostrar imagen con detecciones
-           cv2.imshow(window_name, frame)
+                  # Convertir imagen a escala de grises
+                  gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-           # Salir si se presiona la tecla 'q'
-           if cv2.waitKey(1) & 0xFF == ord('q'):
-               break
+                  # Detectar etiquetas AprilTag
+                  detections = at_detector.detect(gray)
 
-       # Liberar recursos
-       cap.release()
-       cv2.destroyAllWindows()
-       print("Cámara cerrada.")
+                  for detection in detections:
+                        tag_id = detection.tag_id
+                        print(f"Tag detectado: {tag_id}")
 
-   if __name__ == '__main__':
-       main()
+                        # Dibujar un círculo en el centro del tag
+                        center = (int(detection.center[0]), int(detection.center[1]))
+                        cv2.circle(frame, center, 10, (0, 255, 0), 2)
 
-Para el uso de april-tags, es importante tener en cuenta las
-características de la cámara.
+                  # Mostrar imagen con detecciones
+                  cv2.imshow(window_name, frame)
 
-**Nodo ROS 2 que publica detección de AprilTags**
+                  # Salir si se presiona la tecla 'q'
+                  if cv2.waitKey(1) & 0xFF == ord('q'):
+                        break
 
-Para el siguiente nodo, se utulizará los mensajes previamente creados
-``AprilTagPixel`` y ``AprilTagPixelArray``
-
-Este nodo se ejecuta en ROS 2 y **publica los datos detectados** (ID y
-posición en píxeles) en un tópico llamado ``/apriltag_pixels``.
-
-.. code:: python
-
-   import cv2
-   from pupil_apriltags import Detector
-   import rclpy
-   from rclpy.node import Node
-
-   from std_msgs.msg import String
-   from avig_msg.msg import AprilTagPixel, AprilTagPixelArray
-
-   class AprilTagPixelPublisher(Node):
-       def __init__(self):
-           super().__init__('apriltag_pixel_publisher')
-
-           self.publisher_data = self.create_publisher(AprilTagPixelArray, 'apriltag_pixels_arreglo', 1)
-
-           self.cap = cv2.VideoCapture(0)
-           self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
-           self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
-           self.cap.set(cv2.CAP_PROP_FPS, 30)
-
-           if not self.cap.isOpened():
-               self.get_logger().error("No se pudo acceder a la cámara.")
-               exit()
-
-           self.at_detector = Detector(families='tag36h11', nthreads=4)
-
-           # Crear ventana redimensionable (solo si se usa visualización)
-           cv2.namedWindow("AprilTag View", cv2.WINDOW_NORMAL)
-           cv2.resizeWindow("AprilTag View", 800, 600)
-
-           self.timer = self.create_timer(1.0 / 30.0, self.timer_callback)
-           self.get_logger().info("Nodo AprilTag iniciado.")
-
-       def timer_callback(self):
-           ret, frame = self.cap.read()
-           if not ret:
-               self.get_logger().warn(" No se pudo leer el frame.")
-               return
-
-           gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-           detections = self.at_detector.detect(gray)
-
-           msg_arreglo = AprilTagPixelArray()
-           for det in detections:
-               tag_id = det.tag_id
-               center_px = det.center
-               msg = AprilTagPixel()
-               msg.id = tag_id
-               msg.posx = float(center_px[0])
-               msg.posy = float(center_px[1])
-               msg_arreglo.tags.append(msg)
-           self.publisher_data.publish(msg_arreglo)
-           # Visualizacion
-           self.visualizar_detecciones(frame, detections)
-
-       def visualizar_detecciones(self, frame, detections):
-           """Muestra la imagen con círculos e ID de tags detectados."""
-           for det in detections:
-               center = (int(det.center[0]), int(det.center[1]))
-               cv2.circle(frame, center, 8, (0, 255, 0), 2)
-               cv2.putText(frame, f"ID:{det.tag_id}", (center[0] + 10, center[1] - 10),
-                           cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 0, 0), 2)
-
-           cv2.imshow("AprilTag View", frame)
-           if cv2.waitKey(1) & 0xFF == ord('q'):
-               self.get_logger().info(" 'q' presionado. Saliendo.")
-               self.cap.release()
+               # Liberar recursos
+               cap.release()
                cv2.destroyAllWindows()
-               rclpy.shutdown()
+               print("Cámara cerrada.")
 
-       def destroy_node(self):
-           self.cap.release()
-           cv2.destroyAllWindows()
-           super().destroy_node()
+            if __name__ == '__main__':
+               main()
 
-   def main(args=None):
-       rclpy.init(args=args)
-       node = AprilTagPixelPublisher()
-       try:
-           rclpy.spin(node)
-       except KeyboardInterrupt:
-           node.destroy_node()
-           rclpy.shutdown()
+   .. group-tab:: Programa 2
 
-   if __name__ == '__main__':
-       main()
+   **Nodo ROS 2 que publica detección de AprilTags**
 
-Se puede utilizar diferentes variaciones para uso de apriltags con ROS2,
-para poder usar un formato compatible con las imágenes de ROS se debe
-utilizar el tipo de mensaje ``sensor_msgs`` y agregar esta dependencia
-en el paquete creado.
+   Para el siguiente nodo, se utulizará los mensajes previamente creados ``AprilTagPixel`` y ``AprilTagPixelArray``
 
-.. code:: python
+   Este nodo se ejecuta en ROS 2 y **publica los datos detectados** (ID y posición en píxeles) en un tópico llamado ``/apriltag_pixels``.
 
+      .. code-block:: python
 
-   import cv2
-   from pupil_apriltags import Detector
-   import rclpy
-   from rclpy.node import Node
-   from avig_msg.msg import AprilTagPixel, AprilTagPixelArray
-   from sensor_msgs.msg import Image
+         import cv2
+         from pupil_apriltags import Detector
+         import rclpy
+         from rclpy.node import Node
 
-   from cv_bridge import CvBridge
+         from std_msgs.msg import String
+         from avig_msg.msg import AprilTagPixel, AprilTagPixelArray
 
-   class AprilTagPixelPublisher(Node):
-       def __init__(self):
-           super().__init__('apriltag_pixel_publisher')
+         class AprilTagPixelPublisher(Node):
+               def __init__(self):
+                  super().__init__('apriltag_pixel_publisher')
 
-           # Publicador para ID y coordenadas en píxeles (bruto)
-           self.publisher_data = self.create_publisher(AprilTagPixelArray, 'apriltag_pixels', 1)
-           # Publicador para imagen tipo image_raw
-           self.publisher_image = self.create_publisher(Image, 'image_raw', 1)
-           self.bridge = CvBridge()
+                  self.publisher_data = self.create_publisher(AprilTagPixelArray, 'apriltag_pixels_arreglo', 1)
 
-           # Configurar cámara
-           self.cap = cv2.VideoCapture(0)
-           self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
-           self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
-           self.cap.set(cv2.CAP_PROP_FPS, 30)
+                  self.cap = cv2.VideoCapture(0)
+                  self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
+                  self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+                  self.cap.set(cv2.CAP_PROP_FPS, 30)
 
-           if not self.cap.isOpened():
-               self.get_logger().error("No se pudo acceder a la cámara.")
-               exit()
+                  if not self.cap.isOpened():
+                     self.get_logger().error("No se pudo acceder a la cámara.")
+                     exit()
 
-           # Configurar detector de AprilTags
-           self.at_detector = Detector(families='tag36h11', nthreads=4)
+                  self.at_detector = Detector(families='tag36h11', nthreads=4)
 
-           # Temporizador a 30 Hz
-           self.timer = self.create_timer(1.0 / 30.0, self.timer_callback)
-           self.get_logger().info("Nodo de detección AprilTag iniciado (modo simple sin calibración).")
+                  # Crear ventana redimensionable (solo si se usa visualización)
+                  cv2.namedWindow("AprilTag View", cv2.WINDOW_NORMAL)
+                  cv2.resizeWindow("AprilTag View", 800, 600)
 
-       def timer_callback(self):
-           ret, frame = self.cap.read()
-           if not ret:
-               self.get_logger().warn("No se pudo leer el frame.")
-               return
+                  self.timer = self.create_timer(1.0 / 30.0, self.timer_callback)
+                  self.get_logger().info("Nodo AprilTag iniciado.")
 
-           gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-           detections = self.at_detector.detect(gray)
-           msg_arreglo = AprilTagPixelArray()
+               def timer_callback(self):
+                  ret, frame = self.cap.read()
+                  if not ret:
+                     self.get_logger().warn(" No se pudo leer el frame.")
+                     return
 
-           for det in detections:
-               tag_id = det.tag_id
-               center_px = det.center  # coordenadas (x, y) en píxeles
-               msg = AprilTagPixel()
-               msg.id = tag_id
-               msg.posx = float(center_px[0])
-               msg.posy = float(center_px[1])
-               msg_arreglo.tags.append(msg)
+                  gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+                  detections = self.at_detector.detect(gray)
 
-           self.publisher_data.publish(msg_arreglo)
+                  msg_arreglo = AprilTagPixelArray()
+                  for det in detections:
+                     tag_id = det.tag_id
+                     center_px = det.center
+                     msg = AprilTagPixel()
+                     msg.id = tag_id
+                     msg.posx = float(center_px[0])
+                     msg.posy = float(center_px[1])
+                     msg_arreglo.tags.append(msg)
+                  self.publisher_data.publish(msg_arreglo)
+                  # Visualizacion
+                  self.visualizar_detecciones(frame, detections)
 
-           # Publicar la imagen como sensor_msgs/Image
-           img_msg = self.bridge.cv2_to_imgmsg(frame, encoding='bgr8')
-           self.publisher_image.publish(img_msg)
+               def visualizar_detecciones(self, frame, detections):
+                  """Muestra la imagen con círculos e ID de tags detectados."""
+                  for det in detections:
+                     center = (int(det.center[0]), int(det.center[1]))
+                     cv2.circle(frame, center, 8, (0, 255, 0), 2)
+                     cv2.putText(frame, f"ID:{det.tag_id}", (center[0] + 10, center[1] - 10),
+                                 cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 0, 0), 2)
 
-       def destroy_node(self):
-           self.cap.release()
-           super().destroy_node()
+                  cv2.imshow("AprilTag View", frame)
+                  if cv2.waitKey(1) & 0xFF == ord('q'):
+                     self.get_logger().info(" 'q' presionado. Saliendo.")
+                     self.cap.release()
+                     cv2.destroyAllWindows()
+                     rclpy.shutdown()
 
-   def main(args=None):
-       rclpy.init(args=args)
-       node = AprilTagPixelPublisher()
-       try:
-           rclpy.spin(node)
-       except KeyboardInterrupt:
-           node.destroy_node()
-           rclpy.shutdown()
+               def destroy_node(self):
+                  self.cap.release()
+                  cv2.destroyAllWindows()
+                  super().destroy_node()
 
-   if __name__ == '__main__':
-       main()
+         def main(args=None):
+               rclpy.init(args=args)
+               node = AprilTagPixelPublisher()
+               try:
+                  rclpy.spin(node)
+               except KeyboardInterrupt:
+                  node.destroy_node()
+                  rclpy.shutdown()
+
+         if __name__ == '__main__':
+               main()
+
+   .. group-tab:: Programa 2
+
+   Se puede utilizar diferentes variaciones para uso de apriltags con ROS2,
+   para poder usar un formato compatible con las imágenes de ROS se debe
+   utilizar el tipo de mensaje ``sensor_msgs`` y agregar esta dependencia
+   en el paquete creado.
+
+      .. code-block:: python
+
+         import cv2
+         from pupil_apriltags import Detector
+         import rclpy
+         from rclpy.node import Node
+         from avig_msg.msg import AprilTagPixel, AprilTagPixelArray
+         from sensor_msgs.msg import Image
+
+         from cv_bridge import CvBridge
+
+         class AprilTagPixelPublisher(Node):
+               def __init__(self):
+                  super().__init__('apriltag_pixel_publisher')
+
+                  # Publicador para ID y coordenadas en píxeles (bruto)
+                  self.publisher_data = self.create_publisher(AprilTagPixelArray, 'apriltag_pixels', 1)
+                  # Publicador para imagen tipo image_raw
+                  self.publisher_image = self.create_publisher(Image, 'image_raw', 1)
+                  self.bridge = CvBridge()
+
+                  # Configurar cámara
+                  self.cap = cv2.VideoCapture(0)
+                  self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
+                  self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
+                  self.cap.set(cv2.CAP_PROP_FPS, 30)
+
+                  if not self.cap.isOpened():
+                     self.get_logger().error("No se pudo acceder a la cámara.")
+                     exit()
+
+                  # Configurar detector de AprilTags
+                  self.at_detector = Detector(families='tag36h11', nthreads=4)
+
+                  # Temporizador a 30 Hz
+                  self.timer = self.create_timer(1.0 / 30.0, self.timer_callback)
+                  self.get_logger().info("Nodo de detección AprilTag iniciado (modo simple sin calibración).")
+
+               def timer_callback(self):
+                  ret, frame = self.cap.read()
+                  if not ret:
+                     self.get_logger().warn("No se pudo leer el frame.")
+                     return
+
+                  gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+                  detections = self.at_detector.detect(gray)
+                  msg_arreglo = AprilTagPixelArray()
+
+                  for det in detections:
+                     tag_id = det.tag_id
+                     center_px = det.center  # coordenadas (x, y) en píxeles
+                     msg = AprilTagPixel()
+                     msg.id = tag_id
+                     msg.posx = float(center_px[0])
+                     msg.posy = float(center_px[1])
+                     msg_arreglo.tags.append(msg)
+
+                  self.publisher_data.publish(msg_arreglo)
+
+                  # Publicar la imagen como sensor_msgs/Image
+                  img_msg = self.bridge.cv2_to_imgmsg(frame, encoding='bgr8')
+                  self.publisher_image.publish(img_msg)
+
+               def destroy_node(self):
+                  self.cap.release()
+                  super().destroy_node()
+
+         def main(args=None):
+               rclpy.init(args=args)
+               node = AprilTagPixelPublisher()
+               try:
+                  rclpy.spin(node)
+               except KeyboardInterrupt:
+                  node.destroy_node()
+                  rclpy.shutdown()
+
+         if __name__ == '__main__':
+               main()
 
 Servicios personalizados
 ------------------------
