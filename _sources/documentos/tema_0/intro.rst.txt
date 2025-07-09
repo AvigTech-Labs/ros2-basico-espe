@@ -11,7 +11,7 @@ sistema operativo tradicional**, sino una capa de software que corre
 sobre uno (como Ubuntu Linux), utilizando el middleware DDS como base
 para la comunicación entre procesos.
 
---------------
+
 
 Ecosistema ROS 2
 ----------------
@@ -30,7 +30,7 @@ El ecosistema de ROS 2 incluye:
 - **Rosbags (ros2 bag):** Graba y reproduce datos de topics para pruebas
   y análisis.
 
---------------
+
 
 Arquitectura de ROS 2
 ---------------------
@@ -47,7 +47,6 @@ Distribution Service**), eliminando la dependencia del nodo maestro
 - ``ros2 bag``: Grabación y reproducción de datos
 - ``colcon build``: Compila el workspace (sustituye a catkin_make)
 
---------------
 
 Plumbing & Capabilities
 -----------------------
@@ -60,8 +59,6 @@ Plumbing & Capabilities
 - **SLAM Toolbox:** Localización y mapeo simultáneo
 - **MoveIt 2:** Planificación y control de brazos robóticos
 - **Percepción:** Procesamiento de imágenes y datos de sensores
-
---------------
 
 ROS 2 te permite:
 

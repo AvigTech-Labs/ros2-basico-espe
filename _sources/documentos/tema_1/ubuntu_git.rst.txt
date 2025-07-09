@@ -1,18 +1,18 @@
-Instalación de Ubuntu
+Ubuntu y GitHub
 =====================
 
-| Para el funcionamiento de ROS es necesario instalar Ubuntu.
+Instalación de Ubuntu
+---------------------
+
+| Para el funcionamiento de ROS2 es necesario instalar Ubuntu.
 | En este curso trabajaremos con **Ubuntu 22.04** y **ROS Humble**.
 
---------------
 
 **Recursos de descarga**
 
 - **Imagen ISO Ubuntu 22.04.6:**
-  `Descargar desde
-  releases.ubuntu.com <https://releases.ubuntu.com/22.04/>`__
+  `Descarga Oficial <https://releases.ubuntu.com/22.04/>`__
 
---------------
 
 **Opciones de instalación**
 
@@ -42,19 +42,15 @@ Instalación de Ubuntu
 |                 | con hardware real          | desarrollo portable  |
 +-----------------+----------------------------+----------------------+
 
---------------
 
 **Tutoriales recomendados**
 
 - **Opción 1: Partición de disco (Dual Boot):**
-  Es necesario utilizar la ISO descargada de Ubuntu 22.04 LTS
 
-`Ver en YouTube <https://www.youtube.com/watch?v=_d6oT7rEoGc>`__
+Es necesario utilizar la ISO descargada de Ubuntu 22.04 LTS `Ver en YouTube <https://www.youtube.com/watch?v=_d6oT7rEoGc>`__
 
-- **Opción 2: Máquina Virtual:**
-  `Guía práctica aquí <./maquina_virtual.md>`__
-
---------------
+- **Opción 2: Máquina Virtual:**  
+  :doc:`Guía práctica aquí <maquina_virtual>`
 
 **Verificación de instalación de Python**
 
@@ -67,8 +63,10 @@ Una vez dentro de Ubuntu, abre una terminal y ejecuta:
 Debe mostrarse algo como ``Python 3.10.x``, que es la versión por
 defecto en Ubuntu 22.04.
 
-Ubuntu
-------
+
+
+Introducción a Ubuntu
+---------------------
 
 **Ubuntu** es una distribución del sistema operativo **GNU/Linux**
 basada en **Debian**. Es una de las distribuciones más populares por su
@@ -85,7 +83,6 @@ Usos comunes de Ubuntu:
 - Virtualización y contenedores (QEMU, VirtualBox, LXD)
 - Entornos gráficos personalizados y ligeros
 
---------------
 
 La siguiente bibliogradía aborda más a detalle el uso básico de linux
 
@@ -106,8 +103,9 @@ En general los comandos en ubuntu siguen la siguiente extructura:
 
 Aquí algunos comandos fundamentales que debes dominar:
 
-**1. Gestion de arhivos y directorios** \* ls: Lista archivos y
-directorios.
+**1. Gestion de arhivos y directorios**
+
+-ls: Lista archivos y directorios.
 
 ::
 
@@ -154,22 +152,19 @@ Los diferentes directorios poseen niveles de manipulación que son:
 .. figure:: ./img/1-ubuntu1.jpg
    :alt: img
 
-   img
 
-los comandos que permiten modificar los permisos de directorios son: \*
-chmod: Cambia los permisos de archivos y directorios.
+De manera decimal tenemos:
+
+.. figure:: ./img/1-ubuntu2.jpg
+   :alt: img2
+
+los comandos que permiten modificar los permisos de directorios son:
+
+- chmod: Cambia los permisos de archivos y directorios.
 
 ::
 
    chmod 755 archivo.sh # otorga permisos de lectura, escritura y ejecución al propietario, y solo lectura y ejecución al resto.
-
-- chown: Cambia el propietario de archivos o carpetas.
-
-::
-
-   chown usuario # grupo archivo.txt.
-
-De manera decimal tenemos: |img|
 
 **3. Gestión de procesos:**
 
@@ -202,10 +197,16 @@ De manera decimal tenemos: |img|
 
    sudo snap install nombre_paquete.
 
-**5. SSH (Secure Shell):** ¿Qué es SSH?: SSH permite acceso remoto
-seguro a otra máquina, útil cuando trabajas con robots o servidores de
-manera remota. estructura: ssh usuario@ip_del_servidor # Conecta a un
-servidor remoto.
+**5. SSH (Secure Shell):** 
+
+SSH permite acceso remoto seguro a otra máquina, útil cuando trabajas con robots o servidores de
+manera remota. estructura: 
+
+::
+
+   ssh usuario@ip_del_servidor 
+
+Ejemplo:
 
 ::
 
@@ -217,7 +218,9 @@ servidor remoto.
 
    scp archivo.txt usuario@192.168.1.100:/ruta/destino  # Copia archivos a una máquina remota.
 
-**6. Gestión de red:** \* ifconfig: Muestra la configuración de red.
+**6. Gestión de red:**
+
+- ifconfig: Muestra la configuración de red.
 
 - ping: Prueba la conexión a otra máquina.
 
@@ -225,12 +228,10 @@ servidor remoto.
 
    ping google.com # verifica si hay conexión con Google.
 
-- netstat: Muestra las conexiones de red activas.
+::
+   netstat #Muestra las conexiones de red activas.
 
-\*Firewall: Configurar el firewall es esencial para habilitar o
-restringir puertos específicos, sobre todo al usar ROS o ROS2 en redes.
-
-UFW (Uncomplicated Firewall): Firewall básico en Ubuntu.
+- UFW (Uncomplicated Firewall): Firewall básico en Ubuntu.
 
 ::
 
@@ -249,6 +250,7 @@ UFW (Uncomplicated Firewall): Firewall básico en Ubuntu.
    sudo ufw allow 11311 #Permitir conexiones en el puerto que usa ROS.
 
 --------------
+
 
 GitHub
 ------
@@ -280,5 +282,3 @@ Comandos básicos de Git
 
 Tutorial de uso de Git y GitHub
 `tutorial <https://www.youtube.com/watch?v=mBYSUUnMt9M&t=14612s>`__
-
-.. |img| image:: ./img/1-ubuntu2.jpg
