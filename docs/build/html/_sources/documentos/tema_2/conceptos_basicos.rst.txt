@@ -5,7 +5,6 @@ Espacio de trabajo
 ------------------
 
 ¿Qué es un espacio de trabajo en ROS 2?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Un **espacio de trabajo (workspace)** en ROS 2 es una carpeta
 estructurada que contiene paquetes ROS 2, los cuales pueden estar
@@ -60,12 +59,6 @@ Instalación de colcon y extensiones recomendadas
 | ``colcon test``                                    | Ejecuta pruebas |
 |                                                    | definidas en    |
 |                                                    | los paquetes    |
-+----------------------------------------------------+-----------------+
-| ``colcon clean``                                   | Limpia las      |
-|                                                    | carpetas        |
-|                                                    | ``build/``,     |
-|                                                    | ``install/`` y  |
-|                                                    | ``log/``        |
 +----------------------------------------------------+-----------------+
 | ``colcon build --symlink-install``                 | En paquetes     |
 |                                                    | Python, enlaza  |
@@ -188,13 +181,14 @@ Nodos
 -----
 
 Un **nodo** es una entidad computacional que ejecuta una función
-específica, como mover una tortuga, leer sensores, o calcular
+específica, como mover un robot móvil simulado, leer sensores, o calcular
 trayectorias.
 
-Ejemplo: - ``turtlesim_node``: renderiza la tortuga y ejecuta sus
-acciones. - ``turtle_teleop_key``: interpreta teclas y publica comandos
-de velocidad. - ``teleop_twist_keyboard``: interpreta teclas y publica
-comandos de velocidad.
+Ejemplo: 
+
+- ``turtlesim_node``: renderiza la tortuga y ejecuta sus acciones. 
+- ``turtle_teleop_key``: interpreta teclas y publica comandos de velocidad. 
+- ``teleop_twist_keyboard``: interpreta teclas y publica comandos de velocidad.
 
 Listar nodos activos:
 
@@ -210,9 +204,11 @@ Temas
 Un **tema** es un canal por el cual los nodos publican o reciben datos.
 Es **unidireccional y asincrónico**.
 
-Ejemplo: - ``/turtle1/cmd_vel``: donde se publican los comandos de
-velocidad lineal y angular. - ``/turtle1/pose``: donde se publica la
-posición actual de la tortuga.
+Ejemplo: 
+
+- ``/turtle1/cmd_vel``: donde se publican los comandos de velocidad lineal y angular. 
+
+- ``/turtle1/pose``: donde se publica la posición actual de la tortuga.
 
 Ver temas activos:
 
@@ -225,7 +221,7 @@ Ver temas activos:
 .. figure:: ./temas.gif
    :alt: Seleccion
 
-   Seleccion
+   Tomado de: ROS2 Humble - Documentación Oficial
 
 Ejemplos de Lanzamiento y Control de Turtlesim en ROS 2
 -------------------------------------------------------
@@ -262,8 +258,8 @@ tortuga inicial (``/turtle1``).
 **Paso 4: Control con un nodo genérico de teleoperación**
 
 En este ejemplo se usa el nodo ``teleop_twist_keyboard`` del paquete
-``teleop_twist_keyboard``. Este nodo: - Lee las teclas del teclado -
-Publica mensajes del tipo ``geometry_msgs/msg/Twist``
+``teleop_twist_keyboard``. Este nodo: Lee las teclas del teclado y 
+publica mensajes del tipo ``geometry_msgs/msg/Twist``
 
 .. code:: bash
 
@@ -344,14 +340,17 @@ partes separadas por ``---``:
    ---
    int64 sum
 
-Esto significa que: - El **cliente** enviará dos enteros ``a`` y ``b`` -
-El **servidor** responderá con un entero ``sum``
+Esto significa que: 
+
+- El **cliente** enviará dos enteros ``a`` y ``b`` 
+
+- El **servidor** responderá con un entero ``sum``
 
 --------------
 
 **Comunicación Cliente-Servidor**
 
-La interacción funciona así: |Seleccion|
+La interacción funciona así: |Seleccion| *Tomado de: ROS2 Humble - Documentación Oficial*
 
 ::
 
@@ -515,7 +514,7 @@ Un archivo ``.action`` define tres partes:
 .. figure:: ./acciones.gif
    :alt: gif
 
-   gif
+   Tomado de: ROS2 Humble - Documentación Oficial
 
 **Casos de Uso Típicos**
 

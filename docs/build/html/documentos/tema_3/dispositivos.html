@@ -10,6 +10,7 @@
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/tabs.css?v=a5c4661c" />
 
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
@@ -20,6 +21,7 @@
       <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../../_static/copybutton.js?v=f281be69"></script>
       <script src="../../_static/translations.js?v=f85f4cfb"></script>
+      <script src="../../_static/tabs.js?v=3030b3cb"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Índice" href="../../genindex.html" />
     <link rel="search" title="Búsqueda" href="../../search.html" />
@@ -46,11 +48,10 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Módulos</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Temas</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../tema_0/intro.html">¿Qué es ROS2?</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tema_1/instalacion.html">Instalación de Ubuntu</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tema_1/maquina_virtual.html">Instalacion de Ubuntu 22.04 con VirtualBox</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tema_1/ubuntu_git.html">Ubuntu y GitHub</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tema_1/instalacionROS2.html">Instalación de ROS2 Humble</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tema_2/conceptos_basicos.html">Conceptos Básicos</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tema_2/tutoriales.html">Tutoriales</a></li>
@@ -71,6 +72,10 @@
 <li class="toctree-l1"><a class="reference internal" href="../tema_4/visualizacion_datos.html">Archivos URDF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tema_4/visualizacion_datos.html#gemelo-digital">Gemelo Digital</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tema_4/visualizacion_datos.html#calibracion-de-camara">Calibración de Cámara</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Proyecto Aplicado</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tema_5/proyecto.html">Conexión con</a></li>
 </ul>
 
         </div>
@@ -227,7 +232,8 @@ status mosquitto</p>
 información entre 2 equipos:</p>
 <p>Dentro del paquete mi_pkg_python crear el directorio <code class="docutils literal notranslate"><span class="pre">mqtt</span></code></p>
 <p>En el archivo equipo1.py</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">paho.mqtt.client</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mqtt</span>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-ZXF1aXBvMS5weQ==" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-0-ZXF1aXBvMS5weQ==" name="ZXF1aXBvMS5weQ==" role="tab" tabindex="0">equipo1.py</button><button aria-controls="panel-0-ZXF1aXBvMi5weQ==" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-0-ZXF1aXBvMi5weQ==" name="ZXF1aXBvMi5weQ==" role="tab" tabindex="-1">equipo2.py</button></div><div aria-labelledby="tab-0-ZXF1aXBvMS5weQ==" class="sphinx-tabs-panel group-tab" id="panel-0-ZXF1aXBvMS5weQ==" name="ZXF1aXBvMS5weQ==" role="tabpanel" tabindex="0"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">paho.mqtt.client</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mqtt</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
 
@@ -240,27 +246,27 @@ información entre 2 equipos:</p>
 
 <span class="c1"># Callback cuando se conecta al broker</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">on_connect</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">userdata</span><span class="p">,</span> <span class="n">flags</span><span class="p">,</span> <span class="n">rc</span><span class="p">,</span> <span class="n">properties</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">rc</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Conectado al broker MQTT&quot;</span><span class="p">)</span>
-        <span class="n">client</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="n">TOPIC_SUB_SEN</span><span class="p">)</span>
-        <span class="n">client</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="n">TOPIC_SUB_EST</span><span class="p">)</span>
+   <span class="k">if</span> <span class="n">rc</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+      <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Conectado al broker MQTT&quot;</span><span class="p">)</span>
+      <span class="n">client</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="n">TOPIC_SUB_SEN</span><span class="p">)</span>
+      <span class="n">client</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="n">TOPIC_SUB_EST</span><span class="p">)</span>
 
-    <span class="k">else</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error de conexión: código </span><span class="si">{</span><span class="n">rc</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+   <span class="k">else</span><span class="p">:</span>
+      <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error de conexión: código </span><span class="si">{</span><span class="n">rc</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
 <span class="c1"># Callback al recibir un mensaje</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">on_message</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">userdata</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">mensaje</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">payload</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">mensaje</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">msg</span><span class="o">.</span><span class="n">topic</span> <span class="o">==</span> <span class="n">TOPIC_SUB_SEN</span><span class="p">:</span>
+   <span class="k">try</span><span class="p">:</span>
+      <span class="n">mensaje</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">payload</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+      <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">mensaje</span><span class="p">)</span>
+      <span class="k">if</span> <span class="n">msg</span><span class="o">.</span><span class="n">topic</span> <span class="o">==</span> <span class="n">TOPIC_SUB_SEN</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Mensaje recido del Equipo2 EncoderI:&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;EncoderI&quot;</span><span class="p">])</span>
 
-        <span class="k">if</span> <span class="n">msg</span><span class="o">.</span><span class="n">topic</span> <span class="o">==</span> <span class="n">TOPIC_SUB_EST</span><span class="p">:</span>
+      <span class="k">if</span> <span class="n">msg</span><span class="o">.</span><span class="n">topic</span> <span class="o">==</span> <span class="n">TOPIC_SUB_EST</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Mensaje recido del Equipo2 Estado:&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;Estado&quot;</span><span class="p">])</span>
 
-    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error procesando mensaje:&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+   <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+      <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error procesando mensaje:&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
 
 <span class="n">client</span> <span class="o">=</span> <span class="n">mqtt</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">client_id</span><span class="o">=</span><span class="n">CLIENT_ID</span><span class="p">,</span> <span class="n">protocol</span><span class="o">=</span><span class="n">mqtt</span><span class="o">.</span><span class="n">MQTTv311</span><span class="p">)</span>
 
@@ -276,11 +282,11 @@ información entre 2 equipos:</p>
 
 <span class="c1"># Envío continuo de mensajes cada segundo</span>
 <span class="k">try</span><span class="p">:</span>
-    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-        <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
+   <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+      <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;vel&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;u_meta&quot;</span><span class="p">:</span> <span class="mf">0.34</span><span class="p">,</span>
-                <span class="s2">&quot;w_meta&quot;</span><span class="p">:</span> <span class="mf">0.10</span><span class="p">,</span>
+               <span class="s2">&quot;u_meta&quot;</span><span class="p">:</span> <span class="mf">0.34</span><span class="p">,</span>
+               <span class="s2">&quot;w_meta&quot;</span><span class="p">:</span> <span class="mf">0.10</span><span class="p">,</span>
 
             <span class="p">}</span> <span class="p">,</span>
             <span class="s2">&quot;nombre&quot;</span> <span class="p">:</span><span class="s2">&quot;robot1&quot;</span><span class="p">,</span>
@@ -288,22 +294,21 @@ información entre 2 equipos:</p>
             <span class="s2">&quot;soltar_obj&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span>
             <span class="s2">&quot;parar&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span>
             <span class="p">}</span>
-        <span class="n">mensaje</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
-        <span class="n">client</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">TOPIC_PUB</span><span class="p">,</span> <span class="n">mensaje</span><span class="p">)</span>
-        <span class="c1">#print(&quot;Publicado en datos_1:&quot;, payload)</span>
-        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+      <span class="n">mensaje</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+      <span class="n">client</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">TOPIC_PUB</span><span class="p">,</span> <span class="n">mensaje</span><span class="p">)</span>
+      <span class="c1">#print(&quot;Publicado en datos_1:&quot;, payload)</span>
+      <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
 <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> Finalizando conexión MQTT...&quot;</span><span class="p">)</span>
+   <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> Finalizando conexión MQTT...&quot;</span><span class="p">)</span>
 
 <span class="k">finally</span><span class="p">:</span>
-    <span class="n">client</span><span class="o">.</span><span class="n">loop_stop</span><span class="p">()</span>
-    <span class="n">client</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; Desconectado correctamente.&quot;</span><span class="p">)</span>
+   <span class="n">client</span><span class="o">.</span><span class="n">loop_stop</span><span class="p">()</span>
+   <span class="n">client</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
+   <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; Desconectado correctamente.&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>En el archivo equipo2.py</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">paho.mqtt.client</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mqtt</span>
+</div><div aria-labelledby="tab-0-ZXF1aXBvMi5weQ==" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-0-ZXF1aXBvMi5weQ==" name="ZXF1aXBvMi5weQ==" role="tabpanel" tabindex="0"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">paho.mqtt.client</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mqtt</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
 
@@ -316,23 +321,23 @@ información entre 2 equipos:</p>
 
 <span class="c1"># Callback cuando se conecta al broker</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">on_connect</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">userdata</span><span class="p">,</span> <span class="n">flags</span><span class="p">,</span> <span class="n">rc</span><span class="p">,</span> <span class="n">properties</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">rc</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Conectado al broker MQTT&quot;</span><span class="p">)</span>
-        <span class="n">client</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="n">TOPIC_SUB</span><span class="p">)</span>
+   <span class="k">if</span> <span class="n">rc</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+      <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Conectado al broker MQTT&quot;</span><span class="p">)</span>
+      <span class="n">client</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="n">TOPIC_SUB</span><span class="p">)</span>
 
-    <span class="k">else</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error de conexión: código </span><span class="si">{</span><span class="n">rc</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+   <span class="k">else</span><span class="p">:</span>
+      <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error de conexión: código </span><span class="si">{</span><span class="n">rc</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
 <span class="c1"># Callback al recibir un mensaje</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">on_message</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">userdata</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">mensaje</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">payload</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">mensaje</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">msg</span><span class="o">.</span><span class="n">topic</span> <span class="o">==</span> <span class="n">TOPIC_SUB</span><span class="p">:</span>
+   <span class="k">try</span><span class="p">:</span>
+      <span class="n">mensaje</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">payload</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+      <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">mensaje</span><span class="p">)</span>
+      <span class="k">if</span> <span class="n">msg</span><span class="o">.</span><span class="n">topic</span> <span class="o">==</span> <span class="n">TOPIC_SUB</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Mensaje recido del Equipo1:&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;vel&quot;</span><span class="p">][</span><span class="s2">&quot;u_meta&quot;</span><span class="p">])</span>
 
-    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error procesando mensaje:&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+   <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+      <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error procesando mensaje:&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
 
 <span class="n">client</span> <span class="o">=</span> <span class="n">mqtt</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">client_id</span><span class="o">=</span><span class="n">CLIENT_ID</span><span class="p">,</span> <span class="n">protocol</span><span class="o">=</span><span class="n">mqtt</span><span class="o">.</span><span class="n">MQTTv311</span><span class="p">)</span>
 
@@ -348,32 +353,33 @@ información entre 2 equipos:</p>
 
 <span class="c1"># Envío continuo de mensajes cada segundo</span>
 <span class="k">try</span><span class="p">:</span>
-    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-        <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
+   <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+      <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;EncoderI&quot;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>
             <span class="s2">&quot;EncoderD&quot;</span><span class="p">:</span> <span class="mi">30</span><span class="p">,</span>
             <span class="p">}</span>
-        <span class="n">mensaje</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
-        <span class="n">client</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">TOPIC_PUB_SEN</span><span class="p">,</span> <span class="n">mensaje</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Publicado:&quot;</span><span class="p">,</span> <span class="n">payload</span><span class="p">)</span>
+      <span class="n">mensaje</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+      <span class="n">client</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">TOPIC_PUB_SEN</span><span class="p">,</span> <span class="n">mensaje</span><span class="p">)</span>
+      <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Publicado:&quot;</span><span class="p">,</span> <span class="n">payload</span><span class="p">)</span>
 
-        <span class="n">payload2</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="n">payload2</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;Estado&quot;</span><span class="p">:</span> <span class="s2">&quot;Encedido&quot;</span>
             <span class="p">}</span>
-        <span class="n">mensaje2</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">payload2</span><span class="p">)</span>
-        <span class="n">client</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">TOPIC_PUB_EST</span><span class="p">,</span> <span class="n">mensaje2</span><span class="p">)</span>
-        <span class="c1">#print(&quot;Publicado:&quot;, payload)</span>
-        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+      <span class="n">mensaje2</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">payload2</span><span class="p">)</span>
+      <span class="n">client</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">TOPIC_PUB_EST</span><span class="p">,</span> <span class="n">mensaje2</span><span class="p">)</span>
+      <span class="c1">#print(&quot;Publicado:&quot;, payload)</span>
+      <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
 <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> Finalizando conexión MQTT...&quot;</span><span class="p">)</span>
+   <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> Finalizando conexión MQTT...&quot;</span><span class="p">)</span>
 
 <span class="k">finally</span><span class="p">:</span>
-    <span class="n">client</span><span class="o">.</span><span class="n">loop_stop</span><span class="p">()</span>
-    <span class="n">client</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; Desconectado correctamente.&quot;</span><span class="p">)</span>
+   <span class="n">client</span><span class="o">.</span><span class="n">loop_stop</span><span class="p">()</span>
+   <span class="n">client</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
+   <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; Desconectado correctamente.&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
+</div></div>
 </section>
 </section>
 <hr class="docutils" />
@@ -488,8 +494,8 @@ ttyUSB. Para acceder sin sudo:</p>
 <li><p>Uso de MQTT desde Arduino</p></li>
 </ol>
 <p>Crear 2 pestañas: <code class="docutils literal notranslate"><span class="pre">Esp32_mqtt</span></code> y <code class="docutils literal notranslate"><span class="pre">Conf_mqtt</span></code></p>
-<p><strong>Pestaña 1 ESP32_mqtt</strong></p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;PubSubClient.h&gt;</span>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-1-RXNwMzJfbXF0dA==" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-1-RXNwMzJfbXF0dA==" name="RXNwMzJfbXF0dA==" role="tab" tabindex="0">Esp32_mqtt</button><button aria-controls="panel-1-Q29uZl9tcXR0" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-1-Q29uZl9tcXR0" name="Q29uZl9tcXR0" role="tab" tabindex="-1">Conf_mqtt</button></div><div aria-labelledby="tab-1-RXNwMzJfbXF0dA==" class="sphinx-tabs-panel group-tab" id="panel-1-RXNwMzJfbXF0dA==" name="RXNwMzJfbXF0dA==" role="tabpanel" tabindex="0"><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;PubSubClient.h&gt;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;WiFi.h&gt;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ArduinoJson.h&gt;</span>
 
@@ -528,127 +534,127 @@ ttyUSB. Para acceder sin sudo:</p>
 
 
 <span class="kt">void</span><span class="w"> </span><span class="nf">setup</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="c1">// Setup Serial</span>
-<span class="w">  </span><span class="n">Serial</span><span class="p">.</span><span class="n">begin</span><span class="p">(</span><span class="mi">115200</span><span class="p">);</span>
-<span class="w">  </span><span class="c1">// Setup Wifi</span>
-<span class="w">  </span><span class="n">setup_wifi</span><span class="p">();</span>
-<span class="w">  </span><span class="c1">// Setup MQTT</span>
-<span class="w">  </span><span class="n">conexion</span><span class="p">();</span>
-<span class="w">  </span><span class="c1">// Manejo del rele</span>
-<span class="w">  </span><span class="n">pinMode</span><span class="p">(</span><span class="n">pin_led</span><span class="p">,</span><span class="w"> </span><span class="n">OUTPUT</span><span class="p">);</span>
+<span class="c1">// Setup Serial</span>
+<span class="n">Serial</span><span class="p">.</span><span class="n">begin</span><span class="p">(</span><span class="mi">115200</span><span class="p">);</span>
+<span class="c1">// Setup Wifi</span>
+<span class="n">setup_wifi</span><span class="p">();</span>
+<span class="c1">// Setup MQTT</span>
+<span class="n">conexion</span><span class="p">();</span>
+<span class="c1">// Manejo del rele</span>
+<span class="n">pinMode</span><span class="p">(</span><span class="n">pin_led</span><span class="p">,</span><span class="w"> </span><span class="n">OUTPUT</span><span class="p">);</span>
 
 <span class="p">}</span>
 
 <span class="kt">void</span><span class="w"> </span><span class="nf">loop</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="n">Loop_MQTT</span><span class="p">();</span>
-<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">millis</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">lastTime</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">100</span><span class="p">){</span>
-<span class="w">    </span><span class="n">estado</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">    </span><span class="n">encoderi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">encoderi</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span>
-<span class="w">    </span><span class="n">envioDatos</span><span class="p">(</span><span class="n">tema_pub_est</span><span class="p">,</span><span class="w"> </span><span class="n">estado</span><span class="p">,</span><span class="w"> </span><span class="n">encoderi</span><span class="p">,</span><span class="w"> </span><span class="n">encoderd</span><span class="p">);</span>
-<span class="w">    </span><span class="n">envioDatos</span><span class="p">(</span><span class="n">tema_pub_sen</span><span class="p">,</span><span class="w"> </span><span class="n">estado</span><span class="p">,</span><span class="w"> </span><span class="n">encoderi</span><span class="p">,</span><span class="w"> </span><span class="n">encoderd</span><span class="p">);</span>
-<span class="w">    </span><span class="n">lastTime</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">millis</span><span class="p">();</span>
-<span class="w">  </span><span class="p">}</span>
-<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">activar</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">){</span>
-<span class="w">    </span><span class="n">digitalWrite</span><span class="p">(</span><span class="n">pin_led</span><span class="p">,</span><span class="w"> </span><span class="n">HIGH</span><span class="p">);</span><span class="w">  </span><span class="c1">// Enciende el LED</span>
+<span class="n">Loop_MQTT</span><span class="p">();</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">millis</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">lastTime</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">100</span><span class="p">){</span>
+<span class="w">   </span><span class="n">estado</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">   </span><span class="n">encoderi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">encoderi</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span>
+<span class="w">   </span><span class="n">envioDatos</span><span class="p">(</span><span class="n">tema_pub_est</span><span class="p">,</span><span class="w"> </span><span class="n">estado</span><span class="p">,</span><span class="w"> </span><span class="n">encoderi</span><span class="p">,</span><span class="w"> </span><span class="n">encoderd</span><span class="p">);</span>
+<span class="w">   </span><span class="n">envioDatos</span><span class="p">(</span><span class="n">tema_pub_sen</span><span class="p">,</span><span class="w"> </span><span class="n">estado</span><span class="p">,</span><span class="w"> </span><span class="n">encoderi</span><span class="p">,</span><span class="w"> </span><span class="n">encoderd</span><span class="p">);</span>
+<span class="w">   </span><span class="n">lastTime</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">millis</span><span class="p">();</span>
+<span class="p">}</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">activar</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">){</span>
+<span class="w">   </span><span class="n">digitalWrite</span><span class="p">(</span><span class="n">pin_led</span><span class="p">,</span><span class="w"> </span><span class="n">HIGH</span><span class="p">);</span><span class="w">  </span><span class="c1">// Enciende el LED</span>
 
-<span class="w">    </span><span class="p">}</span>
-<span class="w">  </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">digitalWrite</span><span class="p">(</span><span class="n">pin_led</span><span class="p">,</span><span class="w"> </span><span class="n">LOW</span><span class="p">);</span><span class="w">  </span><span class="c1">// Enciende el LED</span>
-<span class="w">  </span><span class="p">}</span>
+<span class="w">   </span><span class="p">}</span>
+<span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="n">digitalWrite</span><span class="p">(</span><span class="n">pin_led</span><span class="p">,</span><span class="w"> </span><span class="n">LOW</span><span class="p">);</span><span class="w">  </span><span class="c1">// Enciende el LED</span>
+<span class="p">}</span>
 
 <span class="p">}</span>
 </pre></div>
 </div>
-<p><strong>Pestaña 2 Conf_Mqtt</strong></p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">setup_wifi</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="c1">// Conexión Wifi</span>
-<span class="w">  </span><span class="n">delay</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
-<span class="w">  </span><span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">();</span>
-<span class="w">  </span><span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;Conectando a &quot;</span><span class="p">);</span>
-<span class="w">  </span><span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="n">ssid</span><span class="p">);</span>
-<span class="w">  </span><span class="n">WiFi</span><span class="p">.</span><span class="n">begin</span><span class="p">(</span><span class="n">ssid</span><span class="p">,</span><span class="w"> </span><span class="n">password</span><span class="p">);</span>
-<span class="w">  </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">WiFi</span><span class="p">.</span><span class="n">status</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">WL_CONNECTED</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">delay</span><span class="p">(</span><span class="mi">500</span><span class="p">);</span>
-<span class="w">    </span><span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;.&quot;</span><span class="p">);</span>
-<span class="w">  </span><span class="p">}</span>
-<span class="w">  </span><span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">);</span>
-<span class="w">  </span><span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;WiFi conectado - Dirección IP del ESP: &quot;</span><span class="p">);</span>
-<span class="w">  </span><span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="n">WiFi</span><span class="p">.</span><span class="n">localIP</span><span class="p">());</span>
+</div><div aria-labelledby="tab-1-Q29uZl9tcXR0" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-1-Q29uZl9tcXR0" name="Q29uZl9tcXR0" role="tabpanel" tabindex="0"><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">setup_wifi</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="c1">// Conexión Wifi</span>
+<span class="n">delay</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+<span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">();</span>
+<span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;Conectando a &quot;</span><span class="p">);</span>
+<span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="n">ssid</span><span class="p">);</span>
+<span class="n">WiFi</span><span class="p">.</span><span class="n">begin</span><span class="p">(</span><span class="n">ssid</span><span class="p">,</span><span class="w"> </span><span class="n">password</span><span class="p">);</span>
+<span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">WiFi</span><span class="p">.</span><span class="n">status</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">WL_CONNECTED</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="n">delay</span><span class="p">(</span><span class="mi">500</span><span class="p">);</span>
+<span class="w">   </span><span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;.&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">);</span>
+<span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;WiFi conectado - Dirección IP del ESP: &quot;</span><span class="p">);</span>
+<span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="n">WiFi</span><span class="p">.</span><span class="n">localIP</span><span class="p">());</span>
 <span class="p">}</span>
 
 <span class="kt">void</span><span class="w"> </span><span class="nf">reconnect</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="c1">// Control de conexión MQTT</span>
-<span class="w">  </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">client</span><span class="p">.</span><span class="n">connected</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;Intentando conexión MQTT...&quot;</span><span class="p">);</span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">client</span><span class="p">.</span><span class="n">connect</span><span class="p">(</span><span class="n">cliente</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="c1">// Control de conexión MQTT</span>
+<span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">client</span><span class="p">.</span><span class="n">connected</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;Intentando conexión MQTT...&quot;</span><span class="p">);</span>
+<span class="w">   </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">client</span><span class="p">.</span><span class="n">connect</span><span class="p">(</span><span class="n">cliente</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="s">&quot;Conectado&quot;</span><span class="p">);</span>
 <span class="w">      </span><span class="c1">// Suscripción a TEMAS</span>
 <span class="w">      </span><span class="n">client</span><span class="p">.</span><span class="n">subscribe</span><span class="p">(</span><span class="n">tema_sub</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
-<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;Falló, rc=&quot;</span><span class="p">);</span>
 <span class="w">      </span><span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="n">client</span><span class="p">.</span><span class="n">state</span><span class="p">());</span>
 <span class="w">      </span><span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="s">&quot;Intentando de nuevo en 2 segundos&quot;</span><span class="p">);</span>
 <span class="w">      </span><span class="n">delay</span><span class="p">(</span><span class="mi">2000</span><span class="p">);</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">  </span><span class="p">}</span>
+<span class="w">   </span><span class="p">}</span>
+<span class="p">}</span>
 <span class="p">}</span>
 
 <span class="kt">void</span><span class="w"> </span><span class="nf">conexion</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="c1">// Conexión MQTT</span>
-<span class="w">  </span><span class="n">client</span><span class="p">.</span><span class="n">setServer</span><span class="p">(</span><span class="n">mqtt_broker</span><span class="p">,</span><span class="w"> </span><span class="n">mqtt_port</span><span class="p">);</span>
-<span class="w">  </span><span class="n">client</span><span class="p">.</span><span class="n">setCallback</span><span class="p">(</span><span class="n">callback</span><span class="p">);</span>
+<span class="c1">// Conexión MQTT</span>
+<span class="n">client</span><span class="p">.</span><span class="n">setServer</span><span class="p">(</span><span class="n">mqtt_broker</span><span class="p">,</span><span class="w"> </span><span class="n">mqtt_port</span><span class="p">);</span>
+<span class="n">client</span><span class="p">.</span><span class="n">setCallback</span><span class="p">(</span><span class="n">callback</span><span class="p">);</span>
 <span class="p">}</span>
 
 <span class="kt">void</span><span class="w"> </span><span class="nf">Loop_MQTT</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="c1">// Manejo MQTT</span>
-<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">client</span><span class="p">.</span><span class="n">connected</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">reconnect</span><span class="p">();</span>
-<span class="w">  </span><span class="p">}</span>
-<span class="w">  </span><span class="n">client</span><span class="p">.</span><span class="n">loop</span><span class="p">();</span>
+<span class="c1">// Manejo MQTT</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">client</span><span class="p">.</span><span class="n">connected</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="n">reconnect</span><span class="p">();</span>
+<span class="p">}</span>
+<span class="n">client</span><span class="p">.</span><span class="n">loop</span><span class="p">();</span>
 <span class="p">}</span>
 
 <span class="kt">void</span><span class="w"> </span><span class="nf">envioDatos</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">mqtt_topic_publicar</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">estado</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">encoderi</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">encoderd</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="n">DynamicJsonDocument</span><span class="w"> </span><span class="n">mensaje</span><span class="p">(</span><span class="mi">256</span><span class="p">);</span>
+<span class="n">DynamicJsonDocument</span><span class="w"> </span><span class="n">mensaje</span><span class="p">(</span><span class="mi">256</span><span class="p">);</span>
 
-<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">mqtt_topic_publicar</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">tema_pub_est</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">mensaje</span><span class="p">[</span><span class="s">&quot;estado&quot;</span><span class="p">]</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">estado</span><span class="p">;</span>
-<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">mensaje_json</span><span class="p">;</span>
-<span class="w">    </span><span class="n">serializeJson</span><span class="p">(</span><span class="n">mensaje</span><span class="p">,</span><span class="w"> </span><span class="n">mensaje_json</span><span class="p">);</span>
-<span class="w">    </span><span class="n">client</span><span class="p">.</span><span class="n">publish</span><span class="p">(</span><span class="n">mqtt_topic_publicar</span><span class="p">,</span><span class="w"> </span><span class="n">mensaje_json</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
-<span class="w">  </span><span class="p">}</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">mqtt_topic_publicar</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">tema_pub_est</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="n">mensaje</span><span class="p">[</span><span class="s">&quot;estado&quot;</span><span class="p">]</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">estado</span><span class="p">;</span>
+<span class="w">   </span><span class="n">String</span><span class="w"> </span><span class="n">mensaje_json</span><span class="p">;</span>
+<span class="w">   </span><span class="n">serializeJson</span><span class="p">(</span><span class="n">mensaje</span><span class="p">,</span><span class="w"> </span><span class="n">mensaje_json</span><span class="p">);</span>
+<span class="w">   </span><span class="n">client</span><span class="p">.</span><span class="n">publish</span><span class="p">(</span><span class="n">mqtt_topic_publicar</span><span class="p">,</span><span class="w"> </span><span class="n">mensaje_json</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+<span class="p">}</span>
 
-<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">mqtt_topic_publicar</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">tema_pub_sen</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">     </span><span class="n">mensaje</span><span class="p">[</span><span class="s">&quot;EncoderI&quot;</span><span class="p">]</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">encoderi</span><span class="p">;</span>
-<span class="w">     </span><span class="n">mensaje</span><span class="p">[</span><span class="s">&quot;EncoderD&quot;</span><span class="p">]</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">encoderd</span><span class="p">;</span>
-<span class="w">     </span><span class="n">String</span><span class="w"> </span><span class="n">mensaje_json</span><span class="p">;</span>
-<span class="w">    </span><span class="n">serializeJson</span><span class="p">(</span><span class="n">mensaje</span><span class="p">,</span><span class="w"> </span><span class="n">mensaje_json</span><span class="p">);</span>
-<span class="w">    </span><span class="n">client</span><span class="p">.</span><span class="n">publish</span><span class="p">(</span><span class="n">mqtt_topic_publicar</span><span class="p">,</span><span class="w"> </span><span class="n">mensaje_json</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
-<span class="w">  </span><span class="p">}</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">mqtt_topic_publicar</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">tema_pub_sen</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="n">mensaje</span><span class="p">[</span><span class="s">&quot;EncoderI&quot;</span><span class="p">]</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">encoderi</span><span class="p">;</span>
+<span class="w">   </span><span class="n">mensaje</span><span class="p">[</span><span class="s">&quot;EncoderD&quot;</span><span class="p">]</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">encoderd</span><span class="p">;</span>
+<span class="w">   </span><span class="n">String</span><span class="w"> </span><span class="n">mensaje_json</span><span class="p">;</span>
+<span class="w">   </span><span class="n">serializeJson</span><span class="p">(</span><span class="n">mensaje</span><span class="p">,</span><span class="w"> </span><span class="n">mensaje_json</span><span class="p">);</span>
+<span class="w">   </span><span class="n">client</span><span class="p">.</span><span class="n">publish</span><span class="p">(</span><span class="n">mqtt_topic_publicar</span><span class="p">,</span><span class="w"> </span><span class="n">mensaje_json</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+<span class="p">}</span>
 
 
 <span class="p">}</span>
 
 <span class="kt">void</span><span class="w"> </span><span class="nf">callback</span><span class="p">(</span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">topic</span><span class="p">,</span><span class="w"> </span><span class="n">byte</span><span class="o">*</span><span class="w"> </span><span class="n">payload</span><span class="p">,</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">length</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="n">StaticJsonDocument</span><span class="o">&lt;</span><span class="n">capacidad_json</span><span class="o">&gt;</span><span class="w"> </span><span class="n">doc</span><span class="p">;</span>
-<span class="w">  </span><span class="kt">char</span><span class="w"> </span><span class="n">buffer</span><span class="p">[</span><span class="n">length</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">];</span>
-<span class="w">  </span><span class="n">memcpy</span><span class="p">(</span><span class="n">buffer</span><span class="p">,</span><span class="w"> </span><span class="n">payload</span><span class="p">,</span><span class="w"> </span><span class="n">length</span><span class="p">);</span>
-<span class="w">  </span><span class="n">buffer</span><span class="p">[</span><span class="n">length</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sc">&#39;\0&#39;</span><span class="p">;</span><span class="w">  </span><span class="c1">// Asegura que el buffer tenga fin de cadena</span>
+<span class="n">StaticJsonDocument</span><span class="o">&lt;</span><span class="n">capacidad_json</span><span class="o">&gt;</span><span class="w"> </span><span class="n">doc</span><span class="p">;</span>
+<span class="kt">char</span><span class="w"> </span><span class="n">buffer</span><span class="p">[</span><span class="n">length</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">];</span>
+<span class="n">memcpy</span><span class="p">(</span><span class="n">buffer</span><span class="p">,</span><span class="w"> </span><span class="n">payload</span><span class="p">,</span><span class="w"> </span><span class="n">length</span><span class="p">);</span>
+<span class="n">buffer</span><span class="p">[</span><span class="n">length</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sc">&#39;\0&#39;</span><span class="p">;</span><span class="w">  </span><span class="c1">// Asegura que el buffer tenga fin de cadena</span>
 
-<span class="w">  </span><span class="n">DeserializationError</span><span class="w"> </span><span class="n">error</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">deserializeJson</span><span class="p">(</span><span class="n">doc</span><span class="p">,</span><span class="w"> </span><span class="n">buffer</span><span class="p">);</span>
+<span class="n">DeserializationError</span><span class="w"> </span><span class="n">error</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">deserializeJson</span><span class="p">(</span><span class="n">doc</span><span class="p">,</span><span class="w"> </span><span class="n">buffer</span><span class="p">);</span>
 
-<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;Error al deserializar JSON: &quot;</span><span class="p">);</span>
-<span class="w">    </span><span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="n">error</span><span class="p">.</span><span class="n">c_str</span><span class="p">());</span>
-<span class="w">    </span><span class="k">return</span><span class="p">;</span>
-<span class="w">  </span><span class="p">}</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;Error al deserializar JSON: &quot;</span><span class="p">);</span>
+<span class="w">   </span><span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="n">error</span><span class="p">.</span><span class="n">c_str</span><span class="p">());</span>
+<span class="w">   </span><span class="k">return</span><span class="p">;</span>
+<span class="p">}</span>
 
-<span class="w">  </span><span class="n">String</span><span class="w"> </span><span class="n">topico</span><span class="p">(</span><span class="n">topic</span><span class="p">);</span>
-<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">topico</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;rm1/acciones&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="n">String</span><span class="w"> </span><span class="n">topico</span><span class="p">(</span><span class="n">topic</span><span class="p">);</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">topico</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;rm1/acciones&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="n">activar</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">doc</span><span class="p">[</span><span class="s">&quot;avanzar&quot;</span><span class="p">];</span>
-<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
 </div>
+</div></div>
 <p>Notas adicionales: <strong>Publicar mensaje:</strong></p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">client</span><span class="p">.</span><span class="n">publish</span><span class="p">(</span><span class="s">&quot;topic&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">mensaje_json</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span><span class="w">  </span><span class="c1">// QoS 1</span>
 </pre></div>

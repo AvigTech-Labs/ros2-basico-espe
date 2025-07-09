@@ -143,155 +143,161 @@ Dentro del paquete mi_pkg_python crear el directorio ``mqtt``
 
 En el archivo equipo1.py
 
-.. code:: python
 
-   import paho.mqtt.client as mqtt
-   import json
-   import time
+.. tabs::
 
-   # Configuración del broker
-   BROKER            = "192.168.100.176" # Ip del computador o localhost
-   TOPIC_SUB_SEN     = "rm1/sensores"
-   TOPIC_SUB_EST     = "rm1/estados"
-   TOPIC_PUB         = "rm1/acciones"
-   CLIENT_ID         = "cliente_rm1"
+   .. group-tab:: equipo1.py
 
-   # Callback cuando se conecta al broker
-   def on_connect(client, userdata, flags, rc, properties=None):
-       if rc == 0:
-           print("Conectado al broker MQTT")
-           client.subscribe(TOPIC_SUB_SEN)
-           client.subscribe(TOPIC_SUB_EST)
+      .. code:: python
 
-       else:
-           print(f"Error de conexión: código {rc}")
+         import paho.mqtt.client as mqtt
+         import json
+         import time
 
-   # Callback al recibir un mensaje
-   def on_message(client, userdata, msg):
-       try:
-           mensaje = msg.payload.decode("utf-8")
-           data = json.loads(mensaje)
-           if msg.topic == TOPIC_SUB_SEN:
-               print("Mensaje recido del Equipo2 EncoderI:", data["EncoderI"])
-           
-           if msg.topic == TOPIC_SUB_EST:
-               print("Mensaje recido del Equipo2 Estado:", data["Estado"])
+         # Configuración del broker
+         BROKER            = "192.168.100.176" # Ip del computador o localhost
+         TOPIC_SUB_SEN     = "rm1/sensores"
+         TOPIC_SUB_EST     = "rm1/estados"
+         TOPIC_PUB         = "rm1/acciones"
+         CLIENT_ID         = "cliente_rm1"
 
-       except Exception as e:
-           print("Error procesando mensaje:", e)
+         # Callback cuando se conecta al broker
+         def on_connect(client, userdata, flags, rc, properties=None):
+            if rc == 0:
+               print("Conectado al broker MQTT")
+               client.subscribe(TOPIC_SUB_SEN)
+               client.subscribe(TOPIC_SUB_EST)
 
-   client = mqtt.Client(client_id=CLIENT_ID, protocol=mqtt.MQTTv311)
+            else:
+               print(f"Error de conexión: código {rc}")
 
-   # Asociar funciones de callback
-   client.on_connect = on_connect
-   client.on_message = on_message
+         # Callback al recibir un mensaje
+         def on_message(client, userdata, msg):
+            try:
+               mensaje = msg.payload.decode("utf-8")
+               data = json.loads(mensaje)
+               if msg.topic == TOPIC_SUB_SEN:
+                     print("Mensaje recido del Equipo2 EncoderI:", data["EncoderI"])
+               
+               if msg.topic == TOPIC_SUB_EST:
+                     print("Mensaje recido del Equipo2 Estado:", data["Estado"])
 
-   # Conexión al broker
-   client.connect(BROKER)
+            except Exception as e:
+               print("Error procesando mensaje:", e)
 
-   # Iniciar loop en segundo plano
-   client.loop_start()
+         client = mqtt.Client(client_id=CLIENT_ID, protocol=mqtt.MQTTv311)
 
-   # Envío continuo de mensajes cada segundo
-   try:
-       while True:
-           payload = {
-               "vel": {
-                   "u_meta": 0.34,
-                   "w_meta": 0.10,
+         # Asociar funciones de callback
+         client.on_connect = on_connect
+         client.on_message = on_message
 
-               } ,
-               "nombre" :"robot1",
-               "avanzar":0,
-               "soltar_obj":0,
-               "parar":1,
-               }
-           mensaje = json.dumps(payload)
-           client.publish(TOPIC_PUB, mensaje)
-           #print("Publicado en datos_1:", payload)
-           time.sleep(1)
+         # Conexión al broker
+         client.connect(BROKER)
 
-   except KeyboardInterrupt:
-       print("\n Finalizando conexión MQTT...")
+         # Iniciar loop en segundo plano
+         client.loop_start()
 
-   finally:
-       client.loop_stop()
-       client.disconnect()
-       print(" Desconectado correctamente.")
+         # Envío continuo de mensajes cada segundo
+         try:
+            while True:
+               payload = {
+                     "vel": {
+                        "u_meta": 0.34,
+                        "w_meta": 0.10,
 
-En el archivo equipo2.py
+                     } ,
+                     "nombre" :"robot1",
+                     "avanzar":0,
+                     "soltar_obj":0,
+                     "parar":1,
+                     }
+               mensaje = json.dumps(payload)
+               client.publish(TOPIC_PUB, mensaje)
+               #print("Publicado en datos_1:", payload)
+               time.sleep(1)
 
-.. code:: python
+         except KeyboardInterrupt:
+            print("\n Finalizando conexión MQTT...")
 
-   import paho.mqtt.client as mqtt
-   import json
-   import time
+         finally:
+            client.loop_stop()
+            client.disconnect()
+            print(" Desconectado correctamente.")
 
-   # Configuración del broker
-   BROKER            = "192.168.100.176" #Ip del computador o Localhost
-   TOPIC_PUB_SEN     = "rm1/sensores"
-   TOPIC_PUB_EST     = "rm1/estados"
-   TOPIC_SUB         = "rm1/acciones"
-   CLIENT_ID         = "cliente_Equipo2"
 
-   # Callback cuando se conecta al broker
-   def on_connect(client, userdata, flags, rc, properties=None):
-       if rc == 0:
-           print("Conectado al broker MQTT")
-           client.subscribe(TOPIC_SUB)
+   .. group-tab:: equipo2.py
 
-       else:
-           print(f"Error de conexión: código {rc}")
+      .. code:: python
 
-   # Callback al recibir un mensaje
-   def on_message(client, userdata, msg):
-       try:
-           mensaje = msg.payload.decode("utf-8")
-           data = json.loads(mensaje)
-           if msg.topic == TOPIC_SUB:
-               print("Mensaje recido del Equipo1:", data["vel"]["u_meta"])
+         import paho.mqtt.client as mqtt
+         import json
+         import time
 
-       except Exception as e:
-           print("Error procesando mensaje:", e)
+         # Configuración del broker
+         BROKER            = "192.168.100.176" #Ip del computador o Localhost
+         TOPIC_PUB_SEN     = "rm1/sensores"
+         TOPIC_PUB_EST     = "rm1/estados"
+         TOPIC_SUB         = "rm1/acciones"
+         CLIENT_ID         = "cliente_Equipo2"
 
-   client = mqtt.Client(client_id=CLIENT_ID, protocol=mqtt.MQTTv311)
+         # Callback cuando se conecta al broker
+         def on_connect(client, userdata, flags, rc, properties=None):
+            if rc == 0:
+               print("Conectado al broker MQTT")
+               client.subscribe(TOPIC_SUB)
 
-   # Asociar funciones de callback
-   client.on_connect = on_connect
-   client.on_message = on_message
+            else:
+               print(f"Error de conexión: código {rc}")
 
-   # Conexión al broker
-   client.connect(BROKER)
+         # Callback al recibir un mensaje
+         def on_message(client, userdata, msg):
+            try:
+               mensaje = msg.payload.decode("utf-8")
+               data = json.loads(mensaje)
+               if msg.topic == TOPIC_SUB:
+                     print("Mensaje recido del Equipo1:", data["vel"]["u_meta"])
 
-   # Iniciar loop en segundo plano
-   client.loop_start()
+            except Exception as e:
+               print("Error procesando mensaje:", e)
 
-   # Envío continuo de mensajes cada segundo
-   try:
-       while True:
-           payload = {
-               "EncoderI": 20,
-               "EncoderD": 30,
-               }
-           mensaje = json.dumps(payload)
-           client.publish(TOPIC_PUB_SEN, mensaje)
-           print("Publicado:", payload)
+         client = mqtt.Client(client_id=CLIENT_ID, protocol=mqtt.MQTTv311)
 
-           payload2 = {
-               "Estado": "Encedido"
-               }
-           mensaje2 = json.dumps(payload2)
-           client.publish(TOPIC_PUB_EST, mensaje2)
-           #print("Publicado:", payload)
-           time.sleep(1)
+         # Asociar funciones de callback
+         client.on_connect = on_connect
+         client.on_message = on_message
 
-   except KeyboardInterrupt:
-       print("\n Finalizando conexión MQTT...")
+         # Conexión al broker
+         client.connect(BROKER)
 
-   finally:
-       client.loop_stop()
-       client.disconnect()
-       print(" Desconectado correctamente.")
+         # Iniciar loop en segundo plano
+         client.loop_start()
+
+         # Envío continuo de mensajes cada segundo
+         try:
+            while True:
+               payload = {
+                     "EncoderI": 20,
+                     "EncoderD": 30,
+                     }
+               mensaje = json.dumps(payload)
+               client.publish(TOPIC_PUB_SEN, mensaje)
+               print("Publicado:", payload)
+
+               payload2 = {
+                     "Estado": "Encedido"
+                     }
+               mensaje2 = json.dumps(payload2)
+               client.publish(TOPIC_PUB_EST, mensaje2)
+               #print("Publicado:", payload)
+               time.sleep(1)
+
+         except KeyboardInterrupt:
+            print("\n Finalizando conexión MQTT...")
+
+         finally:
+            client.loop_stop()
+            client.disconnect()
+            print(" Desconectado correctamente.")
 
 --------------
 
@@ -407,170 +413,172 @@ Ejemplos de Uso.
 
 Crear 2 pestañas: ``Esp32_mqtt`` y ``Conf_mqtt``
 
-**Pestaña 1 ESP32_mqtt**
+.. tabs:: 
 
-.. code:: cpp
+   .. group-tab:: Esp32_mqtt
 
-   #include <PubSubClient.h>
-   #include <WiFi.h>
-   #include <ArduinoJson.h>
+      .. code:: cpp
 
-   // Variable de Control Alarmar
-   int activar  = 0;
-   int estado   = 0;
-   int encoderi = 0;
-   int encoderd = 0;
+         #include <PubSubClient.h>
+         #include <WiFi.h>
+         #include <ArduinoJson.h>
 
-   // GPIO de salidad Digital
-   int pin_led   = 2;
+         // Variable de Control Alarmar
+         int activar  = 0;
+         int estado   = 0;
+         int encoderi = 0;
+         int encoderd = 0;
 
-   //  Credenciales Wifi 
-   const char* ssid = "CARMEN GONZALEZ_";
-   const char* password = "123wa321vg";
+         // GPIO de salidad Digital
+         int pin_led   = 2;
 
-   // Credenciales MQTT
-   const char* mqtt_broker = "192.168.100.178";
-   const int mqtt_port = 1883;
-   const char* cliente = "rm1_esp32";
+         //  Credenciales Wifi 
+         const char* ssid = "CARMEN GONZALEZ_";
+         const char* password = "123wa321vg";
 
-   // Temas MQTT Publicar
-   const char* tema_sub = "rm1/acciones";
-   const char* tema_pub_est = "rm1/estados";
-   const char* tema_pub_sen = "rm1/sensores";
+         // Credenciales MQTT
+         const char* mqtt_broker = "192.168.100.178";
+         const int mqtt_port = 1883;
+         const char* cliente = "rm1_esp32";
 
-   // Variables de control de tiempo
-   unsigned long lastTime = 0;
+         // Temas MQTT Publicar
+         const char* tema_sub = "rm1/acciones";
+         const char* tema_pub_est = "rm1/estados";
+         const char* tema_pub_sen = "rm1/sensores";
 
-   // Creacion del objeto cliente
-   WiFiClient espClient;
-   PubSubClient client(espClient);
+         // Variables de control de tiempo
+         unsigned long lastTime = 0;
 
-   // Tamaño de mensaje JSON
-   const size_t capacidad_json = JSON_OBJECT_SIZE(30);
+         // Creacion del objeto cliente
+         WiFiClient espClient;
+         PubSubClient client(espClient);
+
+         // Tamaño de mensaje JSON
+         const size_t capacidad_json = JSON_OBJECT_SIZE(30);
 
 
-   void setup() {
-     // Setup Serial
-     Serial.begin(115200);
-     // Setup Wifi
-     setup_wifi();
-     // Setup MQTT
-     conexion();
-     // Manejo del rele
-     pinMode(pin_led, OUTPUT);     
-     
-   }
+         void setup() {
+         // Setup Serial
+         Serial.begin(115200);
+         // Setup Wifi
+         setup_wifi();
+         // Setup MQTT
+         conexion();
+         // Manejo del rele
+         pinMode(pin_led, OUTPUT);     
+         
+         }
 
-   void loop() {
-     Loop_MQTT();
-     if (millis() - lastTime >= 100){
-       estado = 1;
-       encoderi = encoderi+1;
-       envioDatos(tema_pub_est, estado, encoderi, encoderd);
-       envioDatos(tema_pub_sen, estado, encoderi, encoderd);
-       lastTime = millis();
-     }
-     if (activar == 1){
-       digitalWrite(pin_led, HIGH);  // Enciende el LED
-       
-       }
-     else {
-       digitalWrite(pin_led, LOW);  // Enciende el LED
-     }
-     
-   }
+         void loop() {
+         Loop_MQTT();
+         if (millis() - lastTime >= 100){
+            estado = 1;
+            encoderi = encoderi+1;
+            envioDatos(tema_pub_est, estado, encoderi, encoderd);
+            envioDatos(tema_pub_sen, estado, encoderi, encoderd);
+            lastTime = millis();
+         }
+         if (activar == 1){
+            digitalWrite(pin_led, HIGH);  // Enciende el LED
+            
+            }
+         else {
+            digitalWrite(pin_led, LOW);  // Enciende el LED
+         }
+         
+         }
 
-**Pestaña 2 Conf_Mqtt**
+   .. group-tab:: Conf_mqtt
 
-.. code:: cpp
+      .. code:: cpp
 
-   void setup_wifi() {
-     // Conexión Wifi
-     delay(10);
-     Serial.println();
-     Serial.print("Conectando a ");
-     Serial.println(ssid);
-     WiFi.begin(ssid, password);
-     while (WiFi.status() != WL_CONNECTED) {
-       delay(500);
-       Serial.print(".");
-     }
-     Serial.println("");
-     Serial.print("WiFi conectado - Dirección IP del ESP: ");
-     Serial.println(WiFi.localIP());
-   }
+         void setup_wifi() {
+         // Conexión Wifi
+         delay(10);
+         Serial.println();
+         Serial.print("Conectando a ");
+         Serial.println(ssid);
+         WiFi.begin(ssid, password);
+         while (WiFi.status() != WL_CONNECTED) {
+            delay(500);
+            Serial.print(".");
+         }
+         Serial.println("");
+         Serial.print("WiFi conectado - Dirección IP del ESP: ");
+         Serial.println(WiFi.localIP());
+         }
 
-   void reconnect() {
-     // Control de conexión MQTT
-     while (!client.connected()) {
-       Serial.print("Intentando conexión MQTT...");
-       if (client.connect(cliente)) {
-         Serial.println("Conectado");
-         // Suscripción a TEMAS
-         client.subscribe(tema_sub, 1);
-       } else {
-         Serial.print("Falló, rc=");
-         Serial.print(client.state());
-         Serial.println("Intentando de nuevo en 2 segundos");
-         delay(2000);
-       }
-     }
-   }
+         void reconnect() {
+         // Control de conexión MQTT
+         while (!client.connected()) {
+            Serial.print("Intentando conexión MQTT...");
+            if (client.connect(cliente)) {
+               Serial.println("Conectado");
+               // Suscripción a TEMAS
+               client.subscribe(tema_sub, 1);
+            } else {
+               Serial.print("Falló, rc=");
+               Serial.print(client.state());
+               Serial.println("Intentando de nuevo en 2 segundos");
+               delay(2000);
+            }
+         }
+         }
 
-   void conexion() {
-     // Conexión MQTT
-     client.setServer(mqtt_broker, mqtt_port);
-     client.setCallback(callback);
-   }
+         void conexion() {
+         // Conexión MQTT
+         client.setServer(mqtt_broker, mqtt_port);
+         client.setCallback(callback);
+         }
 
-   void Loop_MQTT() {
-     // Manejo MQTT 
-     if (!client.connected()) {
-       reconnect();
-     }
-     client.loop();
-   }
+         void Loop_MQTT() {
+         // Manejo MQTT 
+         if (!client.connected()) {
+            reconnect();
+         }
+         client.loop();
+         }
 
-   void envioDatos(const char* mqtt_topic_publicar, int estado, int encoderi, int encoderd) {
-     DynamicJsonDocument mensaje(256);
+         void envioDatos(const char* mqtt_topic_publicar, int estado, int encoderi, int encoderd) {
+         DynamicJsonDocument mensaje(256);
 
-     if (mqtt_topic_publicar == tema_pub_est) {
-       mensaje["estado"]   = estado;
-       String mensaje_json;
-       serializeJson(mensaje, mensaje_json);
-       client.publish(mqtt_topic_publicar, mensaje_json.c_str(), 1);
-     }
+         if (mqtt_topic_publicar == tema_pub_est) {
+            mensaje["estado"]   = estado;
+            String mensaje_json;
+            serializeJson(mensaje, mensaje_json);
+            client.publish(mqtt_topic_publicar, mensaje_json.c_str(), 1);
+         }
 
-     if (mqtt_topic_publicar == tema_pub_sen) {
-        mensaje["EncoderI"]   = encoderi;
-        mensaje["EncoderD"]   = encoderd;
-        String mensaje_json;
-       serializeJson(mensaje, mensaje_json);
-       client.publish(mqtt_topic_publicar, mensaje_json.c_str(), 1);
-     }
-     
-     
-   }
+         if (mqtt_topic_publicar == tema_pub_sen) {
+            mensaje["EncoderI"]   = encoderi;
+            mensaje["EncoderD"]   = encoderd;
+            String mensaje_json;
+            serializeJson(mensaje, mensaje_json);
+            client.publish(mqtt_topic_publicar, mensaje_json.c_str(), 1);
+         }
+         
+         
+         }
 
-   void callback(char* topic, byte* payload, unsigned int length) {
-     StaticJsonDocument<capacidad_json> doc;
-     char buffer[length + 1];
-     memcpy(buffer, payload, length);
-     buffer[length] = '\0';  // Asegura que el buffer tenga fin de cadena
+         void callback(char* topic, byte* payload, unsigned int length) {
+         StaticJsonDocument<capacidad_json> doc;
+         char buffer[length + 1];
+         memcpy(buffer, payload, length);
+         buffer[length] = '\0';  // Asegura que el buffer tenga fin de cadena
 
-     DeserializationError error = deserializeJson(doc, buffer);
+         DeserializationError error = deserializeJson(doc, buffer);
 
-     if (error) {
-       Serial.print("Error al deserializar JSON: ");
-       Serial.println(error.c_str());
-       return;
-     }
+         if (error) {
+            Serial.print("Error al deserializar JSON: ");
+            Serial.println(error.c_str());
+            return;
+         }
 
-     String topico(topic);
-     if (topico == "rm1/acciones") {
-         activar  = doc["avanzar"];
-     }
-   }
+         String topico(topic);
+         if (topico == "rm1/acciones") {
+               activar  = doc["avanzar"];
+         }
+         }
 
 Notas adicionales: **Publicar mensaje:**
 

@@ -14,13 +14,19 @@ Contenido
 
 .. toctree::
    :maxdepth: 2
-   :caption: Módulos
+   :caption: Temas
 
    documentos/tema_0/intro
-   documentos/tema_1/instalacion
-   documentos/tema_1/maquina_virtual
+   documentos/tema_1/ubuntu_git
    documentos/tema_1/instalacionROS2
    documentos/tema_2/conceptos_basicos
    documentos/tema_2/tutoriales
    documentos/tema_3/dispositivos
    documentos/tema_4/visualizacion_datos
+   documentos/tema_4/gemelo
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Proyecto Aplicado
+
+   documentos/tema_5/proyecto

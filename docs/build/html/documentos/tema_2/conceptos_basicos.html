@@ -46,17 +46,13 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Módulos</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Temas</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../tema_0/intro.html">¿Qué es ROS2?</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tema_1/instalacion.html">Instalación de Ubuntu</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tema_1/maquina_virtual.html">Instalacion de Ubuntu 22.04 con VirtualBox</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tema_1/ubuntu_git.html">Ubuntu y GitHub</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tema_1/instalacionROS2.html">Instalación de ROS2 Humble</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Conceptos Básicos</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#espacio-de-trabajo">Espacio de trabajo</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#que-es-un-espacio-de-trabajo-en-ros-2">¿Qué es un espacio de trabajo en ROS 2?</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="#espacio-de-trabajo">Espacio de trabajo</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#paquetes">Paquetes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#nodos">Nodos</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#temas">Temas</a></li>
@@ -73,6 +69,10 @@
 <li class="toctree-l1"><a class="reference internal" href="../tema_4/visualizacion_datos.html">Archivos URDF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tema_4/visualizacion_datos.html#gemelo-digital">Gemelo Digital</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tema_4/visualizacion_datos.html#calibracion-de-camara">Calibración de Cámara</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Proyecto Aplicado</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tema_5/proyecto.html">Conexión con</a></li>
 </ul>
 
         </div>
@@ -102,8 +102,7 @@
 <h1>Conceptos Básicos<a class="headerlink" href="#conceptos-basicos" title="Link to this heading"></a></h1>
 <section id="espacio-de-trabajo">
 <h2>Espacio de trabajo<a class="headerlink" href="#espacio-de-trabajo" title="Link to this heading"></a></h2>
-<section id="que-es-un-espacio-de-trabajo-en-ros-2">
-<h3>¿Qué es un espacio de trabajo en ROS 2?<a class="headerlink" href="#que-es-un-espacio-de-trabajo-en-ros-2" title="Link to this heading"></a></h3>
+<p>¿Qué es un espacio de trabajo en ROS 2?</p>
 <p>Un <strong>espacio de trabajo (workspace)</strong> en ROS 2 es una carpeta
 estructurada que contiene paquetes ROS 2, los cuales pueden estar
 escritos en Python o C++. Todos los paquetes se compilan y organizan
@@ -156,14 +155,7 @@ del workspace</p></td>
 definidas en
 los paquetes</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">colcon</span> <span class="pre">clean</span></code></p></td>
-<td><p>Limpia las
-carpetas
-<code class="docutils literal notranslate"><span class="pre">build/</span></code>,
-<code class="docutils literal notranslate"><span class="pre">install/</span></code> y
-<code class="docutils literal notranslate"><span class="pre">log/</span></code></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">colcon</span> <span class="pre">build</span> <span class="pre">--symlink-install</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">colcon</span> <span class="pre">build</span> <span class="pre">--symlink-install</span></code></p></td>
 <td><p>En paquetes
 Python, enlaza
 código para no
@@ -215,7 +207,6 @@ depuración.</p></td>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>rm<span class="w"> </span>-rf<span class="w"> </span>build/<span class="w"> </span>install/<span class="w"> </span>log/
 </pre></div>
 </div>
-</section>
 </section>
 <hr class="docutils" />
 <section id="paquetes">
@@ -297,12 +288,14 @@ ignora usualmente</p></td>
 <section id="nodos">
 <h2>Nodos<a class="headerlink" href="#nodos" title="Link to this heading"></a></h2>
 <p>Un <strong>nodo</strong> es una entidad computacional que ejecuta una función
-específica, como mover una tortuga, leer sensores, o calcular
+específica, como mover un robot móvil simulado, leer sensores, o calcular
 trayectorias.</p>
-<p>Ejemplo: - <code class="docutils literal notranslate"><span class="pre">turtlesim_node</span></code>: renderiza la tortuga y ejecuta sus
-acciones. - <code class="docutils literal notranslate"><span class="pre">turtle_teleop_key</span></code>: interpreta teclas y publica comandos
-de velocidad. - <code class="docutils literal notranslate"><span class="pre">teleop_twist_keyboard</span></code>: interpreta teclas y publica
-comandos de velocidad.</p>
+<p>Ejemplo:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">turtlesim_node</span></code>: renderiza la tortuga y ejecuta sus acciones.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">turtle_teleop_key</span></code>: interpreta teclas y publica comandos de velocidad.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">teleop_twist_keyboard</span></code>: interpreta teclas y publica comandos de velocidad.</p></li>
+</ul>
 <p>Listar nodos activos:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>node<span class="w"> </span>list
 </pre></div>
@@ -313,9 +306,11 @@ comandos de velocidad.</p>
 <h2>Temas<a class="headerlink" href="#temas" title="Link to this heading"></a></h2>
 <p>Un <strong>tema</strong> es un canal por el cual los nodos publican o reciben datos.
 Es <strong>unidireccional y asincrónico</strong>.</p>
-<p>Ejemplo: - <code class="docutils literal notranslate"><span class="pre">/turtle1/cmd_vel</span></code>: donde se publican los comandos de
-velocidad lineal y angular. - <code class="docutils literal notranslate"><span class="pre">/turtle1/pose</span></code>: donde se publica la
-posición actual de la tortuga.</p>
+<p>Ejemplo:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">/turtle1/cmd_vel</span></code>: donde se publican los comandos de velocidad lineal y angular.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">/turtle1/pose</span></code>: donde se publica la posición actual de la tortuga.</p></li>
+</ul>
 <p>Ver temas activos:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>topic<span class="w"> </span>list
 </pre></div>
@@ -324,7 +319,7 @@ posición actual de la tortuga.</p>
 <figure class="align-default" id="id1">
 <img alt="Seleccion" src="../../_images/temas.gif" />
 <figcaption>
-<p><span class="caption-text">Seleccion</span><a class="headerlink" href="#id1" title="Link to this image"></a></p>
+<p><span class="caption-text">Tomado de: ROS2 Humble - Documentación Oficial</span><a class="headerlink" href="#id1" title="Link to this image"></a></p>
 </figcaption>
 </figure>
 </section>
@@ -352,8 +347,8 @@ tortuga inicial (<code class="docutils literal notranslate"><span class="pre">/t
 <hr class="docutils" />
 <p><strong>Paso 4: Control con un nodo genérico de teleoperación</strong></p>
 <p>En este ejemplo se usa el nodo <code class="docutils literal notranslate"><span class="pre">teleop_twist_keyboard</span></code> del paquete
-<code class="docutils literal notranslate"><span class="pre">teleop_twist_keyboard</span></code>. Este nodo: - Lee las teclas del teclado -
-Publica mensajes del tipo <code class="docutils literal notranslate"><span class="pre">geometry_msgs/msg/Twist</span></code></p>
+<code class="docutils literal notranslate"><span class="pre">teleop_twist_keyboard</span></code>. Este nodo: Lee las teclas del teclado y
+publica mensajes del tipo <code class="docutils literal notranslate"><span class="pre">geometry_msgs/msg/Twist</span></code></p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>run<span class="w"> </span>teleop_twist_keyboard<span class="w"> </span>teleop_twist_keyboard
 </pre></div>
 </div>
@@ -416,11 +411,14 @@ partes separadas por <code class="docutils literal notranslate"><span class="pre
 <span class="n">int64</span> <span class="nb">sum</span>
 </pre></div>
 </div>
-<p>Esto significa que: - El <strong>cliente</strong> enviará dos enteros <code class="docutils literal notranslate"><span class="pre">a</span></code> y <code class="docutils literal notranslate"><span class="pre">b</span></code> -
-El <strong>servidor</strong> responderá con un entero <code class="docutils literal notranslate"><span class="pre">sum</span></code></p>
+<p>Esto significa que:</p>
+<ul class="simple">
+<li><p>El <strong>cliente</strong> enviará dos enteros <code class="docutils literal notranslate"><span class="pre">a</span></code> y <code class="docutils literal notranslate"><span class="pre">b</span></code></p></li>
+<li><p>El <strong>servidor</strong> responderá con un entero <code class="docutils literal notranslate"><span class="pre">sum</span></code></p></li>
+</ul>
 <hr class="docutils" />
 <p><strong>Comunicación Cliente-Servidor</strong></p>
-<p>La interacción funciona así: <img alt="Seleccion" src="../../_images/servicios.gif" /></p>
+<p>La interacción funciona así: <img alt="Seleccion" src="../../_images/servicios.gif" /> <em>Tomado de: ROS2 Humble - Documentación Oficial</em></p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span> <span class="n">Cliente</span> <span class="p">]</span> <span class="o">--</span> <span class="n">Request</span> <span class="o">--&gt;</span> <span class="p">[</span> <span class="n">Servidor</span> <span class="p">]</span>
 <span class="p">[</span> <span class="n">Cliente</span> <span class="p">]</span> <span class="o">&lt;--</span> <span class="n">Response</span> <span class="o">--</span> <span class="p">[</span> <span class="n">Servidor</span> <span class="p">]</span>
 </pre></div>
@@ -612,7 +610,7 @@ resultados o feedback.</p></li>
 <figure class="align-default" id="id2">
 <img alt="gif" src="../../_images/acciones.gif" />
 <figcaption>
-<p><span class="caption-text">gif</span><a class="headerlink" href="#id2" title="Link to this image"></a></p>
+<p><span class="caption-text">Tomado de: ROS2 Humble - Documentación Oficial</span><a class="headerlink" href="#id2" title="Link to this image"></a></p>
 </figcaption>
 </figure>
 <p><strong>Casos de Uso Típicos</strong></p>

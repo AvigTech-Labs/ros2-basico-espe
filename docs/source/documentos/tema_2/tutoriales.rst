@@ -65,141 +65,144 @@ publicador y suscriptor.
 .. code:: bash
 
    touch mi_pkg_python/mi_pkg_python/publicador.py
+   touch mi_pkg_python/mi_pkg_python/suscriptor.py
 
-2. Código del nodo en ``publicador.py``
+2. Agregar el código
 
-.. code:: python
+.. tabs::
 
-   # Importa la librería principal de ROS 2 en Python
-   import rclpy
+   .. group-tab:: publicador.py
 
-   # Importa la clase base Node, que representa un nodo en ROS 2
-   from rclpy.node import Node
+      .. code-block:: python
 
-   # Importa el tipo de mensaje estándar String del paquete std_msgs
-   from std_msgs.msg import String
+         # Importa la librería principal de ROS 2 en Python
+         import rclpy
 
-   # Define una clase que extiende Node, representando un nodo que publica mensajes
-   class MinimalPublisher(Node):
+         # Importa la clase base Node, que representa un nodo en ROS 2
+         from rclpy.node import Node
 
-       def __init__(self):
-           # Llama al constructor de la clase padre (Node) con el nombre del nodo
-           super().__init__('minimal_publisher')
+         # Importa el tipo de mensaje estándar String del paquete std_msgs
+         from std_msgs.msg import String
 
-           # Crea un publicador que publica mensajes del tipo String en el topic 'topic' con una cola de 10 mensajes
-           self.publisher_ = self.create_publisher(String, 'topic', 10)
+         # Define una clase que extiende Node, representando un nodo que publica mensajes
+         class MinimalPublisher(Node):
 
-           # Crea un temporizador que ejecuta la función `timer_callback` cada 0.5 segundos
-           self.timer = self.create_timer(0.5, self.timer_callback)
+               def __init__(self):
+                  # Llama al constructor de la clase padre (Node) con el nombre del nodo
+                  super().__init__('minimal_publisher')
 
-           # Contador para numerar los mensajes
-           self.i = 0
+                  # Crea un publicador que publica mensajes del tipo String en el topic 'topic' con una cola de 10 mensajes
+                  self.publisher_ = self.create_publisher(String, 'topic', 10)
 
-       # Función que se ejecuta cada 0.5 segundos
-       def timer_callback(self):
-           # Crea un mensaje tipo String
-           msg = String()
+                  # Crea un temporizador que ejecuta la función `timer_callback` cada 0.5 segundos
+                  self.timer = self.create_timer(0.5, self.timer_callback)
 
-           # Asigna el contenido del mensaje
-           msg.data = f'Hello World: {self.i}'
+                  # Contador para numerar los mensajes
+                  self.i = 0
 
-           # Publica el mensaje en el topic
-           self.publisher_.publish(msg)
+               # Función que se ejecuta cada 0.5 segundos
+               def timer_callback(self):
+                  # Crea un mensaje tipo String
+                  msg = String()
 
-           # Muestra por consola el mensaje publicado
-           self.get_logger().info(f'Publishing: "{msg.data}"')
+                  # Asigna el contenido del mensaje
+                  msg.data = f'Hello World: {self.i}'
 
-           # Incrementa el contador
-           self.i += 1
+                  # Publica el mensaje en el topic
+                  self.publisher_.publish(msg)
 
-   # Punto de entrada principal del programa
-   def main(args=None):
-       # Inicializa el sistema de nodos de ROS 2
-       rclpy.init(args=args)
+                  # Muestra por consola el mensaje publicado
+                  self.get_logger().info(f'Publishing: "{msg.data}"')
 
-       try:
-           # Instancia el nodo y empieza a ejecutarlo
-           node = MinimalPublisher()
+                  # Incrementa el contador
+                  self.i += 1
 
-           # Mantiene al nodo activo, escuchando eventos y timers
-           rclpy.spin(node)
+         # Punto de entrada principal del programa
+         def main(args=None):
+               # Inicializa el sistema de nodos de ROS 2
+               rclpy.init(args=args)
 
-       except KeyboardInterrupt:
-           # Permite salir con Ctrl+C sin error
-           pass
+               try:
+                  # Instancia el nodo y empieza a ejecutarlo
+                  node = MinimalPublisher()
 
-       finally:
-           # Destruye el nodo de forma limpia y apaga el sistema ROS 2
-           node.destroy_node()
-           rclpy.shutdown()
+                  # Mantiene al nodo activo, escuchando eventos y timers
+                  rclpy.spin(node)
 
-   # Verifica si el archivo se está ejecutando directamente (no importado)
-   if __name__ == '__main__':
-       main()
+               except KeyboardInterrupt:
+                  # Permite salir con Ctrl+C sin error
+                  pass
 
-3. Crear el nodo ``suscriptor.py`` en la misma dirección donde se
-   encuentra el nodo publicador.py
+               finally:
+                  # Destruye el nodo de forma limpia y apaga el sistema ROS 2
+                  node.destroy_node()
+                  rclpy.shutdown()
 
-.. code:: python
+         # Verifica si el archivo se está ejecutando directamente (no importado)
+         if __name__ == '__main__':
+               main()
 
+   .. group-tab:: suscriptor.py
 
-   # Importa la librería principal de ROS 2 para Python
-   import rclpy
+      .. code-block:: python
 
-   # Importa la clase base para crear nodos en ROS 2
-   from rclpy.node import Node
+         # Importa la librería principal de ROS 2 para Python
+         import rclpy
 
-   # Importa el tipo de mensaje estándar String desde std_msgs
-   from std_msgs.msg import String
+         # Importa la clase base para crear nodos en ROS 2
+         from rclpy.node import Node
 
-   # Define una clase que hereda de Node, representa el nodo suscriptor
-   class MinimalSubscriber(Node):
+         # Importa el tipo de mensaje estándar String desde std_msgs
+         from std_msgs.msg import String
 
-       # Método constructor de la clase
-       def __init__(self):
-           # Inicializa el nodo con el nombre 'minimal_subscriber'
-           super().__init__('minimal_subscriber')
+         # Define una clase que hereda de Node, representa el nodo suscriptor
+         class MinimalSubscriber(Node):
 
-           # Crea una suscripción al tópico 'topic'
-           # Tipo de mensaje: String
-           # Función de callback: self.listener_callback
-           # Tamaño de la cola: 10 mensajes
-           self.subscription = self.create_subscription(
-               String,
-               'topic',
-               self.listener_callback,
-               10)
+               # Método constructor de la clase
+               def __init__(self):
+                  # Inicializa el nodo con el nombre 'minimal_subscriber'
+                  super().__init__('minimal_subscriber')
 
-           # Esta línea asegura que la variable no sea optimizada por el compilador (aunque no es obligatorio en Python)
-           self.subscription
+                  # Crea una suscripción al tópico 'topic'
+                  # Tipo de mensaje: String
+                  # Función de callback: self.listener_callback
+                  # Tamaño de la cola: 10 mensajes
+                  self.subscription = self.create_subscription(
+                     String,
+                     'topic',
+                     self.listener_callback,
+                     10)
 
-       # Función que se llama cada vez que se recibe un mensaje en el tópico
-       def listener_callback(self, msg):
-           # Imprime en consola el contenido del mensaje recibido
-           self.get_logger().info('I heard: "%s"' % msg.data)
+                  # Esta línea asegura que la variable no sea optimizada por el compilador (aunque no es obligatorio en Python)
+                  self.subscription
 
-   # Función principal que lanza el nodo
-   def main(args=None):
-       # Inicializa el sistema de ROS 2
-       rclpy.init(args=args)
+               # Función que se llama cada vez que se recibe un mensaje en el tópico
+               def listener_callback(self, msg):
+                  # Imprime en consola el contenido del mensaje recibido
+                  self.get_logger().info('I heard: "%s"' % msg.data)
 
-       # Crea una instancia del nodo suscriptor
-       minimal_subscriber = MinimalSubscriber()
+         # Función principal que lanza el nodo
+         def main(args=None):
+               # Inicializa el sistema de ROS 2
+               rclpy.init(args=args)
 
-       # Mantiene el nodo corriendo escuchando datos (callback se ejecutará cuando lleguen mensajes)
-       rclpy.spin(minimal_subscriber)
+               # Crea una instancia del nodo suscriptor
+               minimal_subscriber = MinimalSubscriber()
 
-       # Cuando se detiene (Ctrl+C o cierre), se destruye el nodo explícitamente (opcional)
-       minimal_subscriber.destroy_node()
+               # Mantiene el nodo corriendo escuchando datos (callback se ejecutará cuando lleguen mensajes)
+               rclpy.spin(minimal_subscriber)
 
-       # Finaliza la ejecución del sistema ROS 2
-       rclpy.shutdown()
+               # Cuando se detiene (Ctrl+C o cierre), se destruye el nodo explícitamente (opcional)
+               minimal_subscriber.destroy_node()
 
-   # Esta verificación permite que el nodo se ejecute solo si el script se corre directamente
-   if __name__ == '__main__':
-       main()
+               # Finaliza la ejecución del sistema ROS 2
+               rclpy.shutdown()
 
-4. Registrar los nodos en ``setup.py``
+         # Esta verificación permite que el nodo se ejecute solo si el script se corre directamente
+         if __name__ == '__main__':
+               main()
+
+3. Registrar los nodos en ``setup.py``
 
 .. code:: python
 
@@ -210,18 +213,24 @@ publicador y suscriptor.
        ],
    },
 
-5. Compilar el paquete
+4. Compilar el paquete
 
 .. code:: bash
 
    cd ~/ros2_ws
    colcon build --packages-select mi_pkg_python
 
-6. Ejecutar el nodo
+5. Ejecutar el nodo publicador
 
 .. code:: bash
 
    ros2 run mi_pkg_python publicador1
+
+en una terminal diferente ejecutar el nodo suscriptor
+
+.. code:: bash
+
+   ros2 run mi_pkg_python suscriptor1
 
 Paquetes con mensajes personalizados
 ------------------------------------
@@ -379,20 +388,20 @@ Desde la raíz del workspace:
 
 En el paquete creado anteriormente de Python ``mi_pkg_python``:
 
-1. En ``package.xml``:
+En ``package.xml``:
 
 .. code:: xml
 
    <exec_depend>avig_msg</exec_depend>
 
-2. En el código Python:
+En el código Python:
 
 .. code:: python
 
    from avig_msg.msg import AprilTagPixel
 
-3. Usarlo en un publicador o suscriptor como cualquier otro mensaje.
---------------------------------------------------------------------
+Se puede usar en un publicador o suscriptor como cualquier otro mensaje.
+
 
 April-Tags
 ----------
@@ -404,12 +413,10 @@ de la Universidad de Michigan.
 
 **Características principales:**
 
-- 🔳 Patrón en blanco y negro con bordes codificados.
-- 📍 Cada tag tiene un **ID único**.
-- 🎯 Puede ser detectado desde distintos ángulos y con iluminación
-  variable.
-- ⚡ Su detección es **más rápida y robusta** que QR o ARTags para
-  propósitos robóticos.
+- Patrón en blanco y negro con bordes codificados.
+- Cada tag tiene un **ID único**.
+- Puede ser detectado desde distintos ángulos y con iluminación variable.
+- Su detección es **más rápida y robusta** que QR o ARTags para propósitos robóticos.
 
 --------------
 
@@ -418,19 +425,19 @@ de la Universidad de Michigan.
 +-----------------+----------------------------------------------------+
 | Aplicación      | Descripción                                        |
 +=================+====================================================+
-| 📍 Localización | Identificar una posición fija en el mapa mediante  |
+| Localización    | Identificar una posición fija en el mapa mediante  |
 | absoluta        | un tag conocido.                                   |
 +-----------------+----------------------------------------------------+
-| 🤖 Seguimiento  | Seguir la posición de un tag en tiempo real        |
+| Seguimiento     | Seguir la posición de un tag en tiempo real        |
 | de objetos      | (e.g. manipulación, drones).                       |
 +-----------------+----------------------------------------------------+
-| 🎯 Calibración  | Calibrar parámetros intrínsecos y extrínsecos de   |
+| Calibración     | Calibrar parámetros intrínsecos y extrínsecos de   |
 | de cámaras      | una cámara.                                        |
 +-----------------+----------------------------------------------------+
-| 🗺️ SLAM /       | Complementar sensores como LiDAR o IMU en mapeo y  |
+| SLAM /          | Complementar sensores como LiDAR o IMU en mapeo y  |
 | Navegación      | navegación autónoma.                               |
 +-----------------+----------------------------------------------------+
-| 🤝 Interacción  | Identificar objetos, posiciones, o áreas           |
+| Interacción     | Identificar objetos, posiciones, o áreas           |
 | humano-robot    | accesibles visualmente.                            |
 +-----------------+----------------------------------------------------+
 
@@ -464,7 +471,7 @@ Ejemplos
 
    .. group-tab:: Programa 1
 
-      **Detección en Python puro (sin ROS)**
+      *Detección en Python puro (sin ROS)*
 
       .. code-block:: python
 
@@ -535,12 +542,11 @@ Ejemplos
                main()
 
    .. group-tab:: Programa 2
+   
+      *Nodo ROS 2 que publica detección de AprilTags*
 
-   **Nodo ROS 2 que publica detección de AprilTags**
-
-   Para el siguiente nodo, se utulizará los mensajes previamente creados ``AprilTagPixel`` y ``AprilTagPixelArray``
-
-   Este nodo se ejecuta en ROS 2 y **publica los datos detectados** (ID y posición en píxeles) en un tópico llamado ``/apriltag_pixels``.
+      Para el siguiente nodo, se utulizará los mensajes previamente creados ``AprilTagPixel`` y ``AprilTagPixelArray``.
+      Este nodo se ejecuta en ROS 2 y **publica los datos detectados** (ID y posición en píxeles) en un tópico llamado ``/apriltag_pixels``.
 
       .. code-block:: python
 
@@ -630,12 +636,11 @@ Ejemplos
          if __name__ == '__main__':
                main()
 
-   .. group-tab:: Programa 2
+   .. group-tab:: Programa 3
 
-   Se puede utilizar diferentes variaciones para uso de apriltags con ROS2,
-   para poder usar un formato compatible con las imágenes de ROS se debe
-   utilizar el tipo de mensaje ``sensor_msgs`` y agregar esta dependencia
-   en el paquete creado.
+      Se puede utilizar diferentes variaciones para uso de apriltags con ROS2,
+      para poder usar un formato compatible con las imágenes de ROS se debe utilizar el tipo de mensaje ``sensor_msgs`` y agregar esta dependencia
+      en el paquete creado.
 
       .. code-block:: python
 
@@ -820,144 +825,151 @@ Dentro del paquete ``mi_pkg_python``
    cd servicios
    touch __initi__.py
 
-Guarda el siguiente código como ``srv_servidor.py``:
+Guarda el siguiente código como ``srv_servidor.py`` y ``srv_cliente.py``:
 
-.. code:: python
+.. tabs::
 
-   import rclpy
-   from rclpy.node import Node
-   from avig_msg.srv import Heuristica
-   from avig_msg.msg import AprilTagPixel
-   import math
+   .. group-tab:: srv_servidor.py
 
-   class EuristicaServer(Node):
-       def __init__(self):
-           super().__init__('euristica_server')
-           self.srv = self.create_service(Heuristica, 'Heuristica', self.heuristica_callback)
-           self.get_logger().info('Servicio Euristica listo.')
+      .. code:: python
 
-       def heuristica_callback(self, request, response):
-           tags = request.tags_in.tags
-           self.get_logger().info(f"Recibidos {tags} tags.")
+         import rclpy
+         from rclpy.node import Node
+         from avig_msg.srv import Heuristica
+         from avig_msg.msg import AprilTagPixel
+         import math
 
-           if not tags:
-               self.get_logger().warn("No se recibió ningún tag.")
-               return response
-           
-           tag1 = next((tag for tag in tags if tag.id == 1), None)
-           tag2 = next((tag for tag in tags if tag.id == 2), None)
+         class EuristicaServer(Node):
+            def __init__(self):
+               super().__init__('euristica_server')
+               self.srv = self.create_service(Heuristica, 'Heuristica', self.heuristica_callback)
+               self.get_logger().info('Servicio Euristica listo.')
 
-           if tag1 is None or tag2 is None:
-               self.get_logger().warn("Faltan tag1 o tag2, no se puede continuar.")
-               return response
+            def heuristica_callback(self, request, response):
+               tags = request.tags_in.tags
+               self.get_logger().info(f"Recibidos {tags} tags.")
 
-
-           tags_ordenados = [tag for tag in tags if tag.id != 0 and tag.id != 1 and tag.id != 2]
-           
-           for i, tag in enumerate(tags_ordenados):
-               self.get_logger().info(f"Revisando el tag: {tag.id}")
-               if 10 <= tag.id < 20:
-                   tag.dist = math.sqrt((tag.posx - tag1.posx)**2 + (tag.posy - tag1.posy)**2)
-               else:
-                   tag.dist = math.sqrt((tag.posx - tag2.posx)**2 + (tag.posy - tag2.posy)**2)
+               if not tags:
+                     self.get_logger().warn("No se recibió ningún tag.")
+                     return response
                
-               self.get_logger().info(f"Distancia del Tag: {tag.id} es {tag.dist}")
+               tag1 = next((tag for tag in tags if tag.id == 1), None)
+               tag2 = next((tag for tag in tags if tag.id == 2), None)
+
+               if tag1 is None or tag2 is None:
+                     self.get_logger().warn("Faltan tag1 o tag2, no se puede continuar.")
+                     return response
+
+
+               tags_ordenados = [tag for tag in tags if tag.id != 0 and tag.id != 1 and tag.id != 2]
                
-           # Heurística: devolver el tag con menor coordenada posx
-           tag_ordenado = sorted(tags_ordenados, key=lambda t: t.dist)[0]
-           response.tag_out = tag_ordenado
-           self.get_logger().info(f"Tag elegido: {tag_ordenado.id}")
-           return response
+               for i, tag in enumerate(tags_ordenados):
+                     self.get_logger().info(f"Revisando el tag: {tag.id}")
+                     if 10 <= tag.id < 20:
+                        tag.dist = math.sqrt((tag.posx - tag1.posx)**2 + (tag.posy - tag1.posy)**2)
+                     else:
+                        tag.dist = math.sqrt((tag.posx - tag2.posx)**2 + (tag.posy - tag2.posy)**2)
+                     
+                     self.get_logger().info(f"Distancia del Tag: {tag.id} es {tag.dist}")
+                     
+               # Heurística: devolver el tag con menor coordenada posx
+               tag_ordenado = sorted(tags_ordenados, key=lambda t: t.dist)[0]
+               response.tag_out = tag_ordenado
+               self.get_logger().info(f"Tag elegido: {tag_ordenado.id}")
+               return response
 
-   def main(args=None):
-       rclpy.init(args=args)
-       node = EuristicaServer()
-       rclpy.spin(node)
-       rclpy.shutdown()
+         def main(args=None):
+            rclpy.init(args=args)
+            node = EuristicaServer()
+            rclpy.spin(node)
+            rclpy.shutdown()
 
-   if __name__ == '__main__':
-       main()
+         if __name__ == '__main__':
+            main()
 
-Este nodo: - Se llama ``srv_servidor`` - Responde a solicitudes del
-servicio ``Heuristica`` - Elige el tag con menor distancia al tag 0
-(``dist``)
+   .. group-tab:: srv_cliente.py
 
---------------
+      .. code:: python
 
-6. Crear el Cliente
+         import rclpy
+         from rclpy.node import Node
 
-Guarda el siguiente código como ``srv_cliente.py``:
+         from avig_msg.srv import Heuristica
+         from avig_msg.msg import AprilTagPixel, AprilTagPixelArray
 
-.. code:: python
+         class EuristicaClient(Node):
+            def __init__(self):
+               super().__init__('euristica_client')
+               self.client = self.create_client(Heuristica, 'Heuristica')
 
-   import rclpy
-   from rclpy.node import Node
+               while not self.client.wait_for_service(timeout_sec=1.0):
+                     self.get_logger().info('Esperando al servicio...')
 
-   from avig_msg.srv import Heuristica
-   from avig_msg.msg import AprilTagPixel, AprilTagPixelArray
-
-   class EuristicaClient(Node):
-       def __init__(self):
-           super().__init__('euristica_client')
-           self.client = self.create_client(Heuristica, 'Heuristica')
-
-           while not self.client.wait_for_service(timeout_sec=1.0):
-               self.get_logger().info('Esperando al servicio...')
-
-           # Crear solicitud con varios tags
-           msg_array = AprilTagPixelArray()
-           for i in range(10, 19, 1):
+               # Crear solicitud con varios tags
+               msg_array = AprilTagPixelArray()
+               for i in range(10, 19, 1):
+                     tag = AprilTagPixel()
+                     tag.id = i
+                     tag.posx = float(100 - i*10)
+                     tag.posy = float(50  + i*10)
+                     msg_array.tags.append(tag)
+               
                tag = AprilTagPixel()
-               tag.id = i
-               tag.posx = float(100 - i*10)
-               tag.posy = float(50  + i*10)
+               tag.id = 1
+               tag.posx = -20.0
+               tag.posy = 170.0
                msg_array.tags.append(tag)
-           
-           tag = AprilTagPixel()
-           tag.id = 1
-           tag.posx = -20.0
-           tag.posy = 170.0
-           msg_array.tags.append(tag)
 
-           tag = AprilTagPixel()
-           tag.id = 2
-           tag.posx = 105.2
-           tag.posy = 23.5
-           msg_array.tags.append(tag)
+               tag = AprilTagPixel()
+               tag.id = 2
+               tag.posx = 105.2
+               tag.posy = 23.5
+               msg_array.tags.append(tag)
 
-           request = Heuristica.Request()
-           request.tags_in = msg_array
+               request = Heuristica.Request()
+               request.tags_in = msg_array
 
-           self.future = self.client.call_async(request)
+               self.future = self.client.call_async(request)
 
-   def main(args=None):
-       rclpy.init(args=args)
-       node = EuristicaClient()
+         def main(args=None):
+            rclpy.init(args=args)
+            node = EuristicaClient()
 
-       while rclpy.ok():
-           rclpy.spin_once(node)
-           if node.future.done():
-               try:
-                   response = node.future.result()
-                   node.get_logger().info(f"Tag seleccionado: {response.tag_out}")
-                                          
-                   node.get_logger().info(f"Tag ID: {response.tag_out.id} "
-                                          f"({response.tag_out.posx:.1f}, {response.tag_out.posy:.1f})")
-               except Exception as e:
-                   node.get_logger().error(f"Error al llamar al servicio: {e}")
-               break
+            while rclpy.ok():
+               rclpy.spin_once(node)
+               if node.future.done():
+                     try:
+                        response = node.future.result()
+                        node.get_logger().info(f"Tag seleccionado: {response.tag_out}")
+                                                
+                        node.get_logger().info(f"Tag ID: {response.tag_out.id} "
+                                                f"({response.tag_out.posx:.1f}, {response.tag_out.posy:.1f})")
+                     except Exception as e:
+                        node.get_logger().error(f"Error al llamar al servicio: {e}")
+                     break
 
-       rclpy.shutdown()
+            rclpy.shutdown()
 
-   if __name__ == '__main__':
-       main()
+         if __name__ == '__main__':
+            main()
 
-Este nodo: - Crea y envía una lista de ``AprilTagPixel`` - Solicita una
-respuesta del servidor - Muestra el tag seleccionado
+El nodo servidor
+
+- Responde a solicitudes del servicio ``Heuristica`` 
+
+- Elige el tag con menor distancia al tag 1 o al tag 2 (``dist``)
+
+El nodo cliente: 
+
+- Crea y envía una lista de ``AprilTagPixel`` 
+
+- Solicita una respuesta del servidor 
+
+- Muestra el tag seleccionado
 
 --------------
 
-7. Registrar los nodos en setup.py
+6. Registrar los nodos en setup.py
 
 En tu ``setup.py`` agrega:
 
@@ -970,37 +982,32 @@ En tu ``setup.py`` agrega:
        ],
    },
 
-+------------------------------------------+
-| 8. Compilar nuevamente                   |
-+==========================================+
-| 9. Ejecutar                              |
-+------------------------------------------+
-| En dos terminales diferentes:            |
-+------------------------------------------+
-| ``bash ros2 run mi_pkg_python servidor`` |
-+------------------------------------------+
-| ``bash ros2 run mi_pkg_python cliente``  |
-+------------------------------------------+
-| ## Implementación de una Acción          |
-| Personalizada                            |
-+------------------------------------------+
-| En esta **acción personalizada** llamada |
-| ``MoverA`` se simula el movimiento de un |
-| robot hacia una posición ``(x, y)``      |
-| objetivo, utilizando el sistema de       |
-| acciones de ROS 2.                       |
-+------------------------------------------+
-| La acción representa como el robot se    |
-| mueve gradualmente en línea recta hacia  |
-| la meta, acercándose poco a poco hasta   |
-| que la distancia sea menor a un umbral   |
-| (por ejemplo, 0.1).                      |
-+------------------------------------------+
-| La trayectoría que se simularña en este  |
-| ejercicio obedece los siguientes puntos: |
-+------------------------------------------+
-| |mat| |gif|                              |
-+------------------------------------------+
+7. Compilar el paquete 
+
+8. Ejecutar
+
+En dos terminales diferentes:  
+
+.. code:: bash
+   
+   bash ros2 run mi_pkg_python servidor
+   bash ros2 run mi_pkg_python cliente
+
+Implementación de una Acción Personalizada
+------------------------------------------
+
+En esta **acción personalizada** llamada ``MoverA`` se simula el movimiento de un robot hacia una posición ``(x, y)`` objetivo, utilizando el sistema de 
+acciones de ROS 2.
+
+La acción representa como el robot se mueve gradualmente en línea recta hacia 
+la meta, acercándose poco a poco hasta que la distancia sea menor a un umbral (por ejemplo, 0.1).
+
+La trayectoría que se simulará en este ejercicio obedece los siguientes puntos:
+
+|mat| 
+
+|gif|
+
 
 **Estructura general**
 
@@ -1061,223 +1068,223 @@ Agregar:
 
 --------------
 
-4. Servidor de acción (``action_server.py`` en
-   ``mi_pkg_python/acciones``) Este nodo:
+4. Dentro del paquete ``mi_pkg_python`` crar los programas: ``action_server.py`` y ``action_client.py``
 
-- Recibe un objetivo de la posición inicial\ ``(x, y)`` y de la posición
-  objetivo ``(x, y)``.
+.. tabs::
+
+   .. group-tab:: action_client.py
+
+      .. code:: python
+
+         import rclpy
+         from rclpy.node import Node
+         from rclpy.action import ActionServer, GoalResponse, CancelResponse
+         from avig_msg.action import MoverA
+         import math
+
+         # Definición de la clase del servidor de acción
+         class MoverAServer(Node):
+            def __init__(self):
+               # Inicializa el nodo con nombre 'movera_server'
+               super().__init__('movera_server')
+
+               # Crea un servidor de acción para la acción personalizada 'MoverA'
+               self._action_server = ActionServer(
+                     self,
+                     MoverA,
+                     'mover_a',  # Nombre del tópico de acción
+                     execute_callback=self.execute_callback,  # Lógica principal de ejecución
+                     goal_callback=self.goal_callback,        # Qué hacer cuando llega una meta
+                     cancel_callback=self.cancel_callback     # Qué hacer si el cliente pide cancelar
+               )
+
+               self.goal_handle = None  # Guardará el manejador de la meta actual
+               self.timer = None        # Temporizador usado para simular movimiento
+
+            # Callback que se ejecuta cuando se recibe una nueva meta
+            def goal_callback(self, goal_request):
+               self.get_logger().info('Objetivo recibido.')
+               return GoalResponse.ACCEPT  # Acepta todas las metas que recibe
+
+            # Callback que se ejecuta cuando se solicita cancelar una meta
+            def cancel_callback(self, goal_handle):
+               self.get_logger().info('Cancelación solicitada.')
+               return CancelResponse.ACCEPT  # Acepta siempre la cancelación
+
+            # Lógica principal que se ejecuta cuando la meta ha sido aceptada
+            async def execute_callback(self, goal_handle):
+               self.goal_handle = goal_handle
+
+               # Extrae posición inicial y meta desde la solicitud
+               self.x_actual = goal_handle.request.x_actual
+               self.y_actual = goal_handle.request.y_actual
+               self.x_goal = goal_handle.request.x_meta
+               self.y_goal = goal_handle.request.y_meta
+               self.step_size = 0.1  # Tamaño de paso por iteración
+
+               # Crea el objeto de feedback que será enviado al cliente
+               self.feedback_msg = MoverA.Feedback()
+
+               self.get_logger().info(f'Iniciando movimiento: ({self.x_actual:.2f}, {self.y_actual:.2f}) → ({self.x_goal:.2f}, {self.y_goal:.2f})')
+
+               # Crea un temporizador que se ejecuta cada 0.5 segundos
+               self.timer = self.create_timer(0.5, self.update_position)
+
+               # Bucle que espera mientras se ejecuta el temporizador
+               while not goal_handle.is_cancel_requested and self.distance(self.x_actual, self.y_actual) > 0.1:
+                     # Procesa eventos del temporizador
+                     rclpy.spin_once(self, timeout_sec=0.1)
+
+               # Si el cliente cancela la acción
+               if goal_handle.is_cancel_requested:
+                     self.timer.cancel()            # Detiene el temporizador
+                     goal_handle.canceled()        # Informa al cliente que fue cancelado
+                     self.get_logger().warn("Objetivo cancelado por el cliente")
+                     return MoverA.Result(success=False)
+
+               # Si se llegó al destino
+               self.timer.cancel()                # Detiene el temporizador
+               goal_handle.succeed()             # Marca como completado con éxito
+               self.get_logger().info("Objetivo alcanzado")
+               return MoverA.Result(success=True)
+
+            # Función ejecutada periódicamente por el temporizador
+            def update_position(self):
+               if not self.goal_handle:
+                     return
+
+               # Calcula la distancia restante
+               dist = self.distance(self.x_actual, self.y_actual)
+               if dist <= 0.1:
+                     return  # Ya está suficientemente cerca
+
+               # Simula movimiento en línea recta hacia la meta
+               self.x_actual += self.step_size * (self.x_goal - self.x_actual) / dist
+               self.y_actual += self.step_size * (self.y_goal - self.y_actual) / dist
+
+               # Calcula nueva distancia y envía feedback
+               dist = self.distance(self.x_actual, self.y_actual)
+               self.feedback_msg.distancia_restante = float(dist)
+               self.goal_handle.publish_feedback(self.feedback_msg)
+               self.get_logger().info(f"Distancia restante: {dist:.2f}")
+
+            # Función auxiliar para calcular la distancia euclidiana al objetivo
+            def distance(self, x, y):
+               return math.sqrt((x - self.x_goal)**2 + (y - self.y_goal)**2)
+
+         # Función principal para ejecutar el servidor de acción
+         def main(args=None):
+            rclpy.init(args=args)
+            node = MoverAServer()  # Crea el servidor
+            rclpy.spin(node)       # Mantiene el nodo activo
+            rclpy.shutdown()       # Apaga ROS 2 cuando termina
+
+         if __name__ == '__main__':
+            main()
+
+   .. group-tab:: action_server.py
+
+      .. code:: python
+
+         import rclpy
+         from rclpy.node import Node
+         from rclpy.action import ActionClient
+         from avig_msg.action import MoverA  # Importa la acción personalizada
+
+         # Definición de la clase cliente de acción
+         class MoverAClient(Node):
+            def __init__(self):
+               # Inicializa el nodo con nombre 'movera_client'
+               super().__init__('movera_client')
+               # Crea un cliente de acción para comunicarse con el servidor
+               self._client = ActionClient(self, MoverA, 'mover_a')
+               self._goal_handle = None  # Guardará la referencia a la meta enviada
+
+            # Método para enviar una meta al servidor de acción
+            def send_goal(self, xi, yi, xm, ym):
+               # Define los valores de posición inicial y objetivo
+               goal_msg = MoverA.Goal()
+               goal_msg.x_actual = xi
+               goal_msg.y_actual = yi
+               goal_msg.x_meta = xm
+               goal_msg.y_meta = ym
+
+               # Espera a que el servidor esté disponible
+               self._client.wait_for_server()
+
+               self.get_logger().info(f'Enviando objetivo: x={xi}, y={yi} → x={xm}, y={ym}')
+
+               # Envía la meta de forma asíncrona y se suscribe a feedback
+               self._send_goal_future = self._client.send_goal_async(
+                     goal_msg,
+                     feedback_callback=self.feedback_callback
+               )
+               self._send_goal_future.add_done_callback(self.goal_response_callback)
+
+            # Callback que se ejecuta cada vez que el servidor envía feedback
+            def feedback_callback(self, feedback_msg):
+               dist = feedback_msg.feedback.distancia_restante
+               self.get_logger().info(f'Feedback: distancia restante = {dist:.2f}')
+
+               # Lógica personalizada: si estamos suficientemente cerca, solicitamos cancelación
+               if dist < 0.8 and self._goal_handle is not None:
+                     self.get_logger().warn('Cancelando acción por distancia < 0.3...')
+                     cancel_future = self._goal_handle.cancel_goal_async()
+                     cancel_future.add_done_callback(self.cancel_callback)
+
+            # Callback que se ejecuta cuando el servidor responde si acepta o no la meta
+            def goal_response_callback(self, future):
+               self._goal_handle = future.result()
+               if not self._goal_handle.accepted:
+                     self.get_logger().error('Objetivo rechazado.')
+                     return
+
+               self.get_logger().info('Objetivo aceptado.')
+               # Espera de forma asíncrona el resultado final
+               self._get_result_future = self._goal_handle.get_result_async()
+               self._get_result_future.add_done_callback(self.result_callback)
+
+            # Callback que se ejecuta cuando se responde la solicitud de cancelación
+            def cancel_callback(self, future):
+               cancel_response = future.result()
+               if len(cancel_response.goals_canceling) > 0:
+                     self.get_logger().info('Acción cancelada exitosamente.')
+               else:
+                     self.get_logger().info('No se pudo cancelar la acción.')
+
+            # Callback que se ejecuta cuando se recibe el resultado final del servidor
+            def result_callback(self, future):
+               result = future.result().result
+               if result.success:
+                     self.get_logger().info('Llegamos al destino.')
+               else:
+                     self.get_logger().info('Acción no completada.')
+               rclpy.shutdown()
+
+         # Función principal para ejecutar el cliente
+         def main(args=None):
+            rclpy.init(args=args)
+            node = MoverAClient()
+            # Envía una meta de ejemplo
+            node.send_goal(2.0, 3.0, 0.0, 0.1)
+            # Mantiene el nodo activo mientras espera feedback/resultados
+            rclpy.spin(node)
+
+         if __name__ == '__main__':
+            main()
+
+El cliente:
+
+- Envía un objetivo ``(x, y)`` con la posición inicial y un objetivo ``(x, y)`` con la posición meta al servidor.
+- Imprime el feedback recibido.
+- Muestra el resultado final.
+
+El servidor:
+
+- Recibe un objetivo de la posición inicial\ ``(x, y)`` y de la posiciónobjetivo ``(x, y)``.
 - Simula el movimiento hacia la meta.
 - Envía ``feedback`` de la distancia restante.
 - Devuelve ``success = true`` si llega al destino.
-
-.. code:: python
-
-   import rclpy
-   from rclpy.node import Node
-   from rclpy.action import ActionServer, GoalResponse, CancelResponse
-   from avig_msg.action import MoverA
-   import math
-
-   # Definición de la clase del servidor de acción
-   class MoverAServer(Node):
-       def __init__(self):
-           # Inicializa el nodo con nombre 'movera_server'
-           super().__init__('movera_server')
-
-           # Crea un servidor de acción para la acción personalizada 'MoverA'
-           self._action_server = ActionServer(
-               self,
-               MoverA,
-               'mover_a',  # Nombre del tópico de acción
-               execute_callback=self.execute_callback,  # Lógica principal de ejecución
-               goal_callback=self.goal_callback,        # Qué hacer cuando llega una meta
-               cancel_callback=self.cancel_callback     # Qué hacer si el cliente pide cancelar
-           )
-
-           self.goal_handle = None  # Guardará el manejador de la meta actual
-           self.timer = None        # Temporizador usado para simular movimiento
-
-       # Callback que se ejecuta cuando se recibe una nueva meta
-       def goal_callback(self, goal_request):
-           self.get_logger().info('Objetivo recibido.')
-           return GoalResponse.ACCEPT  # Acepta todas las metas que recibe
-
-       # Callback que se ejecuta cuando se solicita cancelar una meta
-       def cancel_callback(self, goal_handle):
-           self.get_logger().info('Cancelación solicitada.')
-           return CancelResponse.ACCEPT  # Acepta siempre la cancelación
-
-       # Lógica principal que se ejecuta cuando la meta ha sido aceptada
-       async def execute_callback(self, goal_handle):
-           self.goal_handle = goal_handle
-
-           # Extrae posición inicial y meta desde la solicitud
-           self.x_actual = goal_handle.request.x_actual
-           self.y_actual = goal_handle.request.y_actual
-           self.x_goal = goal_handle.request.x_meta
-           self.y_goal = goal_handle.request.y_meta
-           self.step_size = 0.1  # Tamaño de paso por iteración
-
-           # Crea el objeto de feedback que será enviado al cliente
-           self.feedback_msg = MoverA.Feedback()
-
-           self.get_logger().info(f'Iniciando movimiento: ({self.x_actual:.2f}, {self.y_actual:.2f}) → ({self.x_goal:.2f}, {self.y_goal:.2f})')
-
-           # Crea un temporizador que se ejecuta cada 0.5 segundos
-           self.timer = self.create_timer(0.5, self.update_position)
-
-           # Bucle que espera mientras se ejecuta el temporizador
-           while not goal_handle.is_cancel_requested and self.distance(self.x_actual, self.y_actual) > 0.1:
-               # Procesa eventos del temporizador
-               rclpy.spin_once(self, timeout_sec=0.1)
-
-           # Si el cliente cancela la acción
-           if goal_handle.is_cancel_requested:
-               self.timer.cancel()            # Detiene el temporizador
-               goal_handle.canceled()        # Informa al cliente que fue cancelado
-               self.get_logger().warn("Objetivo cancelado por el cliente")
-               return MoverA.Result(success=False)
-
-           # Si se llegó al destino
-           self.timer.cancel()                # Detiene el temporizador
-           goal_handle.succeed()             # Marca como completado con éxito
-           self.get_logger().info("Objetivo alcanzado")
-           return MoverA.Result(success=True)
-
-       # Función ejecutada periódicamente por el temporizador
-       def update_position(self):
-           if not self.goal_handle:
-               return
-
-           # Calcula la distancia restante
-           dist = self.distance(self.x_actual, self.y_actual)
-           if dist <= 0.1:
-               return  # Ya está suficientemente cerca
-
-           # Simula movimiento en línea recta hacia la meta
-           self.x_actual += self.step_size * (self.x_goal - self.x_actual) / dist
-           self.y_actual += self.step_size * (self.y_goal - self.y_actual) / dist
-
-           # Calcula nueva distancia y envía feedback
-           dist = self.distance(self.x_actual, self.y_actual)
-           self.feedback_msg.distancia_restante = float(dist)
-           self.goal_handle.publish_feedback(self.feedback_msg)
-           self.get_logger().info(f"Distancia restante: {dist:.2f}")
-
-       # Función auxiliar para calcular la distancia euclidiana al objetivo
-       def distance(self, x, y):
-           return math.sqrt((x - self.x_goal)**2 + (y - self.y_goal)**2)
-
-   # Función principal para ejecutar el servidor de acción
-   def main(args=None):
-       rclpy.init(args=args)
-       node = MoverAServer()  # Crea el servidor
-       rclpy.spin(node)       # Mantiene el nodo activo
-       rclpy.shutdown()       # Apaga ROS 2 cuando termina
-
-   if __name__ == '__main__':
-       main()
-
-Es importante agregar el archivo ``__init__.py`` en el direccitorio
-``mi_pkg_python/acciones``
-
-5. Cliente de acción (``action_client.py`` en ``mi_pkg_python``)
-
-.. code:: python
-
-   import rclpy
-   from rclpy.node import Node
-   from rclpy.action import ActionClient
-   from avig_msg.action import MoverA  # Importa la acción personalizada
-
-   # Definición de la clase cliente de acción
-   class MoverAClient(Node):
-       def __init__(self):
-           # Inicializa el nodo con nombre 'movera_client'
-           super().__init__('movera_client')
-           # Crea un cliente de acción para comunicarse con el servidor
-           self._client = ActionClient(self, MoverA, 'mover_a')
-           self._goal_handle = None  # Guardará la referencia a la meta enviada
-
-       # Método para enviar una meta al servidor de acción
-       def send_goal(self, xi, yi, xm, ym):
-           # Define los valores de posición inicial y objetivo
-           goal_msg = MoverA.Goal()
-           goal_msg.x_actual = xi
-           goal_msg.y_actual = yi
-           goal_msg.x_meta = xm
-           goal_msg.y_meta = ym
-
-           # Espera a que el servidor esté disponible
-           self._client.wait_for_server()
-
-           self.get_logger().info(f'Enviando objetivo: x={xi}, y={yi} → x={xm}, y={ym}')
-
-           # Envía la meta de forma asíncrona y se suscribe a feedback
-           self._send_goal_future = self._client.send_goal_async(
-               goal_msg,
-               feedback_callback=self.feedback_callback
-           )
-           self._send_goal_future.add_done_callback(self.goal_response_callback)
-
-       # Callback que se ejecuta cada vez que el servidor envía feedback
-       def feedback_callback(self, feedback_msg):
-           dist = feedback_msg.feedback.distancia_restante
-           self.get_logger().info(f'Feedback: distancia restante = {dist:.2f}')
-
-           # Lógica personalizada: si estamos suficientemente cerca, solicitamos cancelación
-           if dist < 0.8 and self._goal_handle is not None:
-               self.get_logger().warn('Cancelando acción por distancia < 0.3...')
-               cancel_future = self._goal_handle.cancel_goal_async()
-               cancel_future.add_done_callback(self.cancel_callback)
-
-       # Callback que se ejecuta cuando el servidor responde si acepta o no la meta
-       def goal_response_callback(self, future):
-           self._goal_handle = future.result()
-           if not self._goal_handle.accepted:
-               self.get_logger().error('Objetivo rechazado.')
-               return
-
-           self.get_logger().info('Objetivo aceptado.')
-           # Espera de forma asíncrona el resultado final
-           self._get_result_future = self._goal_handle.get_result_async()
-           self._get_result_future.add_done_callback(self.result_callback)
-
-       # Callback que se ejecuta cuando se responde la solicitud de cancelación
-       def cancel_callback(self, future):
-           cancel_response = future.result()
-           if len(cancel_response.goals_canceling) > 0:
-               self.get_logger().info('Acción cancelada exitosamente.')
-           else:
-               self.get_logger().info('No se pudo cancelar la acción.')
-
-       # Callback que se ejecuta cuando se recibe el resultado final del servidor
-       def result_callback(self, future):
-           result = future.result().result
-           if result.success:
-               self.get_logger().info('Llegamos al destino.')
-           else:
-               self.get_logger().info('Acción no completada.')
-           rclpy.shutdown()
-
-   # Función principal para ejecutar el cliente
-   def main(args=None):
-       rclpy.init(args=args)
-       node = MoverAClient()
-       # Envía una meta de ejemplo
-       node.send_goal(2.0, 3.0, 0.0, 0.1)
-       # Mantiene el nodo activo mientras espera feedback/resultados
-       rclpy.spin(node)
-
-   if __name__ == '__main__':
-       main()
-
-Este nodo:
-
-- Envía un objetivo ``(x, y)`` con la posición inicial y un objetivo
-  ``(x, y)`` con la posición meta al servidor.
-- Imprime el feedback recibido.
-- Muestra el resultado final.
 
 --------------
 
@@ -1319,3 +1326,6 @@ En otra terminal, ejecutar el cliente:
 
    ros2 run mi_pkg_python action_client
 
+.. |mat| image:: ./matematica.png
+
+.. |gif| image:: ./mov.gif
