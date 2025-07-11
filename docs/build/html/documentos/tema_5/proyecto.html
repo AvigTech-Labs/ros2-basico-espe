@@ -21,6 +21,7 @@
       <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../../_static/copybutton.js?v=f281be69"></script>
       <script src="../../_static/translations.js?v=f85f4cfb"></script>
+      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
       <script src="../../_static/tabs.js?v=3030b3cb"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Índice" href="../../genindex.html" />
@@ -65,12 +66,26 @@
 <li class="toctree-l2"><a class="reference internal" href="#calibracion-de-la-camara">Calibración de la cámara</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#instalacion-de-paquetes">Instalación de paquetes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#algoritmo-de-calibracion">Algoritmo de calibración</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#parametros">Parámetros</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#deteccion-y-transformacion-de-apriltags">Detección y Transformación de AprilTags</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#estructura-general">Estructura general</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#matematica-del-sistema">Matemática del sistema</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#codigos">Códigos</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#publicacion-de-objetos-simulados">Publicación de objetos simulados</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#modificacion-de-servicios">Modificación de servicios</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cinematica-inversa">Cinemática Inversa</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#modelo-geometrico">Modelo Geométrico</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#formulacion">Formulación</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#restricciones">Restricciones</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ejemplo-en-codigo">Ejemplo en Código</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#conexion-ros2-esp32">Conexión ROS2 - ESP32</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#modificacion-de-archivos-launch">Modificacion de archivos launch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#algoritmo-de-control-de-proceso">Algoritmo de control de proceso</a></li>
 </ul>
 </li>
 </ul>
@@ -103,6 +118,10 @@
 <section id="actividad">
 <h2>Actividad<a class="headerlink" href="#actividad" title="Link to this heading"></a></h2>
 <p>Diseñar y simular un sistema de clasificación de objetos basados en ROS2.</p>
+<figure class="align-default">
+<img alt="Imagen" src="../../_images/proyecto.png" />
+</figure>
+<p>Para los siguientes programas es importante crear un directorio <code class="docutils literal notranslate"><span class="pre">proyecto</span></code> dentro del paquete <code class="docutils literal notranslate"><span class="pre">mi_pkg_python</span></code>.</p>
 </section>
 <section id="calibracion-de-la-camara">
 <h2>Calibración de la cámara<a class="headerlink" href="#calibracion-de-la-camara" title="Link to this heading"></a></h2>
@@ -138,7 +157,7 @@
 <p>Una estructura fija donde se monte la cámara.</p>
 <p>Un tablero de ajedrez de calibración impreso y plano.</p>
 <p>Para más detalles sobre el algoritmo utilizado, puedes consultar la documentación oficial de OpenCV:</p>
-<p><a href="#id1"><span class="problematic" id="id2">`opencv- colibración de cámara &lt; https://docs.opencv.org/4.x/dc/dbb/tutorial_py_calibration.html&gt;`__</span></a></p>
+<p><a class="reference external" href="https://docs.opencv.org/4.x/dc/dbb/tutorial_py_calibration.html">opencv- colibración de cámara</a></p>
 <p>En este ejemplo se utiliza un tablero generado por el proyecto de Mark Hedley Jones, disponible en:</p>
 <p><a class="reference external" href="https://markhedleyjones.com/projects/calibration-checkerboard-collection">Tablero de Ajedrez</a></p>
 <p>Además, se emplean AprilTags de 100 mm para pruebas adicionales de localización.</p>
@@ -159,20 +178,103 @@
 - Usa <code class="docutils literal notranslate"><span class="pre">pupil_apriltags</span></code> para detectar tags y calcular sus poses.
 - Imprime la distancia entre el tag de referencia (ID 0) y los demás.</p></li>
 </ol>
-</section>
-<section id="parametros">
-<h3>Parámetros<a class="headerlink" href="#parametros" title="Link to this heading"></a></h3>
-<ul class="simple">
+<p>Parámetros</p>
+<blockquote>
+<div><ul class="simple">
 <li><p>Tablero de calibración: 10 x 7 esquinas internas</p></li>
 <li><p>Tamaño de cuadrado: 25 mm (0.025 m)</p></li>
 <li><p>Distancia y pose se muestran en milímetros</p></li>
 <li><p>Salida: <cite>camera_calibration.yaml</cite> (compatible con ROS)</p></li>
 </ul>
+</div></blockquote>
+</section>
+</section>
+<section id="deteccion-y-transformacion-de-apriltags">
+<h2>Detección y Transformación de AprilTags<a class="headerlink" href="#deteccion-y-transformacion-de-apriltags" title="Link to this heading"></a></h2>
+<p><strong>Codigo del proyecto</strong> <code class="docutils literal notranslate"><span class="pre">p1_cam.py</span></code></p>
+<p>Este nodo en ROS 2 tiene como objetivo detectar etiquetas AprilTags en una imagen, transformar su posición al sistema de referencia del tag con ID 0, y publicar sus coordenadas relativas en el topic <code class="docutils literal notranslate"><span class="pre">/apriltag_pixels</span></code>.</p>
+<section id="estructura-general">
+<h3>Estructura general<a class="headerlink" href="#estructura-general" title="Link to this heading"></a></h3>
+<p>El nodo <cite>apriltag_cam</cite> realiza los siguientes pasos:</p>
+<ol class="arabic simple">
+<li><p><strong>Carga de parámetros de calibración</strong> desde un archivo YAML.</p></li>
+<li><p><strong>Inicialización de la cámara y detector AprilTags</strong>.</p></li>
+<li><p><strong>Corrección de distorsión</strong> de la imagen mediante la matriz de calibración.</p></li>
+<li><p><strong>Detección de etiquetas</strong> y cálculo de su pose relativa al sistema de la cámara.</p></li>
+<li><p><strong>Transformación de coordenadas</strong> al sistema de referencia del tag 0.</p></li>
+<li><p><strong>Publicación</strong> de los datos transformados como mensajes <cite>AprilTagPixelArray</cite>.</p></li>
+</ol>
+</section>
+<section id="matematica-del-sistema">
+<h3>Matemática del sistema<a class="headerlink" href="#matematica-del-sistema" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p><strong>Calibración de la cámara</strong></p></li>
+</ol>
+<p>Se utiliza la matriz intrínseca <code class="docutils literal notranslate"><span class="pre">K</span></code> y los coeficientes de distorsión <code class="docutils literal notranslate"><span class="pre">dist</span></code> para corregir la imagen:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">newcameramtx</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">getOptimalNewCameraMatrix</span><span class="p">(</span><span class="n">K</span><span class="p">,</span> <span class="n">dist</span><span class="p">,</span> <span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">))</span>
+<span class="n">undistorted</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">undistort</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">dist</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">newcameramtx</span><span class="p">)</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p><strong>Transformación homogénea</strong></p></li>
+</ol>
+<p>Cada AprilTag detectado provee:</p>
+<ul class="simple">
+<li><p>Matriz de rotación <code class="docutils literal notranslate"><span class="pre">R_tag</span></code> (3x3)</p></li>
+<li><p>Vector de traslación <code class="docutils literal notranslate"><span class="pre">t_tag</span></code> (3x1)</p></li>
+</ul>
+<p>Estos se combinan para formar una matriz homogénea 4x4:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}T = \begin{bmatrix} R &amp; t \\ 0\ 0\ 0 &amp; 1 \end{bmatrix}\end{split}\]</div>
+<ol class="arabic simple" start="3">
+<li><p><strong>Transformación relativa</strong></p></li>
+</ol>
+<p>Para transformar la posición de cada tag al sistema del tag 0:</p>
+<div class="math notranslate nohighlight">
+\[T_{\text{rel}} = T_0^{-1} \cdot T_{\text{tag}}\]</div>
+<p>De ahí se extrae la posición relativa:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">T_rel</span> <span class="o">=</span> <span class="n">T0_inv</span> <span class="o">@</span> <span class="n">T</span>
+<span class="n">t_rel</span> <span class="o">=</span> <span class="n">T_rel</span><span class="p">[:</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">*</span> <span class="mi">1000</span>  <span class="c1"># [mm]</span>
+</pre></div>
+</div>
+<p>Se invierte el eje Y para ROS (orientación hacia arriba):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">msg</span><span class="o">.</span><span class="n">posx</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">t_rel</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">)</span>
+<span class="n">msg</span><span class="o">.</span><span class="n">posy</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="o">-</span><span class="n">t_rel</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">)</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="4">
+<li><p><strong>Orientación del tag 0</strong></p></li>
+</ol>
+<p>La orientación del tag 0 se expresa en ángulos de Euler para referencia espacial:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">euler</span> <span class="o">=</span> <span class="n">R</span><span class="o">.</span><span class="n">from_matrix</span><span class="p">(</span><span class="n">R0</span><span class="p">)</span><span class="o">.</span><span class="n">as_euler</span><span class="p">(</span><span class="s1">&#39;xyz&#39;</span><span class="p">,</span> <span class="n">degrees</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="5">
+<li><p><strong>Publicación de mensajes</strong></p></li>
+</ol>
+<p>Se publica un mensaje tipo <code class="docutils literal notranslate"><span class="pre">AprilTagPixelArray</span></code> con múltiples objetos <code class="docutils literal notranslate"><span class="pre">AprilTagPixel</span></code>, cada uno conteniendo:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">id</span></code>: ID del tag detectado</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">posx</span></code> y <code class="docutils literal notranslate"><span class="pre">posy</span></code>: posición relativa respecto al tag 0 en metros (x hacia adelante, y hacia la izquierda)</p></li>
+</ul>
+<ol class="arabic simple" start="6">
+<li><p><strong>Visualización</strong></p></li>
+</ol>
+<p>La imagen corregida se muestra en una ventana con:</p>
+<ul class="simple">
+<li><p>Contornos de los tags</p></li>
+<li><p>Líneas entre tag 0 y los demás</p></li>
+<li><p>Texto con distancias relativas</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Nota</p>
+<p>Asegúrese de tener cargado un archivo YAML válido con la calibración de la cámara en la carpeta <code class="docutils literal notranslate"><span class="pre">config/</span></code> de su paquete.</p>
+</div>
 </section>
 <section id="codigos">
 <h3>Códigos<a class="headerlink" href="#codigos" title="Link to this heading"></a></h3>
 <div class="sphinx-tabs docutils container">
-<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-UHJvZ3JhbWEgMQ==" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-0-UHJvZ3JhbWEgMQ==" name="UHJvZ3JhbWEgMQ==" role="tab" tabindex="0">Programa 1</button><button aria-controls="panel-0-UHJvZ3JhbWEgMg==" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-0-UHJvZ3JhbWEgMg==" name="UHJvZ3JhbWEgMg==" role="tab" tabindex="-1">Programa 2</button><button aria-controls="panel-0-UHJvZ3JhbWEgMw==" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-0-UHJvZ3JhbWEgMw==" name="UHJvZ3JhbWEgMw==" role="tab" tabindex="-1">Programa 3</button><button aria-controls="panel-0-UHJvZ3JhbWEgNA==" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-0-UHJvZ3JhbWEgNA==" name="UHJvZ3JhbWEgNA==" role="tab" tabindex="-1">Programa 4</button><button aria-controls="panel-0-UHJvZ3JhbWEgNQ==" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-0-UHJvZ3JhbWEgNQ==" name="UHJvZ3JhbWEgNQ==" role="tab" tabindex="-1">Programa 5</button></div><div aria-labelledby="tab-0-UHJvZ3JhbWEgMQ==" class="sphinx-tabs-panel group-tab" id="panel-0-UHJvZ3JhbWEgMQ==" name="UHJvZ3JhbWEgMQ==" role="tabpanel" tabindex="0"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">cv2</span>
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-UHJvZ3JhbWEgMQ==" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-0-UHJvZ3JhbWEgMQ==" name="UHJvZ3JhbWEgMQ==" role="tab" tabindex="0">Programa 1</button><button aria-controls="panel-0-UHJvZ3JhbWEgMg==" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-0-UHJvZ3JhbWEgMg==" name="UHJvZ3JhbWEgMg==" role="tab" tabindex="-1">Programa 2</button><button aria-controls="panel-0-UHJvZ3JhbWEgMw==" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-0-UHJvZ3JhbWEgMw==" name="UHJvZ3JhbWEgMw==" role="tab" tabindex="-1">Programa 3</button><button aria-controls="panel-0-UHJvZ3JhbWEgNA==" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-0-UHJvZ3JhbWEgNA==" name="UHJvZ3JhbWEgNA==" role="tab" tabindex="-1">Programa 4</button><button aria-controls="panel-0-cDFfY2FtLnB5" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-0-cDFfY2FtLnB5" name="cDFfY2FtLnB5" role="tab" tabindex="-1">p1_cam.py</button></div><div aria-labelledby="tab-0-UHJvZ3JhbWEgMQ==" class="sphinx-tabs-panel group-tab" id="panel-0-UHJvZ3JhbWEgMQ==" name="UHJvZ3JhbWEgMQ==" role="tabpanel" tabindex="0"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">cv2</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 
 <span class="n">cap</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">VideoCapture</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
@@ -394,7 +496,180 @@
 <span class="n">cv2</span><span class="o">.</span><span class="n">destroyAllWindows</span><span class="p">()</span>
 </pre></div>
 </div>
-</div><div aria-labelledby="tab-0-UHJvZ3JhbWEgNQ==" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-0-UHJvZ3JhbWEgNQ==" name="UHJvZ3JhbWEgNQ==" role="tabpanel" tabindex="0"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">valor</span><span class="p">)</span>
+</div><div aria-labelledby="tab-0-cDFfY2FtLnB5" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-0-cDFfY2FtLnB5" name="cDFfY2FtLnB5" role="tabpanel" tabindex="0"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">cv2</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pupil_apriltags</span><span class="w"> </span><span class="kn">import</span> <span class="n">Detector</span>
+
+<span class="c1"># Transformaciones de la camara</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.spatial.transform</span><span class="w"> </span><span class="kn">import</span> <span class="n">Rotation</span> <span class="k">as</span> <span class="n">R</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">yaml</span>
+
+<span class="c1"># Manejo de ROS2</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">rclpy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rclpy.node</span><span class="w"> </span><span class="kn">import</span> <span class="n">Node</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">avig_msg.msg</span><span class="w"> </span><span class="kn">import</span> <span class="n">AprilTagPixel</span><span class="p">,</span><span class="n">AprilTagPixelArray</span>
+
+<span class="c1"># Rutas Absolutas del paquete</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ament_index_python.packages</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_package_share_directory</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">AprilTagPixelPublisher</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
+   <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s1">&#39;apriltag_cam&#39;</span><span class="p">)</span>
+
+      <span class="bp">self</span><span class="o">.</span><span class="n">publisher_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_publisher</span><span class="p">(</span><span class="n">AprilTagPixelArray</span><span class="p">,</span> <span class="s1">&#39;/apriltag_pixels&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+      <span class="c1"># Obtener ruta absoluta al paquete</span>
+      <span class="n">package_path</span> <span class="o">=</span> <span class="n">get_package_share_directory</span><span class="p">(</span><span class="s1">&#39;mi_pkg_python&#39;</span><span class="p">)</span>
+
+      <span class="c1"># Ruta completa al archivo de calibración</span>
+      <span class="n">yaml_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">package_path</span><span class="p">,</span> <span class="s1">&#39;config&#39;</span><span class="p">,</span> <span class="s1">&#39;camera_calibration.yaml&#39;</span><span class="p">)</span>
+
+      <span class="c1"># Cargar el YAML</span>
+      <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">yaml_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">calib_data</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+      <span class="bp">self</span><span class="o">.</span><span class="n">K</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">calib_data</span><span class="p">[</span><span class="s1">&#39;camera_matrix&#39;</span><span class="p">][</span><span class="s1">&#39;data&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">calib_data</span><span class="p">[</span><span class="s1">&#39;distortion_coefficients&#39;</span><span class="p">][</span><span class="s1">&#39;data&#39;</span><span class="p">])</span>
+
+      <span class="c1"># --- Parámetros del tag ---</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">tag_size</span> <span class="o">=</span> <span class="mf">0.08</span>  <span class="c1"># Tamaño del tag en metros (100 mm)</span>
+
+      <span class="bp">self</span><span class="o">.</span><span class="n">cap</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">VideoCapture</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+      <span class="c1"># Seteo de la ventana de IMSHOW</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">cap</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">cv2</span><span class="o">.</span><span class="n">CAP_PROP_FRAME_WIDTH</span><span class="p">,</span> <span class="mi">640</span><span class="p">)</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">cap</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">cv2</span><span class="o">.</span><span class="n">CAP_PROP_FRAME_HEIGHT</span><span class="p">,</span> <span class="mi">480</span><span class="p">)</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">cap</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">cv2</span><span class="o">.</span><span class="n">CAP_PROP_FPS</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
+
+      <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">cap</span><span class="o">.</span><span class="n">isOpened</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;No se pudo acceder a la cámara.&quot;</span><span class="p">)</span>
+            <span class="n">exit</span><span class="p">()</span>
+
+      <span class="bp">self</span><span class="o">.</span><span class="n">at_detector</span> <span class="o">=</span> <span class="n">Detector</span><span class="p">(</span><span class="n">families</span><span class="o">=</span><span class="s1">&#39;tag36h11&#39;</span><span class="p">,</span> <span class="n">nthreads</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+
+      <span class="c1"># Crear ventana redimensionable (solo si se usa visualización)</span>
+      <span class="n">cv2</span><span class="o">.</span><span class="n">namedWindow</span><span class="p">(</span><span class="s2">&quot;AprilTag View&quot;</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">WINDOW_NORMAL</span><span class="p">)</span>
+      <span class="n">cv2</span><span class="o">.</span><span class="n">resizeWindow</span><span class="p">(</span><span class="s2">&quot;AprilTag View&quot;</span><span class="p">,</span> <span class="mi">800</span><span class="p">,</span> <span class="mi">600</span><span class="p">)</span>
+
+      <span class="bp">self</span><span class="o">.</span><span class="n">timer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_timer</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="mf">30.0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">timer_callback</span><span class="p">)</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Nodo AprilTag CAM iniciado.&quot;</span><span class="p">)</span>
+
+   <span class="k">def</span><span class="w"> </span><span class="nf">timer_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="n">ret</span><span class="p">,</span> <span class="n">frame</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cap</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+      <span class="k">if</span> <span class="ow">not</span> <span class="n">ret</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot; No se pudo leer el frame.&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+
+      <span class="c1"># Corregir distorsión</span>
+      <span class="n">h</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span>
+      <span class="n">newcameramtx</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">getOptimalNewCameraMatrix</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">K</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dist</span><span class="p">,</span> <span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">))</span>
+      <span class="n">undistorted</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">undistort</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">K</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dist</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">newcameramtx</span><span class="p">)</span>
+
+      <span class="c1"># Convertir a escala de grises</span>
+      <span class="n">gray</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">cvtColor</span><span class="p">(</span><span class="n">undistorted</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">COLOR_BGR2GRAY</span><span class="p">)</span>
+
+      <span class="c1"># Detección</span>
+      <span class="n">tags</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">at_detector</span><span class="o">.</span><span class="n">detect</span><span class="p">(</span>
+            <span class="n">gray</span><span class="p">,</span>
+            <span class="n">estimate_tag_pose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">camera_params</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">K</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">K</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">K</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">K</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]),</span>
+            <span class="n">tag_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tag_size</span>
+      <span class="p">)</span>
+
+      <span class="n">tag_poses</span> <span class="o">=</span> <span class="p">{}</span>
+      <span class="n">tag_centers</span> <span class="o">=</span> <span class="p">{}</span>
+      <span class="n">tag_by_id</span> <span class="o">=</span> <span class="p">{}</span>
+
+      <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">tags</span><span class="p">:</span>
+            <span class="nb">id</span> <span class="o">=</span> <span class="n">tag</span><span class="o">.</span><span class="n">tag_id</span>
+            <span class="n">corners</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">(</span><span class="n">tag</span><span class="o">.</span><span class="n">corners</span><span class="p">)</span>
+            <span class="n">center</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">corners</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+
+            <span class="n">cv2</span><span class="o">.</span><span class="n">polylines</span><span class="p">(</span><span class="n">undistorted</span><span class="p">,</span> <span class="p">[</span><span class="n">corners</span><span class="p">],</span> <span class="kc">True</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="n">cv2</span><span class="o">.</span><span class="n">putText</span><span class="p">(</span><span class="n">undistorted</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;ID: </span><span class="si">{</span><span class="nb">id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">center</span><span class="p">),</span> <span class="n">cv2</span><span class="o">.</span><span class="n">FONT_HERSHEY_SIMPLEX</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
+
+            <span class="n">t</span> <span class="o">=</span> <span class="n">tag</span><span class="o">.</span><span class="n">pose_t</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span> <span class="o">*</span> <span class="mi">1000</span>  <span class="c1"># Convertir a mm</span>
+            <span class="n">tag_poses</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span> <span class="o">=</span> <span class="n">t</span>
+            <span class="n">tag_centers</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">center</span><span class="p">)</span>
+            <span class="n">tag_by_id</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span> <span class="o">=</span> <span class="n">tag</span>
+
+      <span class="n">msg_arreglo</span> <span class="o">=</span> <span class="n">AprilTagPixelArray</span><span class="p">()</span>
+
+      <span class="c1"># --- Transformación al marco del tag 0 ---</span>
+
+      <span class="k">if</span> <span class="mi">0</span> <span class="ow">in</span> <span class="n">tag_by_id</span><span class="p">:</span>
+            <span class="c1"># Obtener transformación del tag 0</span>
+            <span class="n">ref_tag</span> <span class="o">=</span> <span class="n">tag_by_id</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">R0</span> <span class="o">=</span> <span class="n">ref_tag</span><span class="o">.</span><span class="n">pose_R</span>
+            <span class="n">t0</span> <span class="o">=</span> <span class="n">ref_tag</span><span class="o">.</span><span class="n">pose_t</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">T0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">R0</span><span class="p">,</span> <span class="n">t0</span><span class="p">])</span>
+            <span class="n">T0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">T0</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]])</span>
+            <span class="n">T0_inv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">T0</span><span class="p">)</span>
+
+            <span class="c1"># Mostrar orientación del tag 0 (ángulos Euler)</span>
+            <span class="n">r_obj</span> <span class="o">=</span> <span class="n">R</span><span class="o">.</span><span class="n">from_matrix</span><span class="p">(</span><span class="n">R0</span><span class="p">)</span>
+            <span class="n">euler</span> <span class="o">=</span> <span class="n">r_obj</span><span class="o">.</span><span class="n">as_euler</span><span class="p">(</span><span class="s1">&#39;xyz&#39;</span><span class="p">,</span> <span class="n">degrees</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Orientación Tag 0 (Euler): Roll=</span><span class="si">{</span><span class="n">euler</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1">°, Pitch=</span><span class="si">{</span><span class="n">euler</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1">°, Yaw=</span><span class="si">{</span><span class="n">euler</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+            <span class="c1"># Calcular transformaciones relativas corregidas [mm]</span>
+
+            <span class="k">for</span> <span class="nb">id</span><span class="p">,</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">tag_by_id</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+               <span class="k">if</span> <span class="nb">id</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                  <span class="n">msg_0</span> <span class="o">=</span> <span class="n">AprilTagPixel</span><span class="p">()</span>
+                  <span class="n">msg_0</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="mi">0</span>
+                  <span class="n">msg_0</span><span class="o">.</span><span class="n">posx</span> <span class="o">=</span> <span class="mf">0.0</span>
+                  <span class="n">msg_0</span><span class="o">.</span><span class="n">posy</span> <span class="o">=</span> <span class="mf">0.0</span>
+                  <span class="k">continue</span>
+
+               <span class="n">R_tag</span> <span class="o">=</span> <span class="n">tag</span><span class="o">.</span><span class="n">pose_R</span>
+               <span class="n">t_tag</span> <span class="o">=</span> <span class="n">tag</span><span class="o">.</span><span class="n">pose_t</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+               <span class="n">T</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">R_tag</span><span class="p">,</span> <span class="n">t_tag</span><span class="p">])</span>
+               <span class="n">T</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">T</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]])</span>
+
+               <span class="n">T_rel</span> <span class="o">=</span> <span class="n">T0_inv</span> <span class="o">@</span> <span class="n">T</span>
+               <span class="n">t_rel</span> <span class="o">=</span> <span class="n">T_rel</span><span class="p">[:</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">*</span> <span class="mi">1000</span>  <span class="c1"># en mm</span>
+
+               <span class="c1"># creacion del tipo de mensaje AprilTagPixel()</span>
+               <span class="n">msg</span> <span class="o">=</span> <span class="n">AprilTagPixel</span><span class="p">()</span>
+               <span class="n">msg</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="nb">id</span>
+               <span class="n">msg</span><span class="o">.</span><span class="n">posx</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">t_rel</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mi">1000</span><span class="p">)</span>
+               <span class="n">msg</span><span class="o">.</span><span class="n">posy</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="o">-</span><span class="n">t_rel</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="mi">1000</span><span class="p">)</span>
+               <span class="n">msg_arreglo</span><span class="o">.</span><span class="n">tags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+               <span class="k">if</span> <span class="nb">id</span> <span class="ow">in</span> <span class="n">tag_centers</span> <span class="ow">and</span> <span class="mi">0</span> <span class="ow">in</span> <span class="n">tag_centers</span><span class="p">:</span>
+                  <span class="n">cv2</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="n">undistorted</span><span class="p">,</span> <span class="n">tag_centers</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">tag_centers</span><span class="p">[</span><span class="nb">id</span><span class="p">],</span> <span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
+                  <span class="n">cv2</span><span class="o">.</span><span class="n">putText</span><span class="p">(</span><span class="n">undistorted</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;0-&gt;</span><span class="si">{</span><span class="nb">id</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">t_rel</span><span class="p">[:</span><span class="mi">2</span><span class="p">])</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> mm&quot;</span><span class="p">,</span>
+                              <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">30</span> <span class="o">+</span> <span class="mi">30</span> <span class="o">*</span> <span class="nb">id</span><span class="p">),</span> <span class="n">cv2</span><span class="o">.</span><span class="n">FONT_HERSHEY_SIMPLEX</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
+
+      <span class="bp">self</span><span class="o">.</span><span class="n">publisher_data</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">msg_arreglo</span><span class="p">)</span>
+      <span class="c1"># Visualizacion</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">visualizar_detecciones</span><span class="p">(</span><span class="n">undistorted</span><span class="p">)</span>
+
+   <span class="k">def</span><span class="w"> </span><span class="nf">visualizar_detecciones</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frame</span><span class="p">):</span>
+      <span class="n">cv2</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="s2">&quot;AprilTag View&quot;</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
+      <span class="k">if</span> <span class="n">cv2</span><span class="o">.</span><span class="n">waitKey</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xFF</span> <span class="o">==</span> <span class="nb">ord</span><span class="p">(</span><span class="s1">&#39;q&#39;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot; &#39;q&#39; presionado. Saliendo.&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cap</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
+            <span class="n">cv2</span><span class="o">.</span><span class="n">destroyAllWindows</span><span class="p">()</span>
+            <span class="n">rclpy</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
+
+   <span class="k">def</span><span class="w"> </span><span class="nf">destroy_node</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">cap</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
+      <span class="n">cv2</span><span class="o">.</span><span class="n">destroyAllWindows</span><span class="p">()</span>
+      <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">destroy_node</span><span class="p">()</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+   <span class="n">rclpy</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">)</span>
+   <span class="n">node</span> <span class="o">=</span> <span class="n">AprilTagPixelPublisher</span><span class="p">()</span>
+   <span class="k">try</span><span class="p">:</span>
+      <span class="n">rclpy</span><span class="o">.</span><span class="n">spin</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+   <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
+      <span class="n">node</span><span class="o">.</span><span class="n">destroy_node</span><span class="p">()</span>
+      <span class="n">rclpy</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+   <span class="n">main</span><span class="p">()</span>
 </pre></div>
 </div>
 </div></div>
@@ -403,48 +678,140 @@
 <section id="publicacion-de-objetos-simulados">
 <h2>Publicación de objetos simulados<a class="headerlink" href="#publicacion-de-objetos-simulados" title="Link to this heading"></a></h2>
 <p>Los objetos que se visualicen a través de la cámara serán digitalizados y simulados en RVIZ2.</p>
+<p>Dependiendo del ID que tenga el tag, se realiza un cambio de color para distinguir la familia de tags relacionada con el tag_id 1 y el tag_id 2.</p>
+<p><strong>Código del proyecto:</strong> <code class="docutils literal notranslate"><span class="pre">p1_pub_obj.py</span></code></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">rclpy</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">rclpy.node</span><span class="w"> </span><span class="kn">import</span> <span class="n">Node</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">avig_msg.msg</span><span class="w"> </span><span class="kn">import</span> <span class="n">AprilTagPixelArray</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">visualization_msgs.msg</span><span class="w"> </span><span class="kn">import</span> <span class="n">Marker</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">geometry_msgs.msg</span><span class="w"> </span><span class="kn">import</span> <span class="n">Point</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">std_msgs.msg</span><span class="w"> </span><span class="kn">import</span> <span class="n">ColorRGBA</span>
+
+<span class="c1"># Publicador para el seteo del modelo URDF</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sensor_msgs.msg</span><span class="w"> </span><span class="kn">import</span> <span class="n">JointState</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">CuboPublisher</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s1">&#39;cubo_publisher&#39;</span><span class="p">)</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">publisher</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_publisher</span><span class="p">(</span><span class="n">Marker</span><span class="p">,</span> <span class="s1">&#39;visualization_marker&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+      <span class="c1"># Suscripcion</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">subscription</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_subscription</span><span class="p">(</span>
+            <span class="n">AprilTagPixelArray</span><span class="p">,</span>
+            <span class="s1">&#39;/apriltag_pixels&#39;</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">listener_callback</span><span class="p">,</span>
+            <span class="mi">1</span><span class="p">)</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">subscription</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">msg_cubos</span> <span class="o">=</span> <span class="kc">None</span>
+
+      <span class="c1"># Timer del publicador</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">timer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_timer</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">publicar_cubos</span><span class="p">)</span>
 
+   <span class="k">def</span><span class="w"> </span><span class="nf">listener_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">msg</span><span class="p">):</span>
+
+      <span class="c1"># Llegada del mensaje desde el nodo de la camara</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">msg_cubos</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">tags</span>
+
    <span class="k">def</span><span class="w"> </span><span class="nf">publicar_cubos</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-      <span class="n">posiciones</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
-      <span class="p">]</span>
+      <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">msg_cubos</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
 
-      <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">posiciones</span><span class="p">):</span>
-            <span class="n">cubo</span> <span class="o">=</span> <span class="n">Marker</span><span class="p">()</span>
-            <span class="n">cubo</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">frame_id</span> <span class="o">=</span> <span class="s1">&#39;world&#39;</span>
-            <span class="n">cubo</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">stamp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_clock</span><span class="p">()</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">to_msg</span><span class="p">()</span>
-            <span class="n">cubo</span><span class="o">.</span><span class="n">ns</span> <span class="o">=</span> <span class="s1">&#39;cubos&#39;</span>
-            <span class="n">cubo</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">i</span>
-            <span class="n">cubo</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">Marker</span><span class="o">.</span><span class="n">CUBE</span>
-            <span class="n">cubo</span><span class="o">.</span><span class="n">action</span> <span class="o">=</span> <span class="n">Marker</span><span class="o">.</span><span class="n">ADD</span>
-            <span class="n">cubo</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">x</span>
-            <span class="n">cubo</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">y</span>
-            <span class="n">cubo</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="n">z</span> <span class="o">+</span> <span class="mf">0.015</span>  <span class="c1"># para que se vea encima del suelo</span>
-            <span class="n">cubo</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">orientation</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="mf">0.0</span>
-            <span class="n">cubo</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">orientation</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="mf">0.0</span>
-            <span class="n">cubo</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">orientation</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="mf">0.0</span>
-            <span class="n">cubo</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">orientation</span><span class="o">.</span><span class="n">w</span> <span class="o">=</span> <span class="mf">1.0</span>
-            <span class="n">cubo</span><span class="o">.</span><span class="n">scale</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="mf">0.03</span>
-            <span class="n">cubo</span><span class="o">.</span><span class="n">scale</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="mf">0.03</span>
-            <span class="n">cubo</span><span class="o">.</span><span class="n">scale</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="mf">0.03</span>
-            <span class="n">cubo</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="n">ColorRGBA</span><span class="p">(</span><span class="n">r</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">g</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
-            <span class="n">cubo</span><span class="o">.</span><span class="n">lifetime</span><span class="o">.</span><span class="n">sec</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># 0 = permanente</span>
+            <span class="c1"># reviso el arreglo del tipo de mensajes apriltags</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">tag</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">msg_cubos</span><span class="p">):</span>
 
-            <span class="bp">self</span><span class="o">.</span><span class="n">publisher</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">cubo</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Cubo </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1"> publicado en (</span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">y</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">z</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span>
+               <span class="c1"># area de clasificacion TAG 1</span>
+               <span class="k">if</span> <span class="n">tag</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                  <span class="n">cubo</span> <span class="o">=</span> <span class="n">Marker</span><span class="p">()</span>
+                  <span class="n">cubo</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">frame_id</span> <span class="o">=</span> <span class="s1">&#39;world&#39;</span>
+                  <span class="n">cubo</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">stamp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_clock</span><span class="p">()</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">to_msg</span><span class="p">()</span>
+                  <span class="n">cubo</span><span class="o">.</span><span class="n">ns</span> <span class="o">=</span> <span class="s1">&#39;cubos&#39;</span>
+                  <span class="n">cubo</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">i</span>
+                  <span class="n">cubo</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">Marker</span><span class="o">.</span><span class="n">CUBE</span>
+                  <span class="n">cubo</span><span class="o">.</span><span class="n">action</span> <span class="o">=</span> <span class="n">Marker</span><span class="o">.</span><span class="n">ADD</span>
+                  <span class="n">cubo</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">tag</span><span class="o">.</span><span class="n">posx</span>
+                  <span class="n">cubo</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">tag</span><span class="o">.</span><span class="n">posy</span>
+                  <span class="n">cubo</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="mf">0.005</span>  <span class="c1"># para que se vea encima del suelo</span>
+                  <span class="n">cubo</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">orientation</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="mf">0.0</span>
+                  <span class="n">cubo</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">orientation</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="mf">0.0</span>
+                  <span class="n">cubo</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">orientation</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="mf">0.0</span>
+                  <span class="n">cubo</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">orientation</span><span class="o">.</span><span class="n">w</span> <span class="o">=</span> <span class="mf">1.0</span>
+                  <span class="n">cubo</span><span class="o">.</span><span class="n">scale</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="mf">0.10</span>
+                  <span class="n">cubo</span><span class="o">.</span><span class="n">scale</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="mf">0.10</span>
+                  <span class="n">cubo</span><span class="o">.</span><span class="n">scale</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="mf">0.01</span>
+                  <span class="n">cubo</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="n">ColorRGBA</span><span class="p">(</span><span class="n">r</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">g</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>
+                  <span class="n">cubo</span><span class="o">.</span><span class="n">lifetime</span><span class="o">.</span><span class="n">sec</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># 0 = permanente</span>
+                  <span class="bp">self</span><span class="o">.</span><span class="n">publisher</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">cubo</span><span class="p">)</span>
+
+               <span class="c1"># area de clasificacion TAG 2</span>
+
+               <span class="k">if</span> <span class="n">tag</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                  <span class="n">cubo</span> <span class="o">=</span> <span class="n">Marker</span><span class="p">()</span>
+                  <span class="n">cubo</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">frame_id</span> <span class="o">=</span> <span class="s1">&#39;world&#39;</span>
+                  <span class="n">cubo</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">stamp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_clock</span><span class="p">()</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">to_msg</span><span class="p">()</span>
+                  <span class="n">cubo</span><span class="o">.</span><span class="n">ns</span> <span class="o">=</span> <span class="s1">&#39;cubos&#39;</span>
+                  <span class="n">cubo</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">i</span>
+                  <span class="n">cubo</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">Marker</span><span class="o">.</span><span class="n">CUBE</span>
+                  <span class="n">cubo</span><span class="o">.</span><span class="n">action</span> <span class="o">=</span> <span class="n">Marker</span><span class="o">.</span><span class="n">ADD</span>
+                  <span class="n">cubo</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">tag</span><span class="o">.</span><span class="n">posx</span>
+                  <span class="n">cubo</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">tag</span><span class="o">.</span><span class="n">posy</span>
+                  <span class="n">cubo</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="mf">0.005</span>  <span class="c1"># para que se vea encima del suelo</span>
+                  <span class="n">cubo</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">orientation</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="mf">0.0</span>
+                  <span class="n">cubo</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">orientation</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="mf">0.0</span>
+                  <span class="n">cubo</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">orientation</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="mf">0.0</span>
+                  <span class="n">cubo</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">orientation</span><span class="o">.</span><span class="n">w</span> <span class="o">=</span> <span class="mf">1.0</span>
+                  <span class="n">cubo</span><span class="o">.</span><span class="n">scale</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="mf">0.10</span>
+                  <span class="n">cubo</span><span class="o">.</span><span class="n">scale</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="mf">0.10</span>
+                  <span class="n">cubo</span><span class="o">.</span><span class="n">scale</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="mf">0.01</span>
+                  <span class="n">cubo</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="n">ColorRGBA</span><span class="p">(</span><span class="n">r</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">g</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>
+                  <span class="n">cubo</span><span class="o">.</span><span class="n">lifetime</span><span class="o">.</span><span class="n">sec</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># 0 = permanente</span>
+                  <span class="bp">self</span><span class="o">.</span><span class="n">publisher</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">cubo</span><span class="p">)</span>
+
+               <span class="c1"># TAGs  compatibles con el TAG 1</span>
+               <span class="k">if</span> <span class="mi">10</span> <span class="o">&lt;=</span> <span class="n">tag</span><span class="o">.</span><span class="n">id</span> <span class="o">&lt;</span> <span class="mi">20</span><span class="p">:</span>
+                  <span class="n">cubo</span> <span class="o">=</span> <span class="n">Marker</span><span class="p">()</span>
+                  <span class="n">cubo</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">frame_id</span> <span class="o">=</span> <span class="s1">&#39;world&#39;</span>
+                  <span class="n">cubo</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">stamp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_clock</span><span class="p">()</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">to_msg</span><span class="p">()</span>
+                  <span class="n">cubo</span><span class="o">.</span><span class="n">ns</span> <span class="o">=</span> <span class="s1">&#39;cubos&#39;</span>
+                  <span class="n">cubo</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">i</span>
+                  <span class="n">cubo</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">Marker</span><span class="o">.</span><span class="n">CUBE</span>
+                  <span class="n">cubo</span><span class="o">.</span><span class="n">action</span> <span class="o">=</span> <span class="n">Marker</span><span class="o">.</span><span class="n">ADD</span>
+                  <span class="n">cubo</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">tag</span><span class="o">.</span><span class="n">posx</span>
+                  <span class="n">cubo</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">tag</span><span class="o">.</span><span class="n">posy</span>
+                  <span class="n">cubo</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="mf">0.015</span>  <span class="c1"># para que se vea encima del suelo</span>
+                  <span class="n">cubo</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">orientation</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="mf">0.0</span>
+                  <span class="n">cubo</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">orientation</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="mf">0.0</span>
+                  <span class="n">cubo</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">orientation</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="mf">0.0</span>
+                  <span class="n">cubo</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">orientation</span><span class="o">.</span><span class="n">w</span> <span class="o">=</span> <span class="mf">1.0</span>
+                  <span class="n">cubo</span><span class="o">.</span><span class="n">scale</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="mf">0.03</span>
+                  <span class="n">cubo</span><span class="o">.</span><span class="n">scale</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="mf">0.03</span>
+                  <span class="n">cubo</span><span class="o">.</span><span class="n">scale</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="mf">0.03</span>
+                  <span class="n">cubo</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="n">ColorRGBA</span><span class="p">(</span><span class="n">r</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">g</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+                  <span class="n">cubo</span><span class="o">.</span><span class="n">lifetime</span><span class="o">.</span><span class="n">sec</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># 0 = permanente</span>
+                  <span class="bp">self</span><span class="o">.</span><span class="n">publisher</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">cubo</span><span class="p">)</span>
+
+               <span class="c1"># TAGs  compatibles con el TAG 2</span>
+               <span class="k">if</span> <span class="mi">20</span> <span class="o">&lt;=</span> <span class="n">tag</span><span class="o">.</span><span class="n">id</span> <span class="o">&lt;</span> <span class="mi">30</span><span class="p">:</span>
+                  <span class="n">cubo</span> <span class="o">=</span> <span class="n">Marker</span><span class="p">()</span>
+                  <span class="n">cubo</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">frame_id</span> <span class="o">=</span> <span class="s1">&#39;world&#39;</span>
+                  <span class="n">cubo</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">stamp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_clock</span><span class="p">()</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">to_msg</span><span class="p">()</span>
+                  <span class="n">cubo</span><span class="o">.</span><span class="n">ns</span> <span class="o">=</span> <span class="s1">&#39;cubos&#39;</span>
+                  <span class="n">cubo</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">i</span>
+                  <span class="n">cubo</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">Marker</span><span class="o">.</span><span class="n">CUBE</span>
+                  <span class="n">cubo</span><span class="o">.</span><span class="n">action</span> <span class="o">=</span> <span class="n">Marker</span><span class="o">.</span><span class="n">ADD</span>
+                  <span class="n">cubo</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">tag</span><span class="o">.</span><span class="n">posx</span>
+                  <span class="n">cubo</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">tag</span><span class="o">.</span><span class="n">posy</span>
+                  <span class="n">cubo</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="mf">0.015</span>  <span class="c1"># para que se vea encima del suelo</span>
+                  <span class="n">cubo</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">orientation</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="mf">0.0</span>
+                  <span class="n">cubo</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">orientation</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="mf">0.0</span>
+                  <span class="n">cubo</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">orientation</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="mf">0.0</span>
+                  <span class="n">cubo</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">orientation</span><span class="o">.</span><span class="n">w</span> <span class="o">=</span> <span class="mf">1.0</span>
+                  <span class="n">cubo</span><span class="o">.</span><span class="n">scale</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="mf">0.03</span>
+                  <span class="n">cubo</span><span class="o">.</span><span class="n">scale</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="mf">0.03</span>
+                  <span class="n">cubo</span><span class="o">.</span><span class="n">scale</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="mf">0.03</span>
+                  <span class="n">cubo</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="n">ColorRGBA</span><span class="p">(</span><span class="n">r</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">g</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+                  <span class="n">cubo</span><span class="o">.</span><span class="n">lifetime</span><span class="o">.</span><span class="n">sec</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># 0 = permanente</span>
+                  <span class="bp">self</span><span class="o">.</span><span class="n">publisher</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">cubo</span><span class="p">)</span>
+
+
 
 <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
    <span class="n">rclpy</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">)</span>
@@ -455,8 +822,373 @@
 </pre></div>
 </div>
 </section>
+<section id="modificacion-de-servicios">
+<h2>Modificación de servicios<a class="headerlink" href="#modificacion-de-servicios" title="Link to this heading"></a></h2>
+<p>Para solucionar el problema de generar una heurística que permita la toma decisiones con respecto a que tag debe clasificar primero el sistema. Se crea un nuevo
+archivo srv <code class="docutils literal notranslate"><span class="pre">HeuristicaP</span></code> dentro del paquete <code class="docutils literal notranslate"><span class="pre">avig_msg</span></code>, teniendo de requermiento y respuesta un <code class="docutils literal notranslate"><span class="pre">AprilTagPixelArray</span></code>.</p>
+<p>Dado que en la sección de tutoriales se creó una solución para este problema, unicamente es necesario cambiar la respuesta del servidor en base al nuevo tipo de
+archivo srv</p>
+<p><strong>Código del proyecto</strong> <code class="docutils literal notranslate"><span class="pre">p1_heuristica_server.py</span></code></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">rclpy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rclpy.node</span><span class="w"> </span><span class="kn">import</span> <span class="n">Node</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">avig_msg.srv</span><span class="w"> </span><span class="kn">import</span> <span class="n">HeuristicaP</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">avig_msg.msg</span><span class="w"> </span><span class="kn">import</span> <span class="n">AprilTagPixel</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">EuristicaServer</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
+   <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+      <span class="c1"># Declaracion del nodo</span>
+      <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s1">&#39;euristica_server&#39;</span><span class="p">)</span>
+
+      <span class="c1"># Creacion del servicio</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">srv</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_service</span><span class="p">(</span><span class="n">HeuristicaP</span><span class="p">,</span> <span class="s1">&#39;/heuristica&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">heuristica_callback</span><span class="p">)</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Servicio Euristica listo.&#39;</span><span class="p">)</span>
+
+   <span class="k">def</span><span class="w"> </span><span class="nf">heuristica_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">response</span><span class="p">):</span>
+      <span class="n">tags</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">tags_in</span><span class="o">.</span><span class="n">tags</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Recibidos </span><span class="si">{</span><span class="n">tags</span><span class="si">}</span><span class="s2"> tags.&quot;</span><span class="p">)</span>
+
+      <span class="k">if</span> <span class="ow">not</span> <span class="n">tags</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;No se recibió ningún tag.&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">response</span>
+
+      <span class="n">tag1</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">tag</span> <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">tags</span> <span class="k">if</span> <span class="n">tag</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="mi">1</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span>
+      <span class="n">tag2</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">tag</span> <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">tags</span> <span class="k">if</span> <span class="n">tag</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="mi">2</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span>
+
+      <span class="k">if</span> <span class="n">tag1</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">tag2</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Faltan tag1 o tag2, no se puede continuar.&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">response</span>
+
+
+      <span class="n">tags_ordenados</span> <span class="o">=</span> <span class="p">[</span><span class="n">tag</span> <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">tags</span> <span class="k">if</span> <span class="n">tag</span><span class="o">.</span><span class="n">id</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">tag</span><span class="o">.</span><span class="n">id</span> <span class="o">!=</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">tag</span><span class="o">.</span><span class="n">id</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">]</span>
+
+      <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">tag</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">tags_ordenados</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Revisando el tag: </span><span class="si">{</span><span class="n">tag</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="mi">10</span> <span class="o">&lt;=</span> <span class="n">tag</span><span class="o">.</span><span class="n">id</span> <span class="o">&lt;</span> <span class="mi">20</span><span class="p">:</span>
+               <span class="n">tag</span><span class="o">.</span><span class="n">dist</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">tag</span><span class="o">.</span><span class="n">posx</span> <span class="o">-</span> <span class="n">tag1</span><span class="o">.</span><span class="n">posx</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">tag</span><span class="o">.</span><span class="n">posy</span> <span class="o">-</span> <span class="n">tag1</span><span class="o">.</span><span class="n">posy</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+               <span class="n">tag</span><span class="o">.</span><span class="n">dist</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">tag</span><span class="o">.</span><span class="n">posx</span> <span class="o">-</span> <span class="n">tag2</span><span class="o">.</span><span class="n">posx</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">tag</span><span class="o">.</span><span class="n">posy</span> <span class="o">-</span> <span class="n">tag2</span><span class="o">.</span><span class="n">posy</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Distancia del Tag: </span><span class="si">{</span><span class="n">tag</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2"> es </span><span class="si">{</span><span class="n">tag</span><span class="o">.</span><span class="n">dist</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+      <span class="c1"># Heurística: devolver el tag con menor coordenada posx</span>
+      <span class="n">tag_ordenado</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">tags_ordenados</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">dist</span><span class="p">)</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Revisando el tag: </span><span class="si">{</span><span class="n">tag_ordenado</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+      <span class="n">response</span><span class="o">.</span><span class="n">tags_out</span><span class="o">.</span><span class="n">tags</span> <span class="o">=</span> <span class="n">tag_ordenado</span>
+      <span class="k">return</span> <span class="n">response</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+   <span class="n">rclpy</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">)</span>
+   <span class="n">node</span> <span class="o">=</span> <span class="n">EuristicaServer</span><span class="p">()</span>
+   <span class="n">rclpy</span><span class="o">.</span><span class="n">spin</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+   <span class="n">rclpy</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+   <span class="n">main</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="cinematica-inversa">
+<h2>Cinemática Inversa<a class="headerlink" href="#cinematica-inversa" title="Link to this heading"></a></h2>
+<section id="modelo-geometrico">
+<h3>Modelo Geométrico<a class="headerlink" href="#modelo-geometrico" title="Link to this heading"></a></h3>
+<p>Se considera un manipulador plano con dos eslabones de longitud:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(l_1\)</span>: longitud del brazo</p></li>
+<li><p><span class="math notranslate nohighlight">\(l_2\)</span>: longitud del antebrazo</p></li>
+</ul>
+<p>Y dos articulaciones:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(q_1\)</span>: ángulo del primer eslabón respecto al eje X de <code class="docutils literal notranslate"><span class="pre">base_link</span></code></p></li>
+<li><p><span class="math notranslate nohighlight">\(q_2\)</span>: ángulo del segundo eslabón respecto al primero</p></li>
+</ul>
+<p>El extremo del robot (end-effector) está ubicado en el plano XY, y el origen del robot está desplazado desde el origen global (<code class="docutils literal notranslate"><span class="pre">world</span></code>) por:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(dx\)</span>: desplazamiento en X</p></li>
+<li><p><span class="math notranslate nohighlight">\(dy\)</span>: desplazamiento en Y</p></li>
+</ul>
+</section>
+<section id="formulacion">
+<h3>Formulación<a class="headerlink" href="#formulacion" title="Link to this heading"></a></h3>
+<p>Dado un punto deseado en coordenadas globales:</p>
+<div class="math notranslate nohighlight">
+\[(x_a, y_a)\]</div>
+<p>El primer paso es trasladar ese punto al marco del robot (<code class="docutils literal notranslate"><span class="pre">base_link</span></code>):</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}x_d = x_a - dx \\
+y_d = y_a - dy\end{split}\]</div>
+<p>A partir de este punto deseado relativo al marco base, se aplica la cinemática inversa para resolver los ángulos de las articulaciones.</p>
+<p>Se define:</p>
+<div class="math notranslate nohighlight">
+\[D = \frac{x_d^2 + y_d^2 - l_1^2 - l_2^2}{2 l_1 l_2}\]</div>
+<p>El ángulo <span class="math notranslate nohighlight">\(q_2\)</span> se obtiene mediante:</p>
+<div class="math notranslate nohighlight">
+\[q_2 = \arccos(D)\]</div>
+<p>Y el ángulo <span class="math notranslate nohighlight">\(q_1\)</span> se obtiene por:</p>
+<div class="math notranslate nohighlight">
+\[q_1 = \arctan2(y_d, x_d) - \arctan2(l_2 \sin(q_2), l_1 + l_2 \cos(q_2))\]</div>
+</section>
+<section id="restricciones">
+<h3>Restricciones<a class="headerlink" href="#restricciones" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>El valor absoluto de <span class="math notranslate nohighlight">\(D\)</span> debe ser menor o igual a 1 para garantizar solución real.</p></li>
+<li><p>Si <span class="math notranslate nohighlight">\(|D| &gt; 1\)</span>, el punto está fuera del alcance del robot.</p></li>
+</ul>
+</section>
+<section id="ejemplo-en-codigo">
+<h3>Ejemplo en Código<a class="headerlink" href="#ejemplo-en-codigo" title="Link to this heading"></a></h3>
+<p>Con el fin de automatizar el proceso de carga del desplazamiento del origen del URDF del robot SCARA creado, con respecto al april-tag 0, y de los eslabones correspondientes a q1 y q2,
+se implementa un algoritmo que a través del uso de TF2 carga automaticamente estos valores al lanzarse el launcher con el URDF y visualizador RVIZ.</p>
+<p><strong>Código del proyecto</strong> <code class="docutils literal notranslate"><span class="pre">p1_ci.py</span></code></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">rclpy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rclpy.node</span><span class="w"> </span><span class="kn">import</span> <span class="n">Node</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">geometry_msgs.msg</span><span class="w"> </span><span class="kn">import</span> <span class="n">TransformStamped</span><span class="p">,</span> <span class="n">Pose</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tf2_ros</span><span class="w"> </span><span class="kn">import</span> <span class="n">Buffer</span><span class="p">,</span> <span class="n">TransformListener</span><span class="p">,</span> <span class="n">LookupException</span><span class="p">,</span> <span class="n">TimeoutException</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">acos</span><span class="p">,</span> <span class="n">atan2</span><span class="p">,</span> <span class="n">sqrt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">CinematicaInversaTF</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
+   <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s1">&#39;cinematica_inversa_tf&#39;</span><span class="p">)</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">tf_buffer</span> <span class="o">=</span> <span class="n">Buffer</span><span class="p">()</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">tf_listener</span> <span class="o">=</span> <span class="n">TransformListener</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tf_buffer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+
+      <span class="bp">self</span><span class="o">.</span><span class="n">pub</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_publisher</span><span class="p">(</span><span class="n">Pose</span><span class="p">,</span> <span class="s1">&#39;/angulos_mov&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">sub</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_subscription</span><span class="p">(</span><span class="n">Pose</span><span class="p">,</span> <span class="s1">&#39;/puntos_ci&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">callback_ci</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+      <span class="bp">self</span><span class="o">.</span><span class="n">timer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_timer</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">obtener_parametros_robot</span><span class="p">)</span>
+
+      <span class="bp">self</span><span class="o">.</span><span class="n">dx</span> <span class="o">=</span> <span class="kc">None</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">dy</span> <span class="o">=</span> <span class="kc">None</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">l1</span> <span class="o">=</span> <span class="kc">None</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">l2</span> <span class="o">=</span> <span class="kc">None</span>
+
+   <span class="k">def</span><span class="w"> </span><span class="nf">obtener_parametros_robot</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="k">try</span><span class="p">:</span>
+            <span class="n">t0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tf_buffer</span><span class="o">.</span><span class="n">lookup_transform</span><span class="p">(</span><span class="s1">&#39;world&#39;</span><span class="p">,</span> <span class="s1">&#39;base_link&#39;</span><span class="p">,</span> <span class="n">rclpy</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">Time</span><span class="p">())</span>
+            <span class="n">t1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tf_buffer</span><span class="o">.</span><span class="n">lookup_transform</span><span class="p">(</span><span class="s1">&#39;brazo_link&#39;</span><span class="p">,</span> <span class="s1">&#39;antebrazo_link&#39;</span><span class="p">,</span> <span class="n">rclpy</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">Time</span><span class="p">())</span>
+            <span class="n">t2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tf_buffer</span><span class="o">.</span><span class="n">lookup_transform</span><span class="p">(</span><span class="s1">&#39;antebrazo_link&#39;</span><span class="p">,</span> <span class="s1">&#39;efector_link&#39;</span><span class="p">,</span> <span class="n">rclpy</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">Time</span><span class="p">())</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">dx</span> <span class="o">=</span> <span class="n">t0</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">translation</span><span class="o">.</span><span class="n">x</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dy</span> <span class="o">=</span> <span class="n">t0</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">translation</span><span class="o">.</span><span class="n">y</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">l1</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">t1</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">translation</span><span class="o">.</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">t1</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">translation</span><span class="o">.</span><span class="n">y</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">l2</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">t2</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">translation</span><span class="o">.</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">t2</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">translation</span><span class="o">.</span><span class="n">y</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Obtenido: l1=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">l1</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">, l2=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">l2</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">, dx=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dx</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">, dy=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dy</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">timer</span><span class="o">.</span><span class="n">cancel</span><span class="p">()</span>  <span class="c1"># Ya no es necesario repetir</span>
+
+      <span class="k">except</span> <span class="p">(</span><span class="n">LookupException</span><span class="p">,</span> <span class="n">TimeoutException</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Esperando transformaciones...&quot;</span><span class="p">)</span>
+
+   <span class="k">def</span><span class="w"> </span><span class="nf">callback_ci</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+      <span class="k">if</span> <span class="kc">None</span> <span class="ow">in</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dx</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dy</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">l1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">l2</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Parámetros del robot aún no disponibles.&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+
+      <span class="k">try</span><span class="p">:</span>
+            <span class="n">xa</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">x</span>
+            <span class="n">ya</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">y</span>
+
+            <span class="c1"># Convertir a sistema base_link</span>
+            <span class="n">xd</span> <span class="o">=</span> <span class="n">xa</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">dx</span>
+            <span class="n">yd</span> <span class="o">=</span> <span class="n">ya</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">dy</span>
+
+            <span class="n">D</span> <span class="o">=</span> <span class="p">(</span><span class="n">xd</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">yd</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">l1</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">l2</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">l1</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">l2</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">D</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+               <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Punto fuera del alcance geométrico.&quot;</span><span class="p">)</span>
+               <span class="k">return</span>
+
+            <span class="n">q2</span> <span class="o">=</span> <span class="n">acos</span><span class="p">(</span><span class="n">D</span><span class="p">)</span>
+            <span class="n">q1</span> <span class="o">=</span> <span class="n">atan2</span><span class="p">(</span><span class="n">yd</span><span class="p">,</span> <span class="n">xd</span><span class="p">)</span> <span class="o">-</span> <span class="n">atan2</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">l2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">q2</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">l1</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">l2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">q2</span><span class="p">))</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;q1 = </span><span class="si">{</span><span class="n">q1</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> rad, q2 = </span><span class="si">{</span><span class="n">q2</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> rad&quot;</span><span class="p">)</span>
+
+            <span class="n">msg_enviar</span> <span class="o">=</span> <span class="n">Pose</span><span class="p">()</span>
+            <span class="n">msg_enviar</span><span class="o">.</span><span class="n">orientation</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">q1</span>
+            <span class="n">msg_enviar</span><span class="o">.</span><span class="n">orientation</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">q2</span>
+            <span class="n">msg_enviar</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">z</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Enviando angulos </span><span class="si">{</span><span class="n">msg_enviar</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pub</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">msg_enviar</span><span class="p">)</span>
+
+      <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error en cinemática inversa: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+   <span class="n">rclpy</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">)</span>
+   <span class="n">node</span> <span class="o">=</span> <span class="n">CinematicaInversaTF</span><span class="p">()</span>
+   <span class="k">try</span><span class="p">:</span>
+      <span class="n">rclpy</span><span class="o">.</span><span class="n">spin</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+   <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
+      <span class="k">pass</span>
+   <span class="n">node</span><span class="o">.</span><span class="n">destroy_node</span><span class="p">()</span>
+   <span class="n">rclpy</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="conexion-ros2-esp32">
+<h2>Conexión ROS2 - ESP32<a class="headerlink" href="#conexion-ros2-esp32" title="Link to this heading"></a></h2>
+<p>Utilizando el archivo base de urdf-mqtt.py, se realizan las modificaciones necesarias para suscribirse a un topic, que publique los angulos que debe moverse cada juntas
+para alcanzar los diferentes objetos en el espacio de trabajo.</p>
+<p><strong>Código del proyecto</strong> <code class="docutils literal notranslate"><span class="pre">p1_puente.py</span></code></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">rclpy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rclpy.node</span><span class="w"> </span><span class="kn">import</span> <span class="n">Node</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rclpy.duration</span><span class="w"> </span><span class="kn">import</span> <span class="n">Duration</span>
+
+<span class="c1"># librerias soporte URDF</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">std_msgs.msg</span><span class="w"> </span><span class="kn">import</span> <span class="n">Float32</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sensor_msgs.msg</span><span class="w"> </span><span class="kn">import</span> <span class="n">JointState</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">geometry_msgs.msg</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pose</span>
+
+
+<span class="c1"># librerias MQTT</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">paho.mqtt.client</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mqtt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">MQTTBridge</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
+   <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s1">&#39;mqtt_bridge&#39;</span><span class="p">)</span>
+
+      <span class="c1"># Angulos del robot</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">real_q1</span> <span class="o">=</span> <span class="mf">0.0</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">real_q2</span> <span class="o">=</span> <span class="mf">0.0</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">real_q3</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+      <span class="bp">self</span><span class="o">.</span><span class="n">pub</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_publisher</span><span class="p">(</span> <span class="n">Float32</span><span class="p">,</span> <span class="s1">&#39;sensor_bateria&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">subscription</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_subscription</span><span class="p">(</span>
+            <span class="n">Pose</span><span class="p">,</span>
+            <span class="s1">&#39;/angulos_mov&#39;</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">listener_ros</span><span class="p">,</span> <span class="mi">1</span>
+            <span class="p">)</span>
+
+      <span class="bp">self</span><span class="o">.</span><span class="n">pub_joint</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_publisher</span><span class="p">(</span>
+            <span class="n">JointState</span><span class="p">,</span>
+            <span class="s1">&#39;/joint_states&#39;</span><span class="p">,</span>
+            <span class="mi">1</span>
+            <span class="p">)</span>
+
+
+      <span class="bp">self</span><span class="o">.</span><span class="n">last_data</span> <span class="o">=</span> <span class="kc">None</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">active</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># control de publicación activa</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">last_mqtt_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_clock</span><span class="p">()</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+
+      <span class="bp">self</span><span class="o">.</span><span class="n">timer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_timer</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">publish_sensor_data</span><span class="p">)</span>       <span class="c1"># Publicador (10 Hz)</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">timer_watchdog</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_timer</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_timeout</span><span class="p">)</span>    <span class="c1"># Verificador de tiempo</span>
+
+      <span class="bp">self</span><span class="o">.</span><span class="n">topic_sub</span> <span class="o">=</span> <span class="s2">&quot;ra/sensores&quot;</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">topic_pub</span> <span class="o">=</span> <span class="s2">&quot;ra/juntas&quot;</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">mqtt_client</span> <span class="o">=</span> <span class="n">mqtt</span><span class="o">.</span><span class="n">Client</span><span class="p">()</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">mqtt_client</span><span class="o">.</span><span class="n">on_connect</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">on_connect</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">mqtt_client</span><span class="o">.</span><span class="n">on_message</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">on_message</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">mqtt_client</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;192.168.100.180&quot;</span><span class="p">,</span> <span class="mi">1883</span><span class="p">,</span> <span class="mi">60</span><span class="p">)</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">mqtt_client</span><span class="o">.</span><span class="n">loop_start</span><span class="p">()</span>
+
+   <span class="k">def</span><span class="w"> </span><span class="nf">listener_ros</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+
+      <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Arrancando Puente&#39;</span><span class="p">)</span>
+
+      <span class="n">q1_mov</span> <span class="o">=</span> <span class="mf">0.0</span>
+      <span class="n">q2_mov</span> <span class="o">=</span> <span class="mf">0.0</span>
+      <span class="n">q3_mov</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+      <span class="c1"># Resolucion del stepper 0.9</span>
+      <span class="n">meta</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">orientation</span><span class="o">.</span><span class="n">x</span><span class="p">),</span><span class="mi">4</span><span class="p">)</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">real_q1</span><span class="p">,</span> <span class="n">q1_mov</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mover_a_angulo_discreto</span><span class="p">(</span><span class="n">meta</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">real_q1</span><span class="p">)</span>
+
+      <span class="n">meta</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">orientation</span><span class="o">.</span><span class="n">y</span><span class="p">),</span><span class="mi">4</span><span class="p">)</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">real_q2</span><span class="p">,</span> <span class="n">q2_mov</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mover_a_angulo_discreto</span><span class="p">(</span><span class="n">meta</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">real_q2</span><span class="p">)</span>
+
+      <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
+                  <span class="s2">&quot;q1&quot;</span><span class="p">:</span> <span class="n">q1_mov</span><span class="p">,</span>
+                  <span class="s2">&quot;q2&quot;</span><span class="p">:</span> <span class="n">q2_mov</span>
+                  <span class="p">}</span>
+
+      <span class="n">msg_j</span> <span class="o">=</span> <span class="n">JointState</span><span class="p">()</span>
+      <span class="n">msg_j</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">stamp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_clock</span><span class="p">()</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">to_msg</span><span class="p">()</span>
+      <span class="n">msg_j</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;brazo_joint&#39;</span><span class="p">,</span> <span class="s1">&#39;antebrazo_joint&#39;</span><span class="p">,</span> <span class="s1">&#39;efector_joint&#39;</span><span class="p">]</span>
+      <span class="n">msg_j</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="p">[</span><span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">real_q1</span><span class="p">),</span> <span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">real_q2</span><span class="p">),</span> <span class="n">msg</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">z</span><span class="p">]</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">pub_joint</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">msg_j</span><span class="p">)</span>
+
+      <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Postura inicial publicada.&#39;</span><span class="p">)</span>
+      <span class="n">msg_mqtt</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">mqtt_client</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">topic_pub</span><span class="p">,</span> <span class="n">msg_mqtt</span><span class="p">)</span>
+      <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Mensaje Enviado&quot;</span><span class="p">)</span>
+
+   <span class="k">def</span><span class="w"> </span><span class="nf">mover_a_angulo_discreto</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">angulo_objetivo</span><span class="p">,</span> <span class="n">angulo_actual</span><span class="p">,</span> <span class="n">paso</span><span class="o">=</span><span class="mf">0.9</span><span class="p">):</span>
+<span class="w">      </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">      Calcula el desplazamiento al múltiplo de &#39;paso&#39; más cercano al ángulo objetivo.</span>
+<span class="sd">      Retorna:</span>
+<span class="sd">            - el nuevo ángulo corregido (múltiplo de paso)</span>
+<span class="sd">            - el desplazamiento angular necesario desde el ángulo actual</span>
+<span class="sd">      &quot;&quot;&quot;</span>
+
+      <span class="c1"># Calcula desplazamiento</span>
+      <span class="n">desplazamiento</span> <span class="o">=</span> <span class="n">angulo_objetivo</span> <span class="o">-</span> <span class="n">angulo_actual</span>
+
+      <span class="c1"># Redondea el ángulo objetivo al múltiplo más cercano</span>
+      <span class="n">desplazamiento_valido</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">desplazamiento</span> <span class="o">/</span> <span class="n">paso</span><span class="p">)</span> <span class="o">*</span> <span class="n">paso</span>
+
+      <span class="n">meta_ajustada</span> <span class="o">=</span> <span class="n">angulo_actual</span> <span class="o">+</span> <span class="n">desplazamiento_valido</span>
+      <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[INFO] Objetivo :</span><span class="si">{</span><span class="n">angulo_objetivo</span><span class="si">}</span><span class="s2">°&quot;</span><span class="p">)</span>
+      <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[INFO] Objetivo ajustado: </span><span class="si">{</span><span class="n">meta_ajustada</span><span class="si">}</span><span class="s2">° (múltiplo de </span><span class="si">{</span><span class="n">paso</span><span class="si">}</span><span class="s2">°)&quot;</span><span class="p">)</span>
+      <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[INFO] Desplazamiento desde actual: </span><span class="si">{</span><span class="n">desplazamiento_valido</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">°&quot;</span><span class="p">)</span>
+
+      <span class="k">return</span> <span class="nb">round</span><span class="p">(</span><span class="n">meta_ajustada</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span> <span class="nb">round</span><span class="p">(</span><span class="n">desplazamiento_valido</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+
+
+   <span class="k">def</span><span class="w"> </span><span class="nf">on_connect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">userdata</span><span class="p">,</span> <span class="n">flags</span><span class="p">,</span> <span class="n">rc</span><span class="p">):</span>
+      <span class="k">if</span> <span class="n">rc</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Conectado al broker MQTT&quot;</span><span class="p">)</span>
+            <span class="n">client</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">topic_sub</span><span class="p">)</span>
+      <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error de conexión: código </span><span class="si">{</span><span class="n">rc</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+   <span class="k">def</span><span class="w"> </span><span class="nf">on_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">userdata</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+      <span class="k">try</span><span class="p">:</span>
+            <span class="n">mensaje</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">payload</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">mensaje</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">msg</span><span class="o">.</span><span class="n">topic</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">topic_sub</span><span class="p">:</span>
+               <span class="bp">self</span><span class="o">.</span><span class="n">last_data</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;bateria&quot;</span><span class="p">])</span>
+               <span class="bp">self</span><span class="o">.</span><span class="n">last_mqtt_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_clock</span><span class="p">()</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>  <span class="c1"># Actualiza tiempo del último dato</span>
+               <span class="bp">self</span><span class="o">.</span><span class="n">active</span> <span class="o">=</span> <span class="kc">True</span>
+      <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error procesando mensaje:&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+
+   <span class="k">def</span><span class="w"> </span><span class="nf">publish_sensor_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">active</span><span class="p">:</span>
+            <span class="n">ros_msg</span> <span class="o">=</span> <span class="n">Float32</span><span class="p">()</span>
+            <span class="n">ros_msg</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_data</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pub</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">ros_msg</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ROS2 publicó: </span><span class="si">{</span><span class="n">ros_msg</span><span class="o">.</span><span class="n">data</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+   <span class="k">def</span><span class="w"> </span><span class="nf">check_timeout</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="n">now</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_clock</span><span class="p">()</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+      <span class="k">if</span> <span class="n">now</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_mqtt_time</span> <span class="o">&gt;</span> <span class="n">Duration</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mf">2.0</span><span class="p">):</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">active</span><span class="p">:</span>
+               <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;No se reciben datos desde MQTT. Se detiene la publicación.&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">active</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+   <span class="n">rclpy</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">)</span>
+   <span class="n">node</span> <span class="o">=</span> <span class="n">MQTTBridge</span><span class="p">()</span>
+   <span class="k">try</span><span class="p">:</span>
+      <span class="n">rclpy</span><span class="o">.</span><span class="n">spin</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+   <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
+      <span class="k">pass</span>
+   <span class="n">rclpy</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
 <section id="modificacion-de-archivos-launch">
 <h2>Modificacion de archivos launch<a class="headerlink" href="#modificacion-de-archivos-launch" title="Link to this heading"></a></h2>
+<p>En el archivo launcher es necesario eliminar el slider creado para la manipulación del URDF, dado a que este ahora se moverá en base al
+algoritmo de control del sistema creado.</p>
+<p><strong>Código del proyecto</strong> <code class="docutils literal notranslate"><span class="pre">p1.launch.py</span></code></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Importa la clase principal para definir lanzamientos en ROS 2</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">launch</span><span class="w"> </span><span class="kn">import</span> <span class="n">LaunchDescription</span>
 
@@ -465,6 +1197,9 @@
 
 <span class="c1"># Permite obtener la ruta del directorio share de un paquete instalado</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">ament_index_python.packages</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_package_share_directory</span>
+
+<span class="c1"># Controlador de lanzamiento</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">launch.actions</span><span class="w"> </span><span class="kn">import</span> <span class="n">TimerAction</span>
 
 <span class="c1"># Módulo estándar para trabajar con rutas de archivos</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
@@ -489,14 +1224,6 @@
             <span class="n">parameters</span><span class="o">=</span><span class="p">[{</span><span class="s1">&#39;robot_description&#39;</span><span class="p">:</span> <span class="nb">open</span><span class="p">(</span><span class="n">urdf_file</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()}]</span>
       <span class="p">),</span>
 
-      <span class="c1"># Nodo que abre una interfaz gráfica con sliders para mover las juntas</span>
-      <span class="n">Node</span><span class="p">(</span>
-            <span class="n">package</span><span class="o">=</span><span class="s1">&#39;joint_state_publisher_gui&#39;</span><span class="p">,</span>
-            <span class="n">executable</span><span class="o">=</span><span class="s1">&#39;joint_state_publisher_gui&#39;</span><span class="p">,</span>
-            <span class="n">name</span><span class="o">=</span><span class="s1">&#39;joint_state_publisher_gui&#39;</span><span class="p">,</span>
-            <span class="n">output</span><span class="o">=</span><span class="s1">&#39;screen&#39;</span>
-      <span class="p">),</span>
-
       <span class="c1"># Nodo que lanza RViz2 para visualizar el robot</span>
       <span class="n">Node</span><span class="p">(</span>
             <span class="n">package</span><span class="o">=</span><span class="s1">&#39;rviz2&#39;</span><span class="p">,</span>
@@ -514,8 +1241,224 @@
                      <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span>        <span class="c1"># roll pitch yaw (en radianes)</span>
                      <span class="s1">&#39;world&#39;</span><span class="p">,</span> <span class="s1">&#39;base_link&#39;</span><span class="p">],</span> <span class="c1"># parent frame, child frame</span>
             <span class="n">output</span><span class="o">=</span><span class="s1">&#39;screen&#39;</span>
+      <span class="p">),</span>
+
+      <span class="c1"># Nodo personalizados</span>
+      <span class="n">Node</span><span class="p">(</span>
+            <span class="n">package</span><span class="o">=</span><span class="s1">&#39;mi_pkg_python&#39;</span><span class="p">,</span>
+            <span class="n">executable</span><span class="o">=</span><span class="s1">&#39;p1_pub_obj&#39;</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="s1">&#39;nodo_publicador_objetos&#39;</span><span class="p">,</span>
+            <span class="n">output</span><span class="o">=</span><span class="s1">&#39;screen&#39;</span>
+      <span class="p">),</span>
+
+      <span class="n">Node</span><span class="p">(</span>
+            <span class="n">package</span><span class="o">=</span><span class="s1">&#39;mi_pkg_python&#39;</span><span class="p">,</span>
+            <span class="n">executable</span><span class="o">=</span><span class="s1">&#39;p1_heur&#39;</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="s1">&#39;nodo_heuristica_server&#39;</span><span class="p">,</span>
+            <span class="n">output</span><span class="o">=</span><span class="s1">&#39;screen&#39;</span>
+      <span class="p">),</span>
+
+      <span class="n">Node</span><span class="p">(</span>
+            <span class="n">package</span><span class="o">=</span><span class="s1">&#39;mi_pkg_python&#39;</span><span class="p">,</span>
+            <span class="n">executable</span><span class="o">=</span><span class="s1">&#39;p1_ci&#39;</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="s1">&#39;nodo_ci&#39;</span><span class="p">,</span>
+            <span class="n">output</span><span class="o">=</span><span class="s1">&#39;screen&#39;</span>
+      <span class="p">),</span>
+
+      <span class="n">Node</span><span class="p">(</span>
+            <span class="n">package</span><span class="o">=</span><span class="s1">&#39;mi_pkg_python&#39;</span><span class="p">,</span>
+            <span class="n">executable</span><span class="o">=</span><span class="s1">&#39;p1_puente&#39;</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="s1">&#39;nodo_puente_mqtt&#39;</span><span class="p">,</span>
+            <span class="n">output</span><span class="o">=</span><span class="s1">&#39;screen&#39;</span>
+      <span class="p">),</span>
+
+      <span class="n">TimerAction</span><span class="p">(</span>
+            <span class="n">period</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span>  <span class="c1"># esperar 2 segundos</span>
+            <span class="n">actions</span><span class="o">=</span><span class="p">[</span>
+               <span class="n">Node</span><span class="p">(</span>
+                  <span class="n">package</span><span class="o">=</span><span class="s1">&#39;mi_pkg_python&#39;</span><span class="p">,</span>
+                  <span class="n">executable</span><span class="o">=</span><span class="s1">&#39;p1_set&#39;</span><span class="p">,</span>
+                  <span class="n">name</span><span class="o">=</span><span class="s1">&#39;init_joints&#39;</span><span class="p">,</span>
+                  <span class="n">output</span><span class="o">=</span><span class="s1">&#39;screen&#39;</span>
+               <span class="p">)</span>
+            <span class="p">]</span>
       <span class="p">)</span>
+
    <span class="p">])</span>
+</pre></div>
+</div>
+<p>Dado que, se han eliminado los slider es necesario crear un archivo que publique los valores iniciales de las juntas q1,q2 y q3.</p>
+<p><strong>Código del proyecto</strong> <code class="docutils literal notranslate"><span class="pre">p1_set.py</span></code></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">rclpy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rclpy.node</span><span class="w"> </span><span class="kn">import</span> <span class="n">Node</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sensor_msgs.msg</span><span class="w"> </span><span class="kn">import</span> <span class="n">JointState</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">JointInitializer</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
+   <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s1">&#39;init_joints&#39;</span><span class="p">)</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">publisher</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_publisher</span><span class="p">(</span><span class="n">JointState</span><span class="p">,</span> <span class="s1">&#39;/joint_states&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+      <span class="c1"># Publicar al iniciar</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">timer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_timer</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">publicar_posicion</span><span class="p">)</span>
+
+   <span class="k">def</span><span class="w"> </span><span class="nf">publicar_posicion</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="n">msg</span> <span class="o">=</span> <span class="n">JointState</span><span class="p">()</span>
+      <span class="n">msg</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">stamp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_clock</span><span class="p">()</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">to_msg</span><span class="p">()</span>
+      <span class="n">msg</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;brazo_joint&#39;</span><span class="p">,</span> <span class="s1">&#39;antebrazo_joint&#39;</span><span class="p">,</span> <span class="s1">&#39;efector_joint&#39;</span><span class="p">]</span>
+      <span class="n">msg</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">publisher</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Postura inicial publicada.&#39;</span><span class="p">)</span>
+      <span class="n">rclpy</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+   <span class="n">rclpy</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">)</span>
+   <span class="n">node</span> <span class="o">=</span> <span class="n">JointInitializer</span><span class="p">()</span>
+   <span class="n">rclpy</span><span class="o">.</span><span class="n">spin</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+   <span class="n">main</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="algoritmo-de-control-de-proceso">
+<h2>Algoritmo de control de proceso<a class="headerlink" href="#algoritmo-de-control-de-proceso" title="Link to this heading"></a></h2>
+<p>Para realizar el ejercicio de clasificación de objetos es necesario aplicar un algoritmo que permita serilizar el proceso que
+tendra que hacer el robot.</p>
+<p><strong>Código del proyecto</strong> <code class="docutils literal notranslate"><span class="pre">p1_coordinador.py</span></code></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">rclpy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rclpy.node</span><span class="w"> </span><span class="kn">import</span> <span class="n">Node</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rclpy.callback_groups</span><span class="w"> </span><span class="kn">import</span> <span class="n">ReentrantCallbackGroup</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">avig_msg.msg</span><span class="w"> </span><span class="kn">import</span> <span class="n">AprilTagPixelArray</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">avig_msg.srv</span><span class="w"> </span><span class="kn">import</span> <span class="n">HeuristicaP</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sensor_msgs.msg</span><span class="w"> </span><span class="kn">import</span> <span class="n">JointState</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">geometry_msgs.msg</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pose</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">NodoCoordinador</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
+   <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s1">&#39;nodo_coordinador&#39;</span><span class="p">)</span>
+
+      <span class="c1"># Tags puntos de almacenes</span>
+
+      <span class="bp">self</span><span class="o">.</span><span class="n">tag_id_1</span> <span class="o">=</span> <span class="kc">None</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">tag_id_2</span> <span class="o">=</span> <span class="kc">None</span>
+      <span class="c1"># Publicador para setear la posición inicial</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">pub_joint</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_publisher</span><span class="p">(</span><span class="n">JointState</span><span class="p">,</span> <span class="s1">&#39;/joint_states&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+      <span class="c1"># CI / Puente</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">pub_tra</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_publisher</span><span class="p">(</span><span class="n">Pose</span><span class="p">,</span> <span class="s1">&#39;/puntos_ci&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+      <span class="c1"># Cliente de servicio y acción</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">cli</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_client</span><span class="p">(</span><span class="n">HeuristicaP</span><span class="p">,</span> <span class="s1">&#39;/heuristica&#39;</span><span class="p">)</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">sub</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_subscription</span><span class="p">(</span>
+            <span class="n">AprilTagPixelArray</span><span class="p">,</span>
+            <span class="s1">&#39;/apriltag_pixels&#39;</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">callback_tags</span><span class="p">,</span>
+            <span class="mi">1</span>
+      <span class="p">)</span>
+
+      <span class="bp">self</span><span class="o">.</span><span class="n">ultima_data</span>    <span class="o">=</span> <span class="kc">None</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">proceso_activo</span> <span class="o">=</span> <span class="kc">False</span>
+
+      <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;P &quot;y&quot; para comenzar el proceso...&#39;</span><span class="p">)</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">esperar_input_usuario</span><span class="p">()</span>
+
+   <span class="k">def</span><span class="w"> </span><span class="nf">esperar_input_usuario</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="kn">import</span><span class="w"> </span><span class="nn">threading</span>
+
+      <span class="k">def</span><span class="w"> </span><span class="nf">esperar_tecla</span><span class="p">():</span>
+            <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+               <span class="n">tecla</span> <span class="o">=</span> <span class="nb">input</span><span class="p">()</span>
+               <span class="k">if</span> <span class="n">tecla</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span>
+                  <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Iniciando el proceso...&#39;</span><span class="p">)</span>
+                  <span class="bp">self</span><span class="o">.</span><span class="n">proceso_activo</span> <span class="o">=</span> <span class="kc">True</span>
+                  <span class="k">break</span>
+
+      <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">esperar_tecla</span><span class="p">,</span> <span class="n">daemon</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+   <span class="k">def</span><span class="w"> </span><span class="nf">setear_posicion_inicial</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="n">msg</span> <span class="o">=</span> <span class="n">JointState</span><span class="p">()</span>
+      <span class="n">msg</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">stamp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_clock</span><span class="p">()</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">to_msg</span><span class="p">()</span>
+      <span class="n">msg</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;brazo_joint&#39;</span><span class="p">,</span> <span class="s1">&#39;antebrazo_joint&#39;</span><span class="p">,</span> <span class="s1">&#39;efector_joint&#39;</span><span class="p">]</span>
+      <span class="n">msg</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">pub_joint</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+      <span class="c1">## Sleep de 2 segundos</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Posición inicial seteada.&#39;</span><span class="p">)</span>
+
+   <span class="k">def</span><span class="w"> </span><span class="nf">callback_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+      <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">proceso_activo</span><span class="p">:</span>
+            <span class="k">return</span>
+
+      <span class="n">tags</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">tags</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">tag_id_1</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">tag</span> <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">tags</span> <span class="k">if</span> <span class="n">tag</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="mi">1</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">tag_id_2</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">tag</span> <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">tags</span> <span class="k">if</span> <span class="n">tag</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="mi">2</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span>
+
+      <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tag_id_1</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">tag_id_2</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Faltan tag1 o tag2, no se puede continuar.&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">esperar_input_usuario</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">proceso_activo</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">return</span>
+
+      <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">cli</span><span class="o">.</span><span class="n">service_is_ready</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;Servicio no está disponible.&#39;</span><span class="p">)</span>
+            <span class="k">return</span>
+
+      <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">cli</span><span class="o">.</span><span class="n">wait_for_service</span><span class="p">(</span><span class="n">timeout_sec</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Timeout esperando servicio.&#39;</span><span class="p">)</span>
+            <span class="k">return</span>
+
+      <span class="n">request</span> <span class="o">=</span> <span class="n">HeuristicaP</span><span class="o">.</span><span class="n">Request</span><span class="p">()</span>
+      <span class="n">request</span><span class="o">.</span><span class="n">tags_in</span><span class="o">.</span><span class="n">tags</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">tags</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">proceso_activo</span> <span class="o">=</span> <span class="kc">False</span>
+
+      <span class="n">future</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cli</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+      <span class="n">future</span><span class="o">.</span><span class="n">add_done_callback</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">llamar_accion</span><span class="p">)</span>
+
+   <span class="k">def</span><span class="w"> </span><span class="nf">llamar_accion</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">future</span><span class="p">):</span>
+      <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Solocitando CI&#39;</span><span class="p">)</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">future</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
+
+            <span class="c1"># Envio de resultados el movimiento del primer valor</span>
+
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">tag</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">tags_out</span><span class="o">.</span><span class="n">tags</span><span class="p">):</span>
+               <span class="n">goal_msg</span> <span class="o">=</span> <span class="n">Pose</span><span class="p">()</span>
+               <span class="n">goal_msg</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">tag</span><span class="o">.</span><span class="n">posx</span>
+               <span class="n">goal_msg</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">tag</span><span class="o">.</span><span class="n">posy</span>
+               <span class="n">goal_msg</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="mf">0.0</span>
+               <span class="bp">self</span><span class="o">.</span><span class="n">pub_tra</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">goal_msg</span><span class="p">)</span>
+               <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+               <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Enviando objetivos al nodo CI 1 </span><span class="si">{</span><span class="n">goal_msg</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+               <span class="k">if</span> <span class="mi">10</span> <span class="o">&lt;=</span> <span class="n">tag</span><span class="o">.</span><span class="n">id</span> <span class="o">&lt;</span> <span class="mi">20</span><span class="p">:</span>
+                  <span class="n">goal_msg</span> <span class="o">=</span> <span class="n">Pose</span><span class="p">()</span>
+                  <span class="n">goal_msg</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tag_id_1</span><span class="o">.</span><span class="n">posx</span>
+                  <span class="n">goal_msg</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tag_id_1</span><span class="o">.</span><span class="n">posy</span>
+                  <span class="n">goal_msg</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="mf">0.03</span>
+                  <span class="bp">self</span><span class="o">.</span><span class="n">pub_tra</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">goal_msg</span><span class="p">)</span>
+                  <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+                  <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Enviando objetivos al nodo CI 1 </span><span class="si">{</span><span class="n">goal_msg</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Ejercicio completo</span><span class="si">{</span><span class="n">goal_msg</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">rclpy</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
+
+      <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Error en servicio Herustica: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+   <span class="n">rclpy</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">)</span>
+   <span class="n">node</span> <span class="o">=</span> <span class="n">NodoCoordinador</span><span class="p">()</span>
+   <span class="k">try</span><span class="p">:</span>
+      <span class="n">rclpy</span><span class="o">.</span><span class="n">spin</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+   <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
+      <span class="k">pass</span>
+   <span class="n">rclpy</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+   <span class="n">main</span><span class="p">()</span>
 </pre></div>
 </div>
 </section>
