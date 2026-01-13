@@ -1,0 +1,633 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="es" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Driver Industrial DM542T &mdash; documentación de ros2_espe - 0.1</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=9c9b61ad"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../_static/translations.js?v=f85f4cfb"></script>
+      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Índice" href="../../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../../search.html" />
+    <link rel="next" title="Gemelo Digital" href="gemelo.html" />
+    <link rel="prev" title="Archivos URDF" href="visualizacion_datos.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            ros2_espe
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Buscar documentos" aria-label="Buscar documentos" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Temas</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../tema_0/intro.html">¿Qué es ROS2?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tema_1/ubuntu_git.html">Ubuntu y GitHub</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tema_1/instalacionROS2.html">Instalación de ROS2 Humble</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tema_2/conceptos_basicos.html">Conceptos Básicos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tema_2/tutoriales.html">Tutoriales</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tema_3/dispositivos.html">Conexión con dispositivos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="visualizacion_datos.html">Archivos URDF</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Driver Industrial DM542T</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#arquitectura-interna-del-dm542t">Arquitectura interna del DM542T</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#entradas-y-salidas-del-dm542t">Entradas y salidas del DM542T</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#motor-nema23-con-reductora">Motor: NEMA23 con reductora</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#diagrama-de-conexion">Diagrama de conexión</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#configuracion-recomendada">Configuración recomendada</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#microstepping">Microstepping</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#corriente-del-motor-sw1sw3">Corriente del motor (SW1–SW3)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#ecuaciones">Ecuaciones</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#codigo-esp32-accelstepper-para-400-pulse-rev">Código ESP32 (AccelStepper) para 400 pulse/rev</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#diagnostico-rapido">Diagnóstico rápido</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="gemelo.html">Gemelo Digital</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Proyecto Aplicado</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tema_5/proyecto.html">Ejercicio práctico</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">ros2_espe</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Driver Industrial DM542T</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="driver-industrial-dm542t">
+<h1>Driver Industrial DM542T<a class="headerlink" href="#driver-industrial-dm542t" title="Link to this heading"></a></h1>
+<section id="arquitectura-interna-del-dm542t">
+<h2>Arquitectura interna del DM542T<a class="headerlink" href="#arquitectura-interna-del-dm542t" title="Link to this heading"></a></h2>
+<p>El DM542T es un <strong>driver digital de lazo abierto</strong> para motores paso a paso bipolares.</p>
+<p>Internamente contiene:</p>
+<ul class="simple">
+<li><p>Etapa de potencia con <strong>puentes H</strong> para dos bobinas (A y B)</p></li>
+<li><p>Control digital de corriente (PWM + control senoidal)</p></li>
+<li><p>Optoacopladores en entradas de control</p></li>
+<li><p>Lógica de conteo de pulsos STEP/DIR</p></li>
+<li><p>Protecciones internas:
+- Sobrecorriente
+- Sobretemperatura
+- Subtensión</p></li>
+</ul>
+<p>El driver <strong>NO conoce grados ni posiciones absolutas</strong>.
+Solo interpreta:
+- Pulsos
+- Sentido
+- Corriente configurada</p>
+<section id="entradas-y-salidas-del-dm542t">
+<h3>Entradas y salidas del DM542T<a class="headerlink" href="#entradas-y-salidas-del-dm542t" title="Link to this heading"></a></h3>
+<p>La bornera del DM542T se divide en:
+- <strong>Entradas de control (señales)</strong>
+- <strong>Salidas de potencia (motor)</strong>
+- <strong>Alimentación</strong>
+- <strong>Salida de estado/alarma</strong></p>
+<ol class="arabic simple">
+<li><p>Entradas de control: PUL (STEP)</p></li>
+</ol>
+<p>Terminales:
+- <strong>PUL+</strong>
+- <strong>PUL-</strong></p>
+<p><em>Función eléctrica</em></p>
+<ul class="simple">
+<li><p>Entrada a un <strong>optoacoplador</strong></p></li>
+<li><p>Cada transición activa del opto genera <strong>un incremento interno de contador</strong></p></li>
+</ul>
+<p><em>Función lógica</em>
+- <strong>Cada pulso STEP = un micro-paso</strong>
+- El tamaño del paso depende del microstepping configurado (SW5–SW8)</p>
+<p><em>Qué ocurre internamente</em>
+- El driver incrementa o decrementa el contador de posición interna
+- Actualiza las corrientes en las bobinas según la tabla senoidal</p>
+<p><em>Requisitos eléctricos</em>
+- Pulso mínimo típico: <strong>≥ 2.5 µs</strong>
+- Recomendado: <strong>5 µs o más</strong>
+- Frecuencia máxima típica: <strong>200 kHz</strong> (práctico mucho menor)</p>
+<p><em>En tu conexión con ESP32</em>
+Modo recomendado (prueba directa):</p>
+<dl class="simple">
+<dt>::</dt><dd><p>PUL- -&gt; GND ESP32
+PUL+ -&gt; GPIO STEP</p>
+</dd>
+</dl>
+<p><em>Qué pasa si no se conecta</em>
+- El motor <strong>no se mueve</strong>
+- El driver queda energizado pero sin comandos</p>
+<ol class="arabic simple" start="2">
+<li><p>Entradas de control: DIR (dirección)</p></li>
+</ol>
+<p>Terminales:
+- <strong>DIR+</strong>
+- <strong>DIR-</strong></p>
+<p><em>Función eléctrica</em>
+- Entrada optoacoplada
+- Nivel lógico estable (no pulso)</p>
+<p><em>Función lógica</em></p>
+<ul class="simple">
+<li><p>Define el <strong>sentido de conteo</strong> del contador interno:
+- HIGH → sentido A
+- LOW  → sentido B</p></li>
+</ul>
+<p><em>Cuándo se lee DIR</em>
+- El estado de DIR se muestrea <strong>antes del flanco activo del pulso STEP</strong></p>
+<p><em>En la práctica</em>
+- Cambia DIR
+- Espera unos microsegundos
+- Envía pulsos STEP</p>
+<p><em>En tu conexión con ESP32</em></p>
+<dl class="simple">
+<dt>::</dt><dd><p>DIR- -&gt; GND ESP32
+DIR+ -&gt; GPIO DIR</p>
+</dd>
+</dl>
+<p><em>Qué pasa si no se conecta</em>
+- El sentido queda indeterminado
+- Puede girar siempre en un solo sentido</p>
+<ol class="arabic simple" start="3">
+<li><p>Entradas de control: ENA (Enable)</p></li>
+</ol>
+<p>Terminales:
+- <strong>ENA+</strong>
+- <strong>ENA-</strong></p>
+<p><em>Función eléctrica</em>
+- Entrada optoacoplada
+- Controla la <strong>habilitación de la etapa de potencia</strong></p>
+<p><em>Función lógica</em></p>
+<ul class="simple">
+<li><p>Enable activo:
+- Driver energiza bobinas
+- Mantiene torque</p></li>
+<li><p>Enable inactivo:
+- Driver desenergiza bobinas
+- Motor queda libre</p></li>
+</ul>
+<p><em>Uso típico</em>
+- Seguridad
+- Parada de emergencia
+- Ahorro de energía</p>
+<p><em>Importante</em>
+- Algunos drivers consideran ENA activo en HIGH
+- Otros en LOW
+- Depende del cableado (common anode / common cathode)</p>
+<p><em>En la conexión con ESP32</em></p>
+<dl class="simple">
+<dt>::</dt><dd><p>ENA- -&gt; GND ESP32
+ENA+ -&gt; GPIO EN   (opcional)</p>
+</dd>
+</dl>
+<p><em>Si NO se usa</em>
+- Puede dejarse sin conectar
+- O fijarse siempre habilitado</p>
+<ol class="arabic simple" start="4">
+<li><p>Salida de estado: ALM (Alarm)</p></li>
+</ol>
+<p>Terminales:
+- <strong>ALM+</strong>
+- <strong>ALM-</strong></p>
+<p><em>Función eléctrica</em>
+- Salida optoacoplada (colector abierto)</p>
+<p><em>Función lógica</em></p>
+<ul class="simple">
+<li><p>Indica condición de fallo:
+- Sobrecorriente
+- Sobretemperatura
+- Error interno</p></li>
+</ul>
+<p><em>Uso típico</em>
+- Encender LED de fallo
+- Entrada a PLC o microcontrolador
+- Activar relé de seguridad</p>
+<p><em>En tu sistema</em>
+- <strong>No es necesaria para pruebas iniciales</strong>
+- Puede conectarse luego a una entrada GPIO</p>
+<ol class="arabic simple" start="5">
+<li><p>Salidas de potencia: Motor</p></li>
+</ol>
+<p>Terminales:
+- <strong>A+ / A-</strong>
+- <strong>B+ / B-</strong></p>
+<p><em>Función</em>
+- Alimentan las dos bobinas del motor paso a paso bipolar</p>
+<p><em>Importante</em>
+- A y B deben ser <strong>pares reales de bobina</strong></p>
+<ul class="simple">
+<li><p>Si se cruzan:
+- El motor vibra
+- No gira correctamente</p></li>
+</ul>
+<p><em>Identificación de bobinas</em>
+- Medir continuidad con multímetro
+- Cada bobina tiene baja resistencia (≈1–2 Ω)</p>
+<ol class="arabic simple" start="6">
+<li><p>Alimentación del driver</p></li>
+</ol>
+<p>Terminales:
+- <strong>+Vdc</strong>
+- <strong>GND</strong></p>
+<p><em>Función</em>
+- Alimenta la etapa de potencia y control del driver</p>
+<p><em>Valores permitidos</em>
+- Típico: <strong>20–50 V DC</strong>
+- Recomendado para tu caso: <strong>24 V DC</strong></p>
+<p><em>Importante</em>
+- <strong>NO es la alimentación lógica</strong>
+- <strong>NO conectar 5 V aquí</strong></p>
+</section>
+</section>
+<section id="motor-nema23-con-reductora">
+<h2>Motor: NEMA23 con reductora<a class="headerlink" href="#motor-nema23-con-reductora" title="Link to this heading"></a></h2>
+<p>Modelo: <strong>23HS22-2804S-PG47</strong></p>
+<ul class="simple">
+<li><p>Motor paso a paso típico: <strong>1.8° por paso</strong> (200 pasos por vuelta del eje del motor).</p></li>
+<li><p>Reductora: <strong>PG47</strong> (aprox. <strong>47:1</strong>).</p></li>
+<li><p>La reductora incrementa el torque disponible en la salida y reduce la velocidad.</p></li>
+<li><p>La reductora también introduce <strong>backlash (juego mecánico)</strong>, por lo que la precisión final depende más de la mecánica que del microstepping alto.</p></li>
+</ul>
+</section>
+<section id="diagrama-de-conexion">
+<h2>Diagrama de conexión<a class="headerlink" href="#diagrama-de-conexion" title="Link to this heading"></a></h2>
+<figure class="align-default" id="id1">
+<img alt="Imagen" src="../../_images/driver.png" />
+<figcaption>
+<p><span class="caption-text">Imagen</span><a class="headerlink" href="#id1" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<ol class="arabic simple">
+<li><p>Alimentación 24V al DM542T</p></li>
+</ol>
+<p>Conectar la fuente <strong>24V DC</strong> al driver:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Fuente</span> <span class="mi">24</span><span class="n">V</span> <span class="p">(</span><span class="o">+</span><span class="p">)</span>  <span class="o">-&gt;</span>  <span class="o">+</span><span class="n">Vdc</span>  <span class="p">(</span><span class="n">DM542T</span><span class="p">)</span>
+<span class="n">Fuente</span> <span class="mi">24</span><span class="n">V</span> <span class="p">(</span><span class="o">-</span><span class="p">)</span>  <span class="o">-&gt;</span>  <span class="n">GND</span>   <span class="p">(</span><span class="n">DM542T</span><span class="p">)</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>Conexión del motor (bobinas)</p></li>
+</ol>
+<p>Conectar las bobinas del motor a los bornes del driver:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">A</span><span class="o">+</span>  <span class="n">A</span><span class="o">-</span>   <span class="p">(</span><span class="n">Bobina</span> <span class="n">A</span><span class="p">)</span>
+<span class="n">B</span><span class="o">+</span>  <span class="n">B</span><span class="o">-</span>   <span class="p">(</span><span class="n">Bobina</span> <span class="n">B</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Truco</p>
+<p>Si el motor vibra pero no gira, es probable que las bobinas estén cruzadas.
+Identifica pares de bobina con multímetro (continuidad/resistencia) y conecta cada par a A y B.</p>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>Señales STEP/DIR/ENA (modo «common-cathode»)</p></li>
+</ol>
+<p>Para una prueba directa desde la ESP32, se recomienda usar un común a tierra en los terminales negativos:</p>
+<p>Conectar a GND común:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">DM542T</span> <span class="n">PUL</span><span class="o">-</span>  <span class="o">-&gt;</span> <span class="n">GND</span> <span class="n">ESP32</span>
+<span class="n">DM542T</span> <span class="n">DIR</span><span class="o">-</span>  <span class="o">-&gt;</span> <span class="n">GND</span> <span class="n">ESP32</span>
+<span class="n">DM542T</span> <span class="n">ENA</span><span class="o">-</span>  <span class="o">-&gt;</span> <span class="n">GND</span> <span class="n">ESP32</span>   <span class="p">(</span><span class="n">opcional</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Conectar señales desde la ESP32:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ESP32</span> <span class="n">GPIO_STEP</span> <span class="o">-&gt;</span> <span class="n">DM542T</span> <span class="n">PUL</span><span class="o">+</span>
+<span class="n">ESP32</span> <span class="n">GPIO_DIR</span>  <span class="o">-&gt;</span> <span class="n">DM542T</span> <span class="n">DIR</span><span class="o">+</span>
+<span class="n">ESP32</span> <span class="n">GPIO_EN</span>   <span class="o">-&gt;</span> <span class="n">DM542T</span> <span class="n">ENA</span><span class="o">+</span> <span class="p">(</span><span class="n">opcional</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Pines sugeridos (pueden cambiarse):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">STEP</span> <span class="o">=</span> <span class="n">GPIO</span> <span class="mi">25</span>
+<span class="n">DIR</span>  <span class="o">=</span> <span class="n">GPIO</span> <span class="mi">26</span>
+<span class="n">EN</span>   <span class="o">=</span> <span class="n">GPIO</span> <span class="mi">27</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Advertencia</p>
+<p>Si el driver no detecta correctamente el 3.3V del ESP32 (optoacoplador requiere más corriente/voltaje),
+será necesario usar adaptación (NPN o ULN). Esta guía inicia con prueba directa.</p>
+</div>
+</section>
+<section id="configuracion-recomendada">
+<h2>Configuración recomendada<a class="headerlink" href="#configuracion-recomendada" title="Link to this heading"></a></h2>
+<p>Configurar el driver para que <strong>Pulse/rev = 400</strong>:</p>
+<ul class="simple">
+<li><p><strong>SW5 = OFF</strong></p></li>
+<li><p><strong>SW6 = ON</strong></p></li>
+<li><p><strong>SW7 = ON</strong></p></li>
+<li><p><strong>SW8 = ON</strong></p></li>
+</ul>
+<section id="microstepping">
+<h3>Microstepping<a class="headerlink" href="#microstepping" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p>Paso real vs resolución de comando</p></li>
+</ol>
+<ul class="simple">
+<li><p>El motor tiene <strong>posiciones estables</strong> determinadas por su geometría: para 1.8°:
+- <strong>200 pasos por vuelta</strong> del eje del motor.</p></li>
+<li><p>El <strong>microstepping</strong> no cambia la geometría del motor; el driver:
+- Interpola corrientes entre bobinas para posicionar el rotor <em>entre</em> pasos.
+- Mejora suavidad, reduce vibración/ruido.
+- Reduce el torque por micro-paso (posición intermedia es menos rígida).</p></li>
+</ul>
+<ol class="arabic simple" start="2">
+<li><p>¿Por qué existen microsteppings altos (hasta 25600)?</p></li>
+</ol>
+<ul class="simple">
+<li><p>Para suavidad extrema y reducción de resonancia, especialmente en aplicaciones CNC/ópticas.</p></li>
+<li><p>Para compatibilidad con controladores/PLCs que trabajan con resoluciones específicas.</p></li>
+<li><p>Contras principales:
+- Menor torque incremental por micro-paso.
+- Menor velocidad máxima por aumento de pulsos requeridos.
+- No mejora la precisión final si existe backlash/flexión mecánica.</p></li>
+</ul>
+<div class="admonition important">
+<p class="admonition-title">Importante</p>
+<p>En sistemas con reductora (como PG47), normalmente basta con <strong>200 o 400 pulse/rev</strong> para excelente desempeño.</p>
+</div>
+</section>
+<section id="corriente-del-motor-sw1sw3">
+<h3>Corriente del motor (SW1–SW3)<a class="headerlink" href="#corriente-del-motor-sw1sw3" title="Link to this heading"></a></h3>
+<p>El motor indicado suele ser alrededor de <strong>2.8A RMS</strong> nominal.
+Una configuración segura y práctica es ajustar cerca pero ligeramente por debajo (reduce calentamiento y protege el sistema).</p>
+<p>Configuración sugerida:</p>
+<ul class="simple">
+<li><p><strong>SW1 = ON</strong></p></li>
+<li><p><strong>SW2 = OFF</strong></p></li>
+<li><p><strong>SW3 = OFF</strong></p></li>
+</ul>
+<p>Reducción de corriente en reposo (SW4)</p>
+<ul class="simple">
+<li><p><strong>SW4 = OFF</strong> (Half Current en reposo)
+- Menos calentamiento mientras el motor está detenido.
+- Recomendado para pruebas y uso general.</p></li>
+</ul>
+<p>Resumen final de switches</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">SW1</span> <span class="n">ON</span>
+<span class="n">SW2</span> <span class="n">OFF</span>
+<span class="n">SW3</span> <span class="n">OFF</span>
+<span class="n">SW4</span> <span class="n">OFF</span>
+<span class="n">SW5</span> <span class="n">OFF</span>
+<span class="n">SW6</span> <span class="n">ON</span>
+<span class="n">SW7</span> <span class="n">ON</span>
+<span class="n">SW8</span> <span class="n">ON</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="ecuaciones">
+<h2>Ecuaciones<a class="headerlink" href="#ecuaciones" title="Link to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p>Pasos por vuelta del motor (1.8°)</p></li>
+</ol>
+<p>Ángulo por paso:</p>
+<div class="math notranslate nohighlight">
+\[\theta_{paso} = 1.8^\circ\]</div>
+<p>Pasos por vuelta del motor:</p>
+<div class="math notranslate nohighlight">
+\[N_{motor} = \frac{360^\circ}{\theta_{paso}} = \frac{360}{1.8} = 200\]</div>
+<ol class="arabic simple" start="2">
+<li><p>Pulsos por vuelta del motor con microstepping</p></li>
+</ol>
+<p>Sea:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(M\)</span> = factor de microstepping (full step: 1, half: 2, quarter: 4, etc.)</p></li>
+</ul>
+<p>Entonces:</p>
+<div class="math notranslate nohighlight">
+\[N_{pulsos\_motor} = N_{motor} \times M\]</div>
+<p>Para <strong>400 pulse/rev</strong>:</p>
+<div class="math notranslate nohighlight">
+\[M = 2 \Rightarrow N_{pulsos\_motor} = 200 \times 2 = 400\]</div>
+<ol class="arabic simple" start="3">
+<li><p>Pulsos por vuelta en la salida con reductora PG47</p></li>
+</ol>
+<p>Sea:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(R = 47\)</span> relación de reducción.</p></li>
+</ul>
+<p>Entonces:</p>
+<div class="math notranslate nohighlight">
+\[N_{salida} = N_{pulsos\_motor} \times R\]</div>
+<p>Con 400 pulse/rev motor:</p>
+<div class="math notranslate nohighlight">
+\[N_{salida} = 400 \times 47 = 18800\]</div>
+<ol class="arabic simple" start="4">
+<li><p>Resolución angular de comando en la salida</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[\theta_{res\_salida} = \frac{360^\circ}{N_{salida}}\]</div>
+<p>Para el caso:</p>
+<div class="math notranslate nohighlight">
+\[\theta_{res\_salida} = \frac{360}{18800} \approx 0.019^\circ\]</div>
+<ol class="arabic simple" start="5">
+<li><p>Conversión: grados → pulsos (salida)</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[P = \frac{\theta}{360^\circ} \times N_{salida}\]</div>
+<p>Ejemplo 90°:</p>
+<div class="math notranslate nohighlight">
+\[P = \frac{90}{360} \times 18800 = 4700\]</div>
+<ol class="arabic simple" start="6">
+<li><p>Conversión: pulsos → grados (salida)</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[\theta = \frac{P}{N_{salida}} \times 360^\circ\]</div>
+<ol class="arabic simple" start="7">
+<li><p>Velocidad: frecuencia de pulso → RPM de salida</p></li>
+</ol>
+<p>Sea:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(f_{step}\)</span> frecuencia de pulsos STEP (Hz = pulsos/seg)</p></li>
+</ul>
+<p>Entonces:</p>
+<div class="math notranslate nohighlight">
+\[RPM_{salida} = \frac{f_{step}}{N_{salida}} \times 60\]</div>
+<p>Ejemplo con 2000 Hz:</p>
+<div class="math notranslate nohighlight">
+\[RPM_{salida} = \frac{2000}{18800}\times 60 \approx 6.38\]</div>
+<ol class="arabic simple" start="8">
+<li><p>Relación RMS y pico del driver (referencia)</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[I_{peak} \approx I_{RMS}\times 1.4\]</div>
+</section>
+<section id="codigo-esp32-accelstepper-para-400-pulse-rev">
+<h2>Código ESP32 (AccelStepper) para 400 pulse/rev<a class="headerlink" href="#codigo-esp32-accelstepper-para-400-pulse-rev" title="Link to this heading"></a></h2>
+<p>Requisitos:</p>
+<ul class="simple">
+<li><p>Arduino IDE</p></li>
+<li><p>Placa ESP32 con <strong>core 3.x</strong></p></li>
+<li><p>Librería <strong>AccelStepper</strong></p></li>
+</ul>
+<p>El siguiente ejemplo:</p>
+<ul class="simple">
+<li><p>Asume el DM542T configurado a <strong>400 pulse/rev</strong> del motor.</p></li>
+<li><p>Calcula pulsos por vuelta de salida con <span class="math notranslate nohighlight">\(R=47\)</span>.</p></li>
+<li><p>Mueve +90° y vuelve a 0° usando aceleración.</p></li>
+</ul>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;Arduino.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;AccelStepper.h&gt;</span>
+
+<span class="c1">// --------------------</span>
+<span class="c1">// Pines ESP32</span>
+<span class="c1">// --------------------</span>
+<span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">PIN_STEP</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">25</span><span class="p">;</span><span class="w">  </span><span class="c1">// -&gt; PUL+</span>
+<span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">PIN_DIR</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="mi">26</span><span class="p">;</span><span class="w">  </span><span class="c1">// -&gt; DIR+</span>
+<span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">PIN_EN</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="mi">27</span><span class="p">;</span><span class="w">  </span><span class="c1">// -&gt; ENA+ (opcional)</span>
+
+<span class="c1">// --------------------</span>
+<span class="c1">// Configuración: 400 pulse/rev del motor (por DIP SW5..SW8)</span>
+<span class="c1">// Reductora: PG47 ~ 47:1</span>
+<span class="c1">// --------------------</span>
+<span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">PULSES_PER_REV_MOTOR</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">400</span><span class="p">;</span>
+<span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">GEAR_RATIO</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">47.0f</span><span class="p">;</span>
+
+<span class="c1">// Pulsos por vuelta del eje de salida (aprox)</span>
+<span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">PULSES_PER_REV_OUT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">long</span><span class="p">)(</span><span class="n">PULSES_PER_REV_MOTOR</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">GEAR_RATIO</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mf">0.5f</span><span class="p">);</span>
+
+<span class="c1">// Driver en modo STEP/DIR</span>
+<span class="n">AccelStepper</span><span class="w"> </span><span class="nf">stepper</span><span class="p">(</span><span class="n">AccelStepper</span><span class="o">::</span><span class="n">DRIVER</span><span class="p">,</span><span class="w"> </span><span class="n">PIN_STEP</span><span class="p">,</span><span class="w"> </span><span class="n">PIN_DIR</span><span class="p">);</span>
+
+<span class="c1">// Convierte grados del eje de salida a pulsos</span>
+<span class="kt">long</span><span class="w"> </span><span class="nf">outDegreesToPulses</span><span class="p">(</span><span class="kt">float</span><span class="w"> </span><span class="n">deg_out</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kt">float</span><span class="w"> </span><span class="n">pulses</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">deg_out</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mf">360.0f</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="kt">float</span><span class="p">)</span><span class="n">PULSES_PER_REV_OUT</span><span class="p">;</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">lroundf</span><span class="p">(</span><span class="n">pulses</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">setup</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">Serial</span><span class="p">.</span><span class="n">begin</span><span class="p">(</span><span class="mi">115200</span><span class="p">);</span>
+
+<span class="w">  </span><span class="n">pinMode</span><span class="p">(</span><span class="n">PIN_EN</span><span class="p">,</span><span class="w"> </span><span class="n">OUTPUT</span><span class="p">);</span>
+
+<span class="w">  </span><span class="c1">// ENA: según el cableado del enable del driver, puede requerir invertir</span>
+<span class="w">  </span><span class="c1">// Para esta prueba, iniciamos habilitado en HIGH.</span>
+<span class="w">  </span><span class="n">digitalWrite</span><span class="p">(</span><span class="n">PIN_EN</span><span class="p">,</span><span class="w"> </span><span class="n">HIGH</span><span class="p">);</span>
+
+<span class="w">  </span><span class="c1">// Ajustes AccelStepper</span>
+<span class="w">  </span><span class="n">stepper</span><span class="p">.</span><span class="n">setMaxSpeed</span><span class="p">(</span><span class="mi">2000</span><span class="p">);</span><span class="w">       </span><span class="c1">// pulsos/seg</span>
+<span class="w">  </span><span class="n">stepper</span><span class="p">.</span><span class="n">setAcceleration</span><span class="p">(</span><span class="mi">1500</span><span class="p">);</span><span class="w">   </span><span class="c1">// pulsos/seg^2</span>
+<span class="w">  </span><span class="n">stepper</span><span class="p">.</span><span class="n">setMinPulseWidth</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span><span class="w">     </span><span class="c1">// us (pulso seguro)</span>
+
+<span class="w">  </span><span class="n">stepper</span><span class="p">.</span><span class="n">setCurrentPosition</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+
+<span class="w">  </span><span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="s">&quot;DM542T + ESP32 listo (400 pulse/rev motor).&quot;</span><span class="p">);</span>
+<span class="w">  </span><span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;Pulsos/vuelta salida aprox: &quot;</span><span class="p">);</span>
+<span class="w">  </span><span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="n">PULSES_PER_REV_OUT</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">loop</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kt">long</span><span class="w"> </span><span class="n">p90</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">outDegreesToPulses</span><span class="p">(</span><span class="mf">90.0f</span><span class="p">);</span>
+
+<span class="w">  </span><span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="s">&quot;Moviendo +90° (salida)...&quot;</span><span class="p">);</span>
+<span class="w">  </span><span class="n">stepper</span><span class="p">.</span><span class="n">moveTo</span><span class="p">(</span><span class="n">p90</span><span class="p">);</span>
+<span class="w">  </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">stepper</span><span class="p">.</span><span class="n">distanceToGo</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">stepper</span><span class="p">.</span><span class="n">run</span><span class="p">();</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="n">delay</span><span class="p">(</span><span class="mi">500</span><span class="p">);</span>
+
+<span class="w">  </span><span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="s">&quot;Volviendo a 0° (salida)...&quot;</span><span class="p">);</span>
+<span class="w">  </span><span class="n">stepper</span><span class="p">.</span><span class="n">moveTo</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="w">  </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">stepper</span><span class="p">.</span><span class="n">distanceToGo</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">stepper</span><span class="p">.</span><span class="n">run</span><span class="p">();</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="n">delay</span><span class="p">(</span><span class="mi">1000</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="diagnostico-rapido">
+<h2>Diagnóstico rápido<a class="headerlink" href="#diagnostico-rapido" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Si el motor no se mueve:
+- Confirma <strong>24V</strong> en +Vdc/GND.
+- Confirma <strong>GND común</strong> entre ESP32 y DM542T (PUL-/DIR-/ENA- a GND ESP32).</p>
+<ul>
+<li><p>Prueba invertir enable:
+- cambiar <code class="docutils literal notranslate"><span class="pre">digitalWrite(PIN_EN,</span> <span class="pre">HIGH);</span></code> por <code class="docutils literal notranslate"><span class="pre">digitalWrite(PIN_EN,</span> <span class="pre">LOW);</span></code></p></li>
+<li><p>Reduce velocidad:
+- <code class="docutils literal notranslate"><span class="pre">setMaxSpeed(800);</span></code> y <code class="docutils literal notranslate"><span class="pre">setAcceleration(400);</span></code></p></li>
+</ul>
+</li>
+<li><p>Si vibra pero no gira:
+- Verifica pares de bobina y conexión A/B.</p></li>
+<li><p>Si responde de forma intermitente:
+- El 3.3V puede ser insuficiente para el opto; usar etapa NPN/ULN.</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Pie de página">
+        <a href="visualizacion_datos.html" class="btn btn-neutral float-left" title="Archivos URDF" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Anterior</a>
+        <a href="gemelo.html" class="btn btn-neutral float-right" title="Gemelo Digital" accesskey="n" rel="next">Siguiente <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Derechos de autor 2025, AvigTech.</p>
+  </div>
+
+  Compilado con <a href="https://www.sphinx-doc.org/">Sphinx</a> usando un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">tema</a>
+    proporcionado por <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
