@@ -23,7 +23,9 @@ Contenido
    documentos/tema_2/tutoriales
    documentos/tema_3/dispositivos
    documentos/tema_4/visualizacion_datos
+   documentos/tema_4/driver_gemelo
    documentos/tema_4/gemelo
+   
 
 .. toctree::
    :maxdepth: 2
