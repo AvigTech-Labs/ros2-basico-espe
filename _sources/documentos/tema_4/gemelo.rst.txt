@@ -258,17 +258,38 @@ El código se datalla a continuación:
          #include <PubSubClient.h>
          #include <WiFi.h>
          #include <ArduinoJson.h>
-
          #include <AccelStepper.h>
 
          // Pines motores paso a paso
-         #define STEP1 18
-         #define DIR1  19
-         #define STEP2 22
-         #define DIR2  23
+         #define STEP2 18
+         #define DIR2  19
+         #define STEP3 22
+         #define DIR3  23
 
-         AccelStepper motor1(AccelStepper::DRIVER, STEP1, DIR1);  // Q1
-         AccelStepper motor2(AccelStepper::DRIVER, STEP2, DIR2);  // Q2
+         // Pines Driver
+         static const int PIN_STEP = 25;  // -> PUL+
+         static const int PIN_DIR  = 27;  // -> DIR+
+
+         // --------------------
+         // Config según tu DIP: 400 pulse/rev (del motor)
+         // Reductora: PG47  46.656:1
+         // --------------------
+
+         static const long PULSES_PER_REV_MOTOR = 400;
+         static const float GEAR_RATIO = 46.656f;
+
+         static const long PULSES_PER_REV_OUT = (long)(PULSES_PER_REV_MOTOR * GEAR_RATIO);
+
+         // Convierte grados del eje de salida a pulsos
+         long outDegreesToPulses(float deg_out) {
+         float pulses = (deg_out / 360.0f) * (float)PULSES_PER_REV_OUT;
+         return lroundf(pulses);
+         }
+
+         AccelStepper motor1(AccelStepper::DRIVER, PIN_STEP, PIN_DIR);
+         AccelStepper motor2(AccelStepper::DRIVER, STEP2, DIR2);  // Q1
+         AccelStepper motor3(AccelStepper::DRIVER, STEP3, DIR3);  // Q2
+
 
          float gradosPorPaso = 0.9;
 
@@ -280,12 +301,12 @@ El código se datalla a continuación:
          // GPIO de salidad Digital
          int pin_led   = 2;
 
-         //  Credenciales Wifi 
+         //  Credenciales Wifi
          const char* ssid = "CARMEN GONZALEZ_";
          const char* password = "123wa321vg";
 
          // Credenciales MQTT
-         const char* mqtt_broker = "192.168.100.178";
+         const char* mqtt_broker = "192.168.100.76";
          const int mqtt_port     = 1883;
          const char* cliente     = "rm1_esp32";
 
@@ -314,18 +335,31 @@ El código se datalla a continuación:
          conexion();
          // Manejo del rele
          pinMode(pin_led, OUTPUT);
-         motor1.setMaxSpeed(200);     // Ajusta a tus necesidades
-         motor1.setAcceleration(100); 
-         motor1.setPinsInverted(true, false, false); // 
-         motor2.setMaxSpeed(200);
-         motor2.setAcceleration(100);
-            
+
+         // NEMA 23
+         // AccelStepper
+         motor1.setMaxSpeed(4665.6);       // pulsos/seg (ojo: a mayor, más exigente)
+         motor1.setAcceleration(3110);   // pulsos/seg^2
+         motor1.setMinPulseWidth(5);     // us (seguro para DM542T)
+
+         // NEMA 17
+         motor2.setMaxSpeed(99.9);     
+         motor2.setAcceleration(66.7);
+         motor2.setPinsInverted(true, false, false); //
+         motor3.setMaxSpeed(200);
+         motor3.setAcceleration(100);
+
+         // Referencia inicial (si estás arrancando desde "cero")
+         motor1.setCurrentPosition(0);
+         motor2.setCurrentPosition(0);
+         motor3.setCurrentPosition(0);
          }
 
          void loop() {
          Loop_MQTT();
          motor1.run();
          motor2.run();
+         motor3.run();
 
          if (millis() - lastTime >= 100){
             estado = 1;
@@ -336,12 +370,12 @@ El código se datalla a continuación:
          }
          if (activar == 1){
             digitalWrite(pin_led, HIGH);  // Enciende el LED
-            
+
             }
          else {
             digitalWrite(pin_led, LOW);  // Enciende el LED
          }
-         
+
          }
 
 
@@ -391,7 +425,7 @@ El código se datalla a continuación:
          }
 
          void Loop_MQTT() {
-         // Manejo MQTT 
+         // Manejo MQTT
          if (!client.connected()) {
             reconnect();
          }
@@ -412,10 +446,10 @@ El código se datalla a continuación:
             mensaje["ultra"]   = ultra;
             String mensaje_json;
             serializeJson(mensaje, mensaje_json);
-            client.publish(mqtt_topic_publicar, mensaje_json.c_str(), 1);
+            client.publish(mqtt_topic_publicar, mensaje_json.c_str(), false);
          }
-         
-         
+
+
          }
 
          void callback(char* topic, byte* payload, unsigned int length) {
@@ -434,25 +468,36 @@ El código se datalla a continuación:
 
          String topico(topic);
          if (topico == "ra/juntas") {
-            if (doc.containsKey("q1") && doc.containsKey("q2")) {
-               float q1 = doc["q1"];
-               float q2 = doc["q2"];
+            if (doc.containsKey("q1") && doc.containsKey("q2") && doc.containsKey("q3")) {
+               float q1 = doc["q1"]; // NEMA 23
+               float q2 = doc["q2"]; // NEMA 17
+               float q3 = doc["q3"]; // NEMA 17
 
-               int pasos1 = round(q1 / gradosPorPaso);
+               long pasos1 = outDegreesToPulses(q1);
                int pasos2 = round(q2 / gradosPorPaso);
-
-               motor1.move(pasos1);
-               motor2.move(pasos2);
+               int pasos3 = round(q3 / gradosPorPaso);
 
                Serial.print("Recibido q1: ");
                Serial.print(q1);
                Serial.print(" → pasos: ");
-               Serial.println(pasos1);
+               Serial.print(pasos1);
+
 
                Serial.print("Recibido q2: ");
                Serial.print(q2);
                Serial.print(" → pasos: ");
-               Serial.println(pasos2);
+               Serial.print(pasos2);
+
+               Serial.print(" Recibido q3: ");
+               Serial.print(q3);
+               Serial.print(" → pasos: ");
+               Serial.println(pasos3);
+               
+               // movimiento q1
+               motor1.move(pasos1);
+               // Movimiento NEMA Q2 y Q3
+               motor2.move(pasos2);
+               motor3.move(pasos3);
             }
 
             if (doc.containsKey("avanzar")) {

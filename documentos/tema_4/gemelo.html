@@ -389,17 +389,38 @@ suavemente</p></td>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;PubSubClient.h&gt;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;WiFi.h&gt;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ArduinoJson.h&gt;</span>
-
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;AccelStepper.h&gt;</span>
 
 <span class="c1">// Pines motores paso a paso</span>
-<span class="cp">#define STEP1 18</span>
-<span class="cp">#define DIR1  19</span>
-<span class="cp">#define STEP2 22</span>
-<span class="cp">#define DIR2  23</span>
+<span class="cp">#define STEP2 18</span>
+<span class="cp">#define DIR2  19</span>
+<span class="cp">#define STEP3 22</span>
+<span class="cp">#define DIR3  23</span>
 
-<span class="n">AccelStepper</span><span class="w"> </span><span class="nf">motor1</span><span class="p">(</span><span class="n">AccelStepper</span><span class="o">::</span><span class="n">DRIVER</span><span class="p">,</span><span class="w"> </span><span class="n">STEP1</span><span class="p">,</span><span class="w"> </span><span class="n">DIR1</span><span class="p">);</span><span class="w">  </span><span class="c1">// Q1</span>
-<span class="n">AccelStepper</span><span class="w"> </span><span class="nf">motor2</span><span class="p">(</span><span class="n">AccelStepper</span><span class="o">::</span><span class="n">DRIVER</span><span class="p">,</span><span class="w"> </span><span class="n">STEP2</span><span class="p">,</span><span class="w"> </span><span class="n">DIR2</span><span class="p">);</span><span class="w">  </span><span class="c1">// Q2</span>
+<span class="c1">// Pines Driver</span>
+<span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">PIN_STEP</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">25</span><span class="p">;</span><span class="w">  </span><span class="c1">// -&gt; PUL+</span>
+<span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">PIN_DIR</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="mi">27</span><span class="p">;</span><span class="w">  </span><span class="c1">// -&gt; DIR+</span>
+
+<span class="c1">// --------------------</span>
+<span class="c1">// Config según tu DIP: 400 pulse/rev (del motor)</span>
+<span class="c1">// Reductora: PG47  46.656:1</span>
+<span class="c1">// --------------------</span>
+
+<span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">PULSES_PER_REV_MOTOR</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">400</span><span class="p">;</span>
+<span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">GEAR_RATIO</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">46.656f</span><span class="p">;</span>
+
+<span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">PULSES_PER_REV_OUT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">long</span><span class="p">)(</span><span class="n">PULSES_PER_REV_MOTOR</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">GEAR_RATIO</span><span class="p">);</span>
+
+<span class="c1">// Convierte grados del eje de salida a pulsos</span>
+<span class="kt">long</span><span class="w"> </span><span class="nf">outDegreesToPulses</span><span class="p">(</span><span class="kt">float</span><span class="w"> </span><span class="n">deg_out</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="kt">float</span><span class="w"> </span><span class="n">pulses</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">deg_out</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mf">360.0f</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="kt">float</span><span class="p">)</span><span class="n">PULSES_PER_REV_OUT</span><span class="p">;</span>
+<span class="k">return</span><span class="w"> </span><span class="n">lroundf</span><span class="p">(</span><span class="n">pulses</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">AccelStepper</span><span class="w"> </span><span class="nf">motor1</span><span class="p">(</span><span class="n">AccelStepper</span><span class="o">::</span><span class="n">DRIVER</span><span class="p">,</span><span class="w"> </span><span class="n">PIN_STEP</span><span class="p">,</span><span class="w"> </span><span class="n">PIN_DIR</span><span class="p">);</span>
+<span class="n">AccelStepper</span><span class="w"> </span><span class="nf">motor2</span><span class="p">(</span><span class="n">AccelStepper</span><span class="o">::</span><span class="n">DRIVER</span><span class="p">,</span><span class="w"> </span><span class="n">STEP2</span><span class="p">,</span><span class="w"> </span><span class="n">DIR2</span><span class="p">);</span><span class="w">  </span><span class="c1">// Q1</span>
+<span class="n">AccelStepper</span><span class="w"> </span><span class="nf">motor3</span><span class="p">(</span><span class="n">AccelStepper</span><span class="o">::</span><span class="n">DRIVER</span><span class="p">,</span><span class="w"> </span><span class="n">STEP3</span><span class="p">,</span><span class="w"> </span><span class="n">DIR3</span><span class="p">);</span><span class="w">  </span><span class="c1">// Q2</span>
+
 
 <span class="kt">float</span><span class="w"> </span><span class="n">gradosPorPaso</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.9</span><span class="p">;</span>
 
@@ -416,7 +437,7 @@ suavemente</p></td>
 <span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">password</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;123wa321vg&quot;</span><span class="p">;</span>
 
 <span class="c1">// Credenciales MQTT</span>
-<span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">mqtt_broker</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;192.168.100.178&quot;</span><span class="p">;</span>
+<span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">mqtt_broker</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;192.168.100.76&quot;</span><span class="p">;</span>
 <span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">mqtt_port</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="mi">1883</span><span class="p">;</span>
 <span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">cliente</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;rm1_esp32&quot;</span><span class="p">;</span>
 
@@ -445,18 +466,31 @@ suavemente</p></td>
 <span class="n">conexion</span><span class="p">();</span>
 <span class="c1">// Manejo del rele</span>
 <span class="n">pinMode</span><span class="p">(</span><span class="n">pin_led</span><span class="p">,</span><span class="w"> </span><span class="n">OUTPUT</span><span class="p">);</span>
-<span class="n">motor1</span><span class="p">.</span><span class="n">setMaxSpeed</span><span class="p">(</span><span class="mi">200</span><span class="p">);</span><span class="w">     </span><span class="c1">// Ajusta a tus necesidades</span>
-<span class="n">motor1</span><span class="p">.</span><span class="n">setAcceleration</span><span class="p">(</span><span class="mi">100</span><span class="p">);</span>
-<span class="n">motor1</span><span class="p">.</span><span class="n">setPinsInverted</span><span class="p">(</span><span class="nb">true</span><span class="p">,</span><span class="w"> </span><span class="nb">false</span><span class="p">,</span><span class="w"> </span><span class="nb">false</span><span class="p">);</span><span class="w"> </span><span class="c1">//</span>
-<span class="n">motor2</span><span class="p">.</span><span class="n">setMaxSpeed</span><span class="p">(</span><span class="mi">200</span><span class="p">);</span>
-<span class="n">motor2</span><span class="p">.</span><span class="n">setAcceleration</span><span class="p">(</span><span class="mi">100</span><span class="p">);</span>
 
+<span class="c1">// NEMA 23</span>
+<span class="c1">// AccelStepper</span>
+<span class="n">motor1</span><span class="p">.</span><span class="n">setMaxSpeed</span><span class="p">(</span><span class="mf">4665.6</span><span class="p">);</span><span class="w">       </span><span class="c1">// pulsos/seg (ojo: a mayor, más exigente)</span>
+<span class="n">motor1</span><span class="p">.</span><span class="n">setAcceleration</span><span class="p">(</span><span class="mi">3110</span><span class="p">);</span><span class="w">   </span><span class="c1">// pulsos/seg^2</span>
+<span class="n">motor1</span><span class="p">.</span><span class="n">setMinPulseWidth</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span><span class="w">     </span><span class="c1">// us (seguro para DM542T)</span>
+
+<span class="c1">// NEMA 17</span>
+<span class="n">motor2</span><span class="p">.</span><span class="n">setMaxSpeed</span><span class="p">(</span><span class="mf">99.9</span><span class="p">);</span>
+<span class="n">motor2</span><span class="p">.</span><span class="n">setAcceleration</span><span class="p">(</span><span class="mf">66.7</span><span class="p">);</span>
+<span class="n">motor2</span><span class="p">.</span><span class="n">setPinsInverted</span><span class="p">(</span><span class="nb">true</span><span class="p">,</span><span class="w"> </span><span class="nb">false</span><span class="p">,</span><span class="w"> </span><span class="nb">false</span><span class="p">);</span><span class="w"> </span><span class="c1">//</span>
+<span class="n">motor3</span><span class="p">.</span><span class="n">setMaxSpeed</span><span class="p">(</span><span class="mi">200</span><span class="p">);</span>
+<span class="n">motor3</span><span class="p">.</span><span class="n">setAcceleration</span><span class="p">(</span><span class="mi">100</span><span class="p">);</span>
+
+<span class="c1">// Referencia inicial (si estás arrancando desde &quot;cero&quot;)</span>
+<span class="n">motor1</span><span class="p">.</span><span class="n">setCurrentPosition</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="n">motor2</span><span class="p">.</span><span class="n">setCurrentPosition</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="n">motor3</span><span class="p">.</span><span class="n">setCurrentPosition</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
 <span class="p">}</span>
 
 <span class="kt">void</span><span class="w"> </span><span class="nf">loop</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="n">Loop_MQTT</span><span class="p">();</span>
 <span class="n">motor1</span><span class="p">.</span><span class="n">run</span><span class="p">();</span>
 <span class="n">motor2</span><span class="p">.</span><span class="n">run</span><span class="p">();</span>
+<span class="n">motor3</span><span class="p">.</span><span class="n">run</span><span class="p">();</span>
 
 <span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">millis</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">lastTime</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">100</span><span class="p">){</span>
 <span class="w">   </span><span class="n">estado</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
@@ -538,7 +572,7 @@ suavemente</p></td>
 <span class="w">   </span><span class="n">mensaje</span><span class="p">[</span><span class="s">&quot;ultra&quot;</span><span class="p">]</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">ultra</span><span class="p">;</span>
 <span class="w">   </span><span class="n">String</span><span class="w"> </span><span class="n">mensaje_json</span><span class="p">;</span>
 <span class="w">   </span><span class="n">serializeJson</span><span class="p">(</span><span class="n">mensaje</span><span class="p">,</span><span class="w"> </span><span class="n">mensaje_json</span><span class="p">);</span>
-<span class="w">   </span><span class="n">client</span><span class="p">.</span><span class="n">publish</span><span class="p">(</span><span class="n">mqtt_topic_publicar</span><span class="p">,</span><span class="w"> </span><span class="n">mensaje_json</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+<span class="w">   </span><span class="n">client</span><span class="p">.</span><span class="n">publish</span><span class="p">(</span><span class="n">mqtt_topic_publicar</span><span class="p">,</span><span class="w"> </span><span class="n">mensaje_json</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span><span class="w"> </span><span class="nb">false</span><span class="p">);</span>
 <span class="p">}</span>
 
 
@@ -560,25 +594,36 @@ suavemente</p></td>
 
 <span class="n">String</span><span class="w"> </span><span class="n">topico</span><span class="p">(</span><span class="n">topic</span><span class="p">);</span>
 <span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">topico</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;ra/juntas&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">   </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">doc</span><span class="p">.</span><span class="n">containsKey</span><span class="p">(</span><span class="s">&quot;q1&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">doc</span><span class="p">.</span><span class="n">containsKey</span><span class="p">(</span><span class="s">&quot;q2&quot;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="kt">float</span><span class="w"> </span><span class="n">q1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">doc</span><span class="p">[</span><span class="s">&quot;q1&quot;</span><span class="p">];</span>
-<span class="w">      </span><span class="kt">float</span><span class="w"> </span><span class="n">q2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">doc</span><span class="p">[</span><span class="s">&quot;q2&quot;</span><span class="p">];</span>
+<span class="w">   </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">doc</span><span class="p">.</span><span class="n">containsKey</span><span class="p">(</span><span class="s">&quot;q1&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">doc</span><span class="p">.</span><span class="n">containsKey</span><span class="p">(</span><span class="s">&quot;q2&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">doc</span><span class="p">.</span><span class="n">containsKey</span><span class="p">(</span><span class="s">&quot;q3&quot;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="kt">float</span><span class="w"> </span><span class="n">q1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">doc</span><span class="p">[</span><span class="s">&quot;q1&quot;</span><span class="p">];</span><span class="w"> </span><span class="c1">// NEMA 23</span>
+<span class="w">      </span><span class="kt">float</span><span class="w"> </span><span class="n">q2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">doc</span><span class="p">[</span><span class="s">&quot;q2&quot;</span><span class="p">];</span><span class="w"> </span><span class="c1">// NEMA 17</span>
+<span class="w">      </span><span class="kt">float</span><span class="w"> </span><span class="n">q3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">doc</span><span class="p">[</span><span class="s">&quot;q3&quot;</span><span class="p">];</span><span class="w"> </span><span class="c1">// NEMA 17</span>
 
-<span class="w">      </span><span class="kt">int</span><span class="w"> </span><span class="n">pasos1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">round</span><span class="p">(</span><span class="n">q1</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">gradosPorPaso</span><span class="p">);</span>
+<span class="w">      </span><span class="kt">long</span><span class="w"> </span><span class="n">pasos1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">outDegreesToPulses</span><span class="p">(</span><span class="n">q1</span><span class="p">);</span>
 <span class="w">      </span><span class="kt">int</span><span class="w"> </span><span class="n">pasos2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">round</span><span class="p">(</span><span class="n">q2</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">gradosPorPaso</span><span class="p">);</span>
-
-<span class="w">      </span><span class="n">motor1</span><span class="p">.</span><span class="n">move</span><span class="p">(</span><span class="n">pasos1</span><span class="p">);</span>
-<span class="w">      </span><span class="n">motor2</span><span class="p">.</span><span class="n">move</span><span class="p">(</span><span class="n">pasos2</span><span class="p">);</span>
+<span class="w">      </span><span class="kt">int</span><span class="w"> </span><span class="n">pasos3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">round</span><span class="p">(</span><span class="n">q3</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">gradosPorPaso</span><span class="p">);</span>
 
 <span class="w">      </span><span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;Recibido q1: &quot;</span><span class="p">);</span>
 <span class="w">      </span><span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="n">q1</span><span class="p">);</span>
 <span class="w">      </span><span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">&quot; → pasos: &quot;</span><span class="p">);</span>
-<span class="w">      </span><span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="n">pasos1</span><span class="p">);</span>
+<span class="w">      </span><span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="n">pasos1</span><span class="p">);</span>
+
 
 <span class="w">      </span><span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;Recibido q2: &quot;</span><span class="p">);</span>
 <span class="w">      </span><span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="n">q2</span><span class="p">);</span>
 <span class="w">      </span><span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">&quot; → pasos: &quot;</span><span class="p">);</span>
-<span class="w">      </span><span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="n">pasos2</span><span class="p">);</span>
+<span class="w">      </span><span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="n">pasos2</span><span class="p">);</span>
+
+<span class="w">      </span><span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">&quot; Recibido q3: &quot;</span><span class="p">);</span>
+<span class="w">      </span><span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="n">q3</span><span class="p">);</span>
+<span class="w">      </span><span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">&quot; → pasos: &quot;</span><span class="p">);</span>
+<span class="w">      </span><span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="n">pasos3</span><span class="p">);</span>
+
+<span class="w">      </span><span class="c1">// movimiento q1</span>
+<span class="w">      </span><span class="n">motor1</span><span class="p">.</span><span class="n">move</span><span class="p">(</span><span class="n">pasos1</span><span class="p">);</span>
+<span class="w">      </span><span class="c1">// Movimiento NEMA Q2 y Q3</span>
+<span class="w">      </span><span class="n">motor2</span><span class="p">.</span><span class="n">move</span><span class="p">(</span><span class="n">pasos2</span><span class="p">);</span>
+<span class="w">      </span><span class="n">motor3</span><span class="p">.</span><span class="n">move</span><span class="p">(</span><span class="n">pasos3</span><span class="p">);</span>
 <span class="w">   </span><span class="p">}</span>
 
 <span class="w">   </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">doc</span><span class="p">.</span><span class="n">containsKey</span><span class="p">(</span><span class="s">&quot;avanzar&quot;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
