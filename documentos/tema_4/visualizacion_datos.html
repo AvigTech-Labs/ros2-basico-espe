@@ -1,32 +1,33 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="es">
+<html class="writer-html5" lang="es" data-content_root="../../">
 <head>
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Archivos URDF &mdash; documentación de ros2_espe - 0.1</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
       <link rel="stylesheet" type="text/css" href="../../_static/tabs.css?v=a5c4661c" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=23a32747" />
 
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=5ba375e5"></script>
-      <script src="../../_static/doctools.js?v=888ff710"></script>
-      <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="../../_static/documentation_options.js?v=9c9b61ad"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../../_static/copybutton.js?v=f281be69"></script>
-      <script src="../../_static/translations.js?v=efdbd0b9"></script>
+      <script src="../../_static/translations.js?v=f85f4cfb"></script>
       <script src="../../_static/tabs.js?v=3030b3cb"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Índice" href="../../genindex.html" />
     <link rel="search" title="Búsqueda" href="../../search.html" />
-    <link rel="next" title="Driver Industrial DM542T" href="driver_gemelo.html" />
-    <link rel="prev" title="Conexión con dispositivos" href="../tema_3/dispositivos.html" /> 
+    <link rel="next" title="Ejercicio práctico" href="../tema_5/proyecto.html" />
+    <link rel="prev" title="Driver A4988" href="driver_A4988.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -56,6 +57,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../tema_2/conceptos_basicos.html">Conceptos Básicos</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tema_2/tutoriales.html">Tutoriales</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tema_3/dispositivos.html">Conexión con dispositivos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="driver_DM542T.html">Driver Industrial DM542T</a></li>
+<li class="toctree-l1"><a class="reference internal" href="driver_A4988.html">Driver A4988</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Archivos URDF</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#visualizacion-de-archivos-urdf">Visualización de archivos URDF</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#manejo-de-datos-en-rviz-con-urdf">Manejo de datos en RVIZ con URDF.</a><ul>
@@ -63,10 +66,9 @@
 <li class="toctree-l3"><a class="reference internal" href="#tf2">tf2</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#ros2-y-el-control-de-stepper">ROS2 y el control de stepper</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="driver_gemelo.html">Driver Industrial DM542T</a></li>
-<li class="toctree-l1"><a class="reference internal" href="gemelo.html">Gemelo Digital</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Proyecto Aplicado</span></p>
 <ul>
@@ -97,7 +99,7 @@
            <div itemprop="articleBody">
              
   <section id="archivos-urdf">
-<h1>Archivos URDF<a class="headerlink" href="#archivos-urdf" title="Enlace permanente a este encabezado"></a></h1>
+<h1>Archivos URDF<a class="headerlink" href="#archivos-urdf" title="Link to this heading"></a></h1>
 <p>Prueba de actualizacion</p>
 <p>Para crear archivos URDF en base a diseños personalidados de robots con
 solidworks, es necesario descargar la extensión URDF.</p>
@@ -110,7 +112,7 @@ extensión de archivos URDF.</p>
 <figure class="align-default" id="id1">
 <img alt="Imagen" src="../../_images/solid.png" />
 <figcaption>
-<p><span class="caption-text">Imagen</span><a class="headerlink" href="#id1" title="Enlace permanente a esta imagen"></a></p>
+<p><span class="caption-text">Imagen</span><a class="headerlink" href="#id1" title="Link to this image"></a></p>
 </figcaption>
 </figure>
 <p>Esta extensión generará una carpeta con los documentos necesarios para
@@ -123,7 +125,7 @@ rapida del modelo obtenido.</p>
 <figure class="align-default" id="id2">
 <img alt="Ejemplo" src="../../_images/image.png" />
 <figcaption>
-<p><span class="caption-text">Ejemplo</span><a class="headerlink" href="#id2" title="Enlace permanente a esta imagen"></a></p>
+<p><span class="caption-text">Ejemplo</span><a class="headerlink" href="#id2" title="Link to this image"></a></p>
 </figcaption>
 </figure>
 <p>En el siguiente enlace
@@ -131,7 +133,7 @@ rapida del modelo obtenido.</p>
 se encuentra el modelo base que será utilizado para configurar el
 visualizador RVIZ2 de ROS2.</p>
 <section id="visualizacion-de-archivos-urdf">
-<h2>Visualización de archivos URDF<a class="headerlink" href="#visualizacion-de-archivos-urdf" title="Enlace permanente a este encabezado"></a></h2>
+<h2>Visualización de archivos URDF<a class="headerlink" href="#visualizacion-de-archivos-urdf" title="Link to this heading"></a></h2>
 <p>Para visualizar y manipular el archivo URDF creado se utiliza la
 herramienta RVIZ, a continuación se muestra los pasos para su
 configuración.</p>
@@ -276,13 +278,13 @@ ros2<span class="w"> </span>launch<span class="w"> </span>mi_pkg_python<span cla
 </div>
 </section>
 <section id="manejo-de-datos-en-rviz-con-urdf">
-<h2>Manejo de datos en RVIZ con URDF.<a class="headerlink" href="#manejo-de-datos-en-rviz-con-urdf" title="Enlace permanente a este encabezado"></a></h2>
+<h2>Manejo de datos en RVIZ con URDF.<a class="headerlink" href="#manejo-de-datos-en-rviz-con-urdf" title="Link to this heading"></a></h2>
 <p>En este caso se busca crear archivos que permitan obtener y colocar
 valores en las juntas del modelo URDF creado.</p>
 <p>Los datos de las juntas se publican y escuchan utilizando el tipo de
 mensaje <code class="docutils literal notranslate"><span class="pre">JointState</span></code></p>
 <section id="jointstate">
-<h3>JointState<a class="headerlink" href="#jointstate" title="Enlace permanente a este encabezado"></a></h3>
+<h3>JointState<a class="headerlink" href="#jointstate" title="Link to this heading"></a></h3>
 <p>El mensaje <code class="docutils literal notranslate"><span class="pre">JointState</span></code> representa el <strong>estado actual de las
 articulaciones</strong> del robot.</p>
 <p><strong>Campos del mensaje</strong></p>
@@ -401,7 +403,7 @@ del robot.</p>
 </section>
 <hr class="docutils" />
 <section id="tf2">
-<h3>tf2<a class="headerlink" href="#tf2" title="Enlace permanente a este encabezado"></a></h3>
+<h3>tf2<a class="headerlink" href="#tf2" title="Link to this heading"></a></h3>
 <div class="line-block">
 <div class="line"><code class="docutils literal notranslate"><span class="pre">tf2</span></code> es el sistema que gestiona <strong>transformaciones espaciales entre
 los frames</strong> del robot.</div>
@@ -520,14 +522,158 @@ archivo package.xml y asegúrate de incluir:</p>
 </div>
 </section>
 </section>
+<section id="ros2-y-el-control-de-stepper">
+<h2>ROS2 y el control de stepper<a class="headerlink" href="#ros2-y-el-control-de-stepper" title="Link to this heading"></a></h2>
+<p>Con el fin de poder reflejar los movimientos del robot Simulado en RVIZ2 y del
+robot real, se aplica la combinación de los códigos de <code class="docutils literal notranslate"><span class="pre">mqtt_bridge</span></code> y
+<code class="docutils literal notranslate"><span class="pre">urdf_sub</span></code>.</p>
+<p>Dentro de la carpeta <code class="docutils literal notranslate"><span class="pre">mqtt_python</span></code>, crear el archivo <code class="docutils literal notranslate"><span class="pre">urdf_mqtt`</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">rclpy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rclpy.node</span><span class="w"> </span><span class="kn">import</span> <span class="n">Node</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rclpy.duration</span><span class="w"> </span><span class="kn">import</span> <span class="n">Duration</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">std_msgs.msg</span><span class="w"> </span><span class="kn">import</span> <span class="n">Float32</span><span class="p">,</span> <span class="n">Int32</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sensor_msgs.msg</span><span class="w"> </span><span class="kn">import</span> <span class="n">JointState</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">paho.mqtt.client</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mqtt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">MQTTBridge</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s1">&#39;mqtt_bridge&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Angulos del robot</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">real_q1</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">real_q2</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">real_q3</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">pub</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_publisher</span><span class="p">(</span> <span class="n">Float32</span><span class="p">,</span> <span class="s1">&#39;sensor_bateria&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subscription</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_subscription</span><span class="p">(</span>
+            <span class="n">JointState</span><span class="p">,</span>
+            <span class="s1">&#39;/joint_states&#39;</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">listener_ros</span><span class="p">,</span> <span class="mi">1</span>
+            <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_data</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">active</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># control de publicación activa</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_mqtt_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_clock</span><span class="p">()</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">timer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_timer</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">publish_sensor_data</span><span class="p">)</span>       <span class="c1"># Publicador (10 Hz)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">timer_watchdog</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_timer</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_timeout</span><span class="p">)</span>    <span class="c1"># Verificador de tiempo</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">topic_sub</span> <span class="o">=</span> <span class="s2">&quot;ra/sensores&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">topic_pub</span> <span class="o">=</span> <span class="s2">&quot;ra/juntas&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mqtt_client</span> <span class="o">=</span> <span class="n">mqtt</span><span class="o">.</span><span class="n">Client</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mqtt_client</span><span class="o">.</span><span class="n">on_connect</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">on_connect</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mqtt_client</span><span class="o">.</span><span class="n">on_message</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">on_message</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mqtt_client</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;192.168.100.178&quot;</span><span class="p">,</span> <span class="mi">1883</span><span class="p">,</span> <span class="mi">60</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mqtt_client</span><span class="o">.</span><span class="n">loop_start</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">listener_ros</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+        <span class="n">q1_mov</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">q2_mov</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">q3_mov</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">name</span><span class="p">):</span>
+            <span class="c1"># Resolucion del stepper 0.9</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;brazo_joint&quot;</span><span class="p">:</span>
+                <span class="n">meta</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">position</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span><span class="mi">4</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">real_q1</span><span class="p">,</span> <span class="n">q1_mov</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mover_a_angulo_discreto</span><span class="p">(</span><span class="n">meta</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">real_q1</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;antebrazo_joint&quot;</span><span class="p">:</span>
+                <span class="n">meta</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">position</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span><span class="mi">4</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">real_q2</span><span class="p">,</span> <span class="n">q2_mov</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mover_a_angulo_discreto</span><span class="p">(</span><span class="n">meta</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">real_q2</span><span class="p">)</span>
+
+        <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">&quot;arti_q1&quot;</span><span class="p">:</span> <span class="n">q1_mov</span><span class="p">,</span>
+                    <span class="s2">&quot;arti_q2&quot;</span><span class="p">:</span> <span class="n">q2_mov</span>
+                  <span class="p">}</span>
+        <span class="n">msg_mqtt</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mqtt_client</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">topic_pub</span><span class="p">,</span> <span class="n">msg_mqtt</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Mensaje Enviado&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">mover_a_angulo_discreto</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">angulo_objetivo</span><span class="p">,</span> <span class="n">angulo_actual</span><span class="p">,</span> <span class="n">paso</span><span class="o">=</span><span class="mf">0.9</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calcula el desplazamiento al múltiplo de &#39;paso&#39; más cercano al ángulo objetivo.</span>
+<span class="sd">        Retorna:</span>
+<span class="sd">            - el nuevo ángulo corregido (múltiplo de paso)</span>
+<span class="sd">            - el desplazamiento angular necesario desde el ángulo actual</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Calcula desplazamiento</span>
+        <span class="n">desplazamiento</span> <span class="o">=</span> <span class="n">angulo_objetivo</span> <span class="o">-</span> <span class="n">angulo_actual</span>
+
+        <span class="c1"># Redondea el ángulo objetivo al múltiplo más cercano</span>
+        <span class="n">desplazamiento_valido</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">desplazamiento</span> <span class="o">/</span> <span class="n">paso</span><span class="p">)</span> <span class="o">*</span> <span class="n">paso</span>
+
+        <span class="n">meta_ajustada</span> <span class="o">=</span> <span class="n">angulo_actual</span> <span class="o">+</span> <span class="n">desplazamiento_valido</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[INFO] Objetivo :</span><span class="si">{</span><span class="n">angulo_objetivo</span><span class="si">}</span><span class="s2">°&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[INFO] Objetivo ajustado: </span><span class="si">{</span><span class="n">meta_ajustada</span><span class="si">}</span><span class="s2">° (múltiplo de </span><span class="si">{</span><span class="n">paso</span><span class="si">}</span><span class="s2">°)&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[INFO] Desplazamiento desde actual: </span><span class="si">{</span><span class="n">desplazamiento_valido</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">°&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="nb">round</span><span class="p">(</span><span class="n">meta_ajustada</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span> <span class="nb">round</span><span class="p">(</span><span class="n">desplazamiento_valido</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">on_connect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">userdata</span><span class="p">,</span> <span class="n">flags</span><span class="p">,</span> <span class="n">rc</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">rc</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Conectado al broker MQTT&quot;</span><span class="p">)</span>
+            <span class="n">client</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">topic_sub</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error de conexión: código </span><span class="si">{</span><span class="n">rc</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">on_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">userdata</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">mensaje</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">payload</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">mensaje</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">msg</span><span class="o">.</span><span class="n">topic</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">topic_sub</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">last_data</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;bateria&quot;</span><span class="p">])</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">last_mqtt_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_clock</span><span class="p">()</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>  <span class="c1"># Actualiza tiempo del último dato</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">active</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error procesando mensaje:&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">publish_sensor_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">active</span><span class="p">:</span>
+            <span class="n">ros_msg</span> <span class="o">=</span> <span class="n">Float32</span><span class="p">()</span>
+            <span class="n">ros_msg</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_data</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pub</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">ros_msg</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ROS2 publicó: </span><span class="si">{</span><span class="n">ros_msg</span><span class="o">.</span><span class="n">data</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">check_timeout</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">now</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_clock</span><span class="p">()</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">now</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_mqtt_time</span> <span class="o">&gt;</span> <span class="n">Duration</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mf">2.0</span><span class="p">):</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">active</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;No se reciben datos desde MQTT. Se detiene la publicación.&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">active</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">rclpy</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">)</span>
+    <span class="n">node</span> <span class="o">=</span> <span class="n">MQTTBridge</span><span class="p">()</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">rclpy</span><span class="o">.</span><span class="n">spin</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
+        <span class="k">pass</span>
+    <span class="n">rclpy</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Registrar el codigo en el <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> y compilar</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>~/ros2_ws
+colcon<span class="w"> </span>build<span class="w"> </span>--packages-select<span class="w"> </span>mi_pkg_python
+</pre></div>
+</div>
+<p>Para ejecutar el programa lanzar los archivos:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>launch<span class="w"> </span>mi_pkg_python<span class="w"> </span>visualizar_rviz.launch.py
+ros2<span class="w"> </span>run<span class="w"> </span>mi_pkg_python<span class="w"> </span>urdf_mqtt
+</pre></div>
+</div>
+</section>
 </section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Pie de página">
-        <a href="../tema_3/dispositivos.html" class="btn btn-neutral float-left" title="Conexión con dispositivos" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Anterior</a>
-        <a href="driver_gemelo.html" class="btn btn-neutral float-right" title="Driver Industrial DM542T" accesskey="n" rel="next">Siguiente <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="driver_A4988.html" class="btn btn-neutral float-left" title="Driver A4988" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Anterior</a>
+        <a href="../tema_5/proyecto.html" class="btn btn-neutral float-right" title="Ejercicio práctico" accesskey="n" rel="next">Siguiente <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

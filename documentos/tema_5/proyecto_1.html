@@ -1,14 +1,14 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="es" data-content_root="../../">
+<html class="writer-html5" lang="es">
 <head>
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ejercicio práctico &mdash; documentación de ros2_espe - 0.1</title>
+  <title>Ejercicio práctico 1 &mdash; documentación de ros2_espe - 0.1</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
       <link rel="stylesheet" type="text/css" href="../../_static/tabs.css?v=a5c4661c" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=23a32747" />
@@ -16,18 +16,19 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=9c9b61ad"></script>
-      <script src="../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=5ba375e5"></script>
+      <script src="../../_static/doctools.js?v=888ff710"></script>
+      <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
       <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../../_static/copybutton.js?v=f281be69"></script>
-      <script src="../../_static/translations.js?v=f85f4cfb"></script>
+      <script src="../../_static/translations.js?v=efdbd0b9"></script>
       <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
       <script src="../../_static/tabs.js?v=3030b3cb"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Índice" href="../../genindex.html" />
     <link rel="search" title="Búsqueda" href="../../search.html" />
-    <link rel="prev" title="Gemelo Digital" href="../tema_4/gemelo.html" /> 
+    <link rel="next" title="Ejercicio práctico 2" href="proyecto_2.html" />
+    <link rel="prev" title="Gemelo Digital" href="../tema_4/gemelo_digital.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -57,13 +58,12 @@
 <li class="toctree-l1"><a class="reference internal" href="../tema_2/conceptos_basicos.html">Conceptos Básicos</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tema_2/tutoriales.html">Tutoriales</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tema_3/dispositivos.html">Conexión con dispositivos</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tema_4/visualizacion_datos.html">Archivos URDF</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tema_4/driver_DM542T.html">Driver Industrial DM542T</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tema_4/gemelo.html">Gemelo Digital</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tema_4/drivers.html">Drivers para Steppers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tema_4/gemelo_digital.html">Gemelo Digital</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Proyecto Aplicado</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Ejercicio práctico</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Ejercicio práctico 1</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#actividad">Actividad</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#calibracion-de-la-camara">Calibración de la cámara</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#instalacion-de-paquetes">Instalación de paquetes</a></li>
@@ -90,6 +90,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#algoritmo-de-control-de-proceso">Algoritmo de control de proceso</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="proyecto_2.html">Ejercicio práctico 2</a></li>
 </ul>
 
         </div>
@@ -106,7 +107,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Ejercicio práctico</li>
+      <li class="breadcrumb-item active">Ejercicio práctico 1</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -115,10 +116,10 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="ejercicio-practico">
-<h1>Ejercicio práctico<a class="headerlink" href="#ejercicio-practico" title="Link to this heading"></a></h1>
+  <section id="ejercicio-practico-1">
+<h1>Ejercicio práctico 1<a class="headerlink" href="#ejercicio-practico-1" title="Enlace permanente a este encabezado"></a></h1>
 <section id="actividad">
-<h2>Actividad<a class="headerlink" href="#actividad" title="Link to this heading"></a></h2>
+<h2>Actividad<a class="headerlink" href="#actividad" title="Enlace permanente a este encabezado"></a></h2>
 <p>Diseñar y simular un sistema de clasificación de objetos basados en ROS2.</p>
 <figure class="align-default">
 <img alt="Imagen" src="../../_images/proyecto.png" />
@@ -126,9 +127,9 @@
 <p>Para los siguientes programas es importante crear un directorio <code class="docutils literal notranslate"><span class="pre">proyecto</span></code> dentro del paquete <code class="docutils literal notranslate"><span class="pre">mi_pkg_python</span></code>.</p>
 </section>
 <section id="calibracion-de-la-camara">
-<h2>Calibración de la cámara<a class="headerlink" href="#calibracion-de-la-camara" title="Link to this heading"></a></h2>
+<h2>Calibración de la cámara<a class="headerlink" href="#calibracion-de-la-camara" title="Enlace permanente a este encabezado"></a></h2>
 <section id="instalacion-de-paquetes">
-<h3>Instalación de paquetes<a class="headerlink" href="#instalacion-de-paquetes" title="Link to this heading"></a></h3>
+<h3>Instalación de paquetes<a class="headerlink" href="#instalacion-de-paquetes" title="Enlace permanente a este encabezado"></a></h3>
 <p>Librerías necesarias:</p>
 <ul class="simple">
 <li><p>OpenCV</p></li>
@@ -153,7 +154,7 @@
 </ul>
 </section>
 <section id="algoritmo-de-calibracion">
-<h3>Algoritmo de calibración<a class="headerlink" href="#algoritmo-de-calibracion" title="Link to this heading"></a></h3>
+<h3>Algoritmo de calibración<a class="headerlink" href="#algoritmo-de-calibracion" title="Enlace permanente a este encabezado"></a></h3>
 <p>Para calibrar una cámara se utiliza el algoritmo de ajuste de matriz intrínseca basado en un patrón de tablero de ajedrez. Este tipo de calibración permite corregir las distorsiones ópticas generadas por el lente, como la distorsión radial y tangencial, mejorando así la precisión en tareas de visión por computadora.</p>
 <p>Los requisitos para realizar la calibración son:</p>
 <p>Una estructura fija donde se monte la cámara.</p>
@@ -192,11 +193,11 @@
 </section>
 </section>
 <section id="deteccion-y-transformacion-de-apriltags">
-<h2>Detección y Transformación de AprilTags<a class="headerlink" href="#deteccion-y-transformacion-de-apriltags" title="Link to this heading"></a></h2>
+<h2>Detección y Transformación de AprilTags<a class="headerlink" href="#deteccion-y-transformacion-de-apriltags" title="Enlace permanente a este encabezado"></a></h2>
 <p><strong>Codigo del proyecto</strong> <code class="docutils literal notranslate"><span class="pre">p1_cam.py</span></code></p>
 <p>Este nodo en ROS 2 tiene como objetivo detectar etiquetas AprilTags en una imagen, transformar su posición al sistema de referencia del tag con ID 0, y publicar sus coordenadas relativas en el topic <code class="docutils literal notranslate"><span class="pre">/apriltag_pixels</span></code>.</p>
 <section id="estructura-general">
-<h3>Estructura general<a class="headerlink" href="#estructura-general" title="Link to this heading"></a></h3>
+<h3>Estructura general<a class="headerlink" href="#estructura-general" title="Enlace permanente a este encabezado"></a></h3>
 <p>El nodo <cite>apriltag_cam</cite> realiza los siguientes pasos:</p>
 <ol class="arabic simple">
 <li><p><strong>Carga de parámetros de calibración</strong> desde un archivo YAML.</p></li>
@@ -208,7 +209,7 @@
 </ol>
 </section>
 <section id="matematica-del-sistema">
-<h3>Matemática del sistema<a class="headerlink" href="#matematica-del-sistema" title="Link to this heading"></a></h3>
+<h3>Matemática del sistema<a class="headerlink" href="#matematica-del-sistema" title="Enlace permanente a este encabezado"></a></h3>
 <ol class="arabic simple">
 <li><p><strong>Calibración de la cámara</strong></p></li>
 </ol>
@@ -274,7 +275,7 @@
 </div>
 </section>
 <section id="codigos">
-<h3>Códigos<a class="headerlink" href="#codigos" title="Link to this heading"></a></h3>
+<h3>Códigos<a class="headerlink" href="#codigos" title="Enlace permanente a este encabezado"></a></h3>
 <div class="sphinx-tabs docutils container">
 <div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-UHJvZ3JhbWEgMQ==" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-0-UHJvZ3JhbWEgMQ==" name="UHJvZ3JhbWEgMQ==" role="tab" tabindex="0">Programa 1</button><button aria-controls="panel-0-UHJvZ3JhbWEgMg==" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-0-UHJvZ3JhbWEgMg==" name="UHJvZ3JhbWEgMg==" role="tab" tabindex="-1">Programa 2</button><button aria-controls="panel-0-UHJvZ3JhbWEgMw==" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-0-UHJvZ3JhbWEgMw==" name="UHJvZ3JhbWEgMw==" role="tab" tabindex="-1">Programa 3</button><button aria-controls="panel-0-UHJvZ3JhbWEgNA==" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-0-UHJvZ3JhbWEgNA==" name="UHJvZ3JhbWEgNA==" role="tab" tabindex="-1">Programa 4</button><button aria-controls="panel-0-cDFfY2FtLnB5" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-0-cDFfY2FtLnB5" name="cDFfY2FtLnB5" role="tab" tabindex="-1">p1_cam.py</button></div><div aria-labelledby="tab-0-UHJvZ3JhbWEgMQ==" class="sphinx-tabs-panel group-tab" id="panel-0-UHJvZ3JhbWEgMQ==" name="UHJvZ3JhbWEgMQ==" role="tabpanel" tabindex="0"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">cv2</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
@@ -678,7 +679,7 @@
 </section>
 </section>
 <section id="publicacion-de-objetos-simulados">
-<h2>Publicación de objetos simulados<a class="headerlink" href="#publicacion-de-objetos-simulados" title="Link to this heading"></a></h2>
+<h2>Publicación de objetos simulados<a class="headerlink" href="#publicacion-de-objetos-simulados" title="Enlace permanente a este encabezado"></a></h2>
 <p>Los objetos que se visualicen a través de la cámara serán digitalizados y simulados en RVIZ2.</p>
 <p>Dependiendo del ID que tenga el tag, se realiza un cambio de color para distinguir la familia de tags relacionada con el tag_id 1 y el tag_id 2.</p>
 <p><strong>Código del proyecto:</strong> <code class="docutils literal notranslate"><span class="pre">p1_pub_obj.py</span></code></p>
@@ -825,7 +826,7 @@
 </div>
 </section>
 <section id="modificacion-de-servicios">
-<h2>Modificación de servicios<a class="headerlink" href="#modificacion-de-servicios" title="Link to this heading"></a></h2>
+<h2>Modificación de servicios<a class="headerlink" href="#modificacion-de-servicios" title="Enlace permanente a este encabezado"></a></h2>
 <p>Para solucionar el problema de generar una heurística que permita la toma decisiones con respecto a que tag debe clasificar primero el sistema. Se crea un nuevo
 archivo srv <code class="docutils literal notranslate"><span class="pre">HeuristicaP</span></code> dentro del paquete <code class="docutils literal notranslate"><span class="pre">avig_msg</span></code>, teniendo de requermiento y respuesta un <code class="docutils literal notranslate"><span class="pre">AprilTagPixelArray</span></code>.</p>
 <p>Dado que en la sección de tutoriales se creó una solución para este problema, unicamente es necesario cambiar la respuesta del servidor en base al nuevo tipo de
@@ -892,9 +893,9 @@ archivo srv</p>
 </div>
 </section>
 <section id="cinematica-inversa">
-<h2>Cinemática Inversa<a class="headerlink" href="#cinematica-inversa" title="Link to this heading"></a></h2>
+<h2>Cinemática Inversa<a class="headerlink" href="#cinematica-inversa" title="Enlace permanente a este encabezado"></a></h2>
 <section id="modelo-geometrico">
-<h3>Modelo Geométrico<a class="headerlink" href="#modelo-geometrico" title="Link to this heading"></a></h3>
+<h3>Modelo Geométrico<a class="headerlink" href="#modelo-geometrico" title="Enlace permanente a este encabezado"></a></h3>
 <p>Se considera un manipulador plano con dos eslabones de longitud:</p>
 <ul class="simple">
 <li><p><span class="math notranslate nohighlight">\(l_1\)</span>: longitud del brazo</p></li>
@@ -912,7 +913,7 @@ archivo srv</p>
 </ul>
 </section>
 <section id="formulacion">
-<h3>Formulación<a class="headerlink" href="#formulacion" title="Link to this heading"></a></h3>
+<h3>Formulación<a class="headerlink" href="#formulacion" title="Enlace permanente a este encabezado"></a></h3>
 <p>Dado un punto deseado en coordenadas globales:</p>
 <div class="math notranslate nohighlight">
 \[(x_a, y_a)\]</div>
@@ -932,14 +933,14 @@ y_d = y_a - dy\end{split}\]</div>
 \[q_1 = \arctan2(y_d, x_d) - \arctan2(l_2 \sin(q_2), l_1 + l_2 \cos(q_2))\]</div>
 </section>
 <section id="restricciones">
-<h3>Restricciones<a class="headerlink" href="#restricciones" title="Link to this heading"></a></h3>
+<h3>Restricciones<a class="headerlink" href="#restricciones" title="Enlace permanente a este encabezado"></a></h3>
 <ul class="simple">
 <li><p>El valor absoluto de <span class="math notranslate nohighlight">\(D\)</span> debe ser menor o igual a 1 para garantizar solución real.</p></li>
 <li><p>Si <span class="math notranslate nohighlight">\(|D| &gt; 1\)</span>, el punto está fuera del alcance del robot.</p></li>
 </ul>
 </section>
 <section id="ejemplo-en-codigo">
-<h3>Ejemplo en Código<a class="headerlink" href="#ejemplo-en-codigo" title="Link to this heading"></a></h3>
+<h3>Ejemplo en Código<a class="headerlink" href="#ejemplo-en-codigo" title="Enlace permanente a este encabezado"></a></h3>
 <p>Con el fin de automatizar el proceso de carga del desplazamiento del origen del URDF del robot SCARA creado, con respecto al april-tag 0, y de los eslabones correspondientes a q1 y q2,
 se implementa un algoritmo que a través del uso de TF2 carga automaticamente estos valores al lanzarse el launcher con el URDF y visualizador RVIZ.</p>
 <p><strong>Código del proyecto</strong> <code class="docutils literal notranslate"><span class="pre">p1_ci.py</span></code></p>
@@ -1032,7 +1033,7 @@ se implementa un algoritmo que a través del uso de TF2 carga automaticamente es
 </section>
 </section>
 <section id="conexion-ros2-esp32">
-<h2>Conexión ROS2 - ESP32<a class="headerlink" href="#conexion-ros2-esp32" title="Link to this heading"></a></h2>
+<h2>Conexión ROS2 - ESP32<a class="headerlink" href="#conexion-ros2-esp32" title="Enlace permanente a este encabezado"></a></h2>
 <p>Utilizando el archivo base de urdf-mqtt.py, se realizan las modificaciones necesarias para suscribirse a un topic, que publique los angulos que debe moverse cada juntas
 para alcanzar los diferentes objetos en el espacio de trabajo.</p>
 <p><strong>Código del proyecto</strong> <code class="docutils literal notranslate"><span class="pre">p1_puente.py</span></code></p>
@@ -1187,7 +1188,7 @@ para alcanzar los diferentes objetos en el espacio de trabajo.</p>
 </div>
 </section>
 <section id="modificacion-de-archivos-launch">
-<h2>Modificacion de archivos launch<a class="headerlink" href="#modificacion-de-archivos-launch" title="Link to this heading"></a></h2>
+<h2>Modificacion de archivos launch<a class="headerlink" href="#modificacion-de-archivos-launch" title="Enlace permanente a este encabezado"></a></h2>
 <p>En el archivo launcher es necesario eliminar el slider creado para la manipulación del URDF, dado a que este ahora se moverá en base al
 algoritmo de control del sistema creado.</p>
 <p><strong>Código del proyecto</strong> <code class="docutils literal notranslate"><span class="pre">p1.launch.py</span></code></p>
@@ -1323,7 +1324,7 @@ algoritmo de control del sistema creado.</p>
 </div>
 </section>
 <section id="algoritmo-de-control-de-proceso">
-<h2>Algoritmo de control de proceso<a class="headerlink" href="#algoritmo-de-control-de-proceso" title="Link to this heading"></a></h2>
+<h2>Algoritmo de control de proceso<a class="headerlink" href="#algoritmo-de-control-de-proceso" title="Enlace permanente a este encabezado"></a></h2>
 <p>Para realizar el ejercicio de clasificación de objetos es necesario aplicar un algoritmo que permita serilizar el proceso que
 tendra que hacer el robot.</p>
 <p><strong>Código del proyecto</strong> <code class="docutils literal notranslate"><span class="pre">p1_coordinador.py</span></code></p>
@@ -1470,7 +1471,8 @@ tendra que hacer el robot.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Pie de página">
-        <a href="../tema_4/gemelo.html" class="btn btn-neutral float-left" title="Gemelo Digital" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Anterior</a>
+        <a href="../tema_4/gemelo_digital.html" class="btn btn-neutral float-left" title="Gemelo Digital" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Anterior</a>
+        <a href="proyecto_2.html" class="btn btn-neutral float-right" title="Ejercicio práctico 2" accesskey="n" rel="next">Siguiente <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

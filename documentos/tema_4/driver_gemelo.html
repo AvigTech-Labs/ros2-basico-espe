@@ -1,25 +1,25 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="es">
+<html class="writer-html5" lang="es" data-content_root="../../">
 <head>
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Driver Industrial DM542T &mdash; documentación de ros2_espe - 0.1</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
 
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=5ba375e5"></script>
-      <script src="../../_static/doctools.js?v=888ff710"></script>
-      <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="../../_static/documentation_options.js?v=9c9b61ad"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../../_static/copybutton.js?v=f281be69"></script>
-      <script src="../../_static/translations.js?v=efdbd0b9"></script>
+      <script src="../../_static/translations.js?v=f85f4cfb"></script>
       <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Índice" href="../../genindex.html" />
@@ -104,9 +104,9 @@
            <div itemprop="articleBody">
              
   <section id="driver-industrial-dm542t">
-<h1>Driver Industrial DM542T<a class="headerlink" href="#driver-industrial-dm542t" title="Enlace permanente a este encabezado"></a></h1>
+<h1>Driver Industrial DM542T<a class="headerlink" href="#driver-industrial-dm542t" title="Link to this heading"></a></h1>
 <section id="arquitectura-interna-del-dm542t">
-<h2>Arquitectura interna del DM542T<a class="headerlink" href="#arquitectura-interna-del-dm542t" title="Enlace permanente a este encabezado"></a></h2>
+<h2>Arquitectura interna del DM542T<a class="headerlink" href="#arquitectura-interna-del-dm542t" title="Link to this heading"></a></h2>
 <p>El DM542T es un <strong>driver digital de lazo abierto</strong> para motores paso a paso bipolares.</p>
 <p>Internamente contiene:</p>
 <ul class="simple">
@@ -125,7 +125,7 @@ Solo interpreta:
 - Sentido
 - Corriente configurada</p>
 <section id="entradas-y-salidas-del-dm542t">
-<h3>Entradas y salidas del DM542T<a class="headerlink" href="#entradas-y-salidas-del-dm542t" title="Enlace permanente a este encabezado"></a></h3>
+<h3>Entradas y salidas del DM542T<a class="headerlink" href="#entradas-y-salidas-del-dm542t" title="Link to this heading"></a></h3>
 <p>La bornera del DM542T se divide en:
 - <strong>Entradas de control (señales)</strong>
 - <strong>Salidas de potencia (motor)</strong>
@@ -284,7 +284,7 @@ ENA+ -&gt; GPIO EN   (opcional)</p>
 </section>
 </section>
 <section id="motor-nema23-con-reductora">
-<h2>Motor: NEMA23 con reductora<a class="headerlink" href="#motor-nema23-con-reductora" title="Enlace permanente a este encabezado"></a></h2>
+<h2>Motor: NEMA23 con reductora<a class="headerlink" href="#motor-nema23-con-reductora" title="Link to this heading"></a></h2>
 <p>Modelo: <strong>23HS22-2804S-PG47</strong></p>
 <ul class="simple">
 <li><p>Motor paso a paso típico: <strong>1.8° por paso</strong> (200 pasos por vuelta del eje del motor).</p></li>
@@ -294,11 +294,11 @@ ENA+ -&gt; GPIO EN   (opcional)</p>
 </ul>
 </section>
 <section id="diagrama-de-conexion">
-<h2>Diagrama de conexión<a class="headerlink" href="#diagrama-de-conexion" title="Enlace permanente a este encabezado"></a></h2>
+<h2>Diagrama de conexión<a class="headerlink" href="#diagrama-de-conexion" title="Link to this heading"></a></h2>
 <figure class="align-default" id="id1">
 <img alt="Imagen" src="../../_images/driver.png" />
 <figcaption>
-<p><span class="caption-text">Imagen</span><a class="headerlink" href="#id1" title="Enlace permanente a esta imagen"></a></p>
+<p><span class="caption-text">Imagen</span><a class="headerlink" href="#id1" title="Link to this image"></a></p>
 </figcaption>
 </figure>
 <ol class="arabic simple">
@@ -351,7 +351,7 @@ será necesario usar adaptación (NPN o ULN). Esta guía inicia con prueba direc
 </div>
 </section>
 <section id="configuracion-recomendada">
-<h2>Configuración recomendada<a class="headerlink" href="#configuracion-recomendada" title="Enlace permanente a este encabezado"></a></h2>
+<h2>Configuración recomendada<a class="headerlink" href="#configuracion-recomendada" title="Link to this heading"></a></h2>
 <p>Configurar el driver para que <strong>Pulse/rev = 400</strong>:</p>
 <ul class="simple">
 <li><p><strong>SW5 = OFF</strong></p></li>
@@ -360,7 +360,7 @@ será necesario usar adaptación (NPN o ULN). Esta guía inicia con prueba direc
 <li><p><strong>SW8 = ON</strong></p></li>
 </ul>
 <section id="microstepping">
-<h3>Microstepping<a class="headerlink" href="#microstepping" title="Enlace permanente a este encabezado"></a></h3>
+<h3>Microstepping<a class="headerlink" href="#microstepping" title="Link to this heading"></a></h3>
 <ol class="arabic simple">
 <li><p>Paso real vs resolución de comando</p></li>
 </ol>
@@ -389,7 +389,7 @@ será necesario usar adaptación (NPN o ULN). Esta guía inicia con prueba direc
 </div>
 </section>
 <section id="corriente-del-motor-sw1sw3">
-<h3>Corriente del motor (SW1–SW3)<a class="headerlink" href="#corriente-del-motor-sw1sw3" title="Enlace permanente a este encabezado"></a></h3>
+<h3>Corriente del motor (SW1–SW3)<a class="headerlink" href="#corriente-del-motor-sw1sw3" title="Link to this heading"></a></h3>
 <p>El motor indicado suele ser alrededor de <strong>2.8A RMS</strong> nominal.
 Una configuración segura y práctica es ajustar cerca pero ligeramente por debajo (reduce calentamiento y protege el sistema).</p>
 <p>Configuración sugerida:</p>
@@ -418,7 +418,7 @@ Una configuración segura y práctica es ajustar cerca pero ligeramente por deba
 </section>
 </section>
 <section id="ecuaciones">
-<h2>Ecuaciones<a class="headerlink" href="#ecuaciones" title="Enlace permanente a este encabezado"></a></h2>
+<h2>Ecuaciones<a class="headerlink" href="#ecuaciones" title="Link to this heading"></a></h2>
 <ol class="arabic simple">
 <li><p>Pasos por vuelta del motor (1.8°)</p></li>
 </ol>
@@ -495,7 +495,7 @@ Una configuración segura y práctica es ajustar cerca pero ligeramente por deba
 \[I_{peak} \approx I_{RMS}\times 1.4\]</div>
 </section>
 <section id="codigo-esp32-accelstepper-para-400-pulse-rev">
-<h2>Código ESP32 (AccelStepper) para 400 pulse/rev<a class="headerlink" href="#codigo-esp32-accelstepper-para-400-pulse-rev" title="Enlace permanente a este encabezado"></a></h2>
+<h2>Código ESP32 (AccelStepper) para 400 pulse/rev<a class="headerlink" href="#codigo-esp32-accelstepper-para-400-pulse-rev" title="Link to this heading"></a></h2>
 <p>Requisitos:</p>
 <ul class="simple">
 <li><p>Arduino IDE</p></li>
@@ -579,7 +579,7 @@ Una configuración segura y práctica es ajustar cerca pero ligeramente por deba
 </div>
 </section>
 <section id="diagnostico-rapido">
-<h2>Diagnóstico rápido<a class="headerlink" href="#diagnostico-rapido" title="Enlace permanente a este encabezado"></a></h2>
+<h2>Diagnóstico rápido<a class="headerlink" href="#diagnostico-rapido" title="Link to this heading"></a></h2>
 <ul class="simple">
 <li><p>Si el motor no se mueve:
 - Confirma <strong>24V</strong> en +Vdc/GND.

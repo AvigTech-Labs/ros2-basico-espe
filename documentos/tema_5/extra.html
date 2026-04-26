@@ -1,33 +1,30 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="es" data-content_root="../../">
+<html class="writer-html5" lang="es">
 <head>
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ejercicio práctico &mdash; documentación de ros2_espe - 0.1</title>
+  <title>Ejercicio práctico 2 &mdash; documentación de ros2_espe - 0.1</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-      <link rel="stylesheet" type="text/css" href="../../_static/tabs.css?v=a5c4661c" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=23a32747" />
 
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=9c9b61ad"></script>
-      <script src="../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=5ba375e5"></script>
+      <script src="../../_static/doctools.js?v=888ff710"></script>
+      <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
       <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../../_static/copybutton.js?v=f281be69"></script>
-      <script src="../../_static/translations.js?v=f85f4cfb"></script>
+      <script src="../../_static/translations.js?v=efdbd0b9"></script>
       <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-      <script src="../../_static/tabs.js?v=3030b3cb"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Índice" href="../../genindex.html" />
-    <link rel="search" title="Búsqueda" href="../../search.html" />
-    <link rel="prev" title="Gemelo Digital" href="../tema_4/gemelo.html" /> 
+    <link rel="search" title="Búsqueda" href="../../search.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -57,39 +54,13 @@
 <li class="toctree-l1"><a class="reference internal" href="../tema_2/conceptos_basicos.html">Conceptos Básicos</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tema_2/tutoriales.html">Tutoriales</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tema_3/dispositivos.html">Conexión con dispositivos</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tema_4/visualizacion_datos.html">Archivos URDF</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tema_4/driver_DM542T.html">Driver Industrial DM542T</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tema_4/gemelo.html">Gemelo Digital</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tema_4/drivers.html">Drivers para Steppers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tema_4/gemelo_digital.html">Gemelo Digital</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Proyecto Aplicado</span></p>
-<ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Ejercicio práctico</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#actividad">Actividad</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#calibracion-de-la-camara">Calibración de la cámara</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#instalacion-de-paquetes">Instalación de paquetes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#algoritmo-de-calibracion">Algoritmo de calibración</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#deteccion-y-transformacion-de-apriltags">Detección y Transformación de AprilTags</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#estructura-general">Estructura general</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#matematica-del-sistema">Matemática del sistema</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#codigos">Códigos</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#publicacion-de-objetos-simulados">Publicación de objetos simulados</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#modificacion-de-servicios">Modificación de servicios</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#cinematica-inversa">Cinemática Inversa</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#modelo-geometrico">Modelo Geométrico</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#formulacion">Formulación</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#restricciones">Restricciones</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#ejemplo-en-codigo">Ejemplo en Código</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#conexion-ros2-esp32">Conexión ROS2 - ESP32</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#modificacion-de-archivos-launch">Modificacion de archivos launch</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#algoritmo-de-control-de-proceso">Algoritmo de control de proceso</a></li>
-</ul>
-</li>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="proyecto_1.html">Ejercicio práctico 1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="proyecto_2.html">Ejercicio práctico 2</a></li>
 </ul>
 
         </div>
@@ -106,7 +77,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Ejercicio práctico</li>
+      <li class="breadcrumb-item active">Ejercicio práctico 2</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -115,570 +86,23 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="ejercicio-practico">
-<h1>Ejercicio práctico<a class="headerlink" href="#ejercicio-practico" title="Link to this heading"></a></h1>
+  <section id="ejercicio-practico-2">
+<h1>Ejercicio práctico 2<a class="headerlink" href="#ejercicio-practico-2" title="Enlace permanente a este encabezado"></a></h1>
 <section id="actividad">
-<h2>Actividad<a class="headerlink" href="#actividad" title="Link to this heading"></a></h2>
-<p>Diseñar y simular un sistema de clasificación de objetos basados en ROS2.</p>
-<figure class="align-default">
-<img alt="Imagen" src="../../_images/proyecto.png" />
-</figure>
-<p>Para los siguientes programas es importante crear un directorio <code class="docutils literal notranslate"><span class="pre">proyecto</span></code> dentro del paquete <code class="docutils literal notranslate"><span class="pre">mi_pkg_python</span></code>.</p>
+<h2>Actividad<a class="headerlink" href="#actividad" title="Enlace permanente a este encabezado"></a></h2>
+<p>Diseñar y simular un sistema de clasificación de objetos basados en ROS2, utilizando 2 robots Scaras.</p>
 </section>
-<section id="calibracion-de-la-camara">
-<h2>Calibración de la cámara<a class="headerlink" href="#calibracion-de-la-camara" title="Link to this heading"></a></h2>
-<section id="instalacion-de-paquetes">
-<h3>Instalación de paquetes<a class="headerlink" href="#instalacion-de-paquetes" title="Link to this heading"></a></h3>
-<p>Librerías necesarias:</p>
-<ul class="simple">
-<li><p>OpenCV</p></li>
-</ul>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>opencv-python
-</pre></div>
-</div>
-<ul class="simple">
-<li><p>PyYAML</p></li>
-</ul>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>pyyaml
-</pre></div>
-</div>
-<ul class="simple">
-<li><p>pupil-apriltags para detección de tags</p></li>
-</ul>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>pupil-apriltags
-</pre></div>
-</div>
-<ul class="simple">
-<li><p>Codigos de ROS2 desarrollados en este repositorio.</p></li>
-</ul>
+<section id="archivos-xacro">
+<h2>Archivos Xacro<a class="headerlink" href="#archivos-xacro" title="Enlace permanente a este encabezado"></a></h2>
 </section>
-<section id="algoritmo-de-calibracion">
-<h3>Algoritmo de calibración<a class="headerlink" href="#algoritmo-de-calibracion" title="Link to this heading"></a></h3>
-<p>Para calibrar una cámara se utiliza el algoritmo de ajuste de matriz intrínseca basado en un patrón de tablero de ajedrez. Este tipo de calibración permite corregir las distorsiones ópticas generadas por el lente, como la distorsión radial y tangencial, mejorando así la precisión en tareas de visión por computadora.</p>
-<p>Los requisitos para realizar la calibración son:</p>
-<p>Una estructura fija donde se monte la cámara.</p>
-<p>Un tablero de ajedrez de calibración impreso y plano.</p>
-<p>Para más detalles sobre el algoritmo utilizado, puedes consultar la documentación oficial de OpenCV:</p>
-<p><a class="reference external" href="https://docs.opencv.org/4.x/dc/dbb/tutorial_py_calibration.html">opencv- colibración de cámara</a></p>
-<p>En este ejemplo se utiliza un tablero generado por el proyecto de Mark Hedley Jones, disponible en:</p>
-<p><a class="reference external" href="https://markhedleyjones.com/projects/calibration-checkerboard-collection">Tablero de Ajedrez</a></p>
-<p>Además, se emplean AprilTags de 100 mm para pruebas adicionales de localización.</p>
-<ol class="arabic simple">
-<li><p><strong>Captura de Imágenes del Tablero</strong>
-- Archivo: <code class="docutils literal notranslate"><span class="pre">0_captura.py</span></code>
-- Abre la cámara, muestra una vista previa y guarda imágenes al presionar <code class="docutils literal notranslate"><span class="pre">c</span></code>.
-- Las imágenes se guardan en la carpeta <code class="docutils literal notranslate"><span class="pre">calib_imgs/</span></code>.</p></li>
-<li><p><strong>Calibración con Tablero de Ajedrez</strong>
-- Archivo: <code class="docutils literal notranslate"><span class="pre">1_calib.py</span></code>
-- Utiliza las imágenes para detectar esquinas de un tablero de 10x7.
-- Genera un archivo <code class="docutils literal notranslate"><span class="pre">camera_calibration.yaml</span></code> con la matriz intrínseca y coeficientes de distorsión.</p></li>
-<li><p><strong>Visualización de Corrección</strong>
-- Archivo: <code class="docutils literal notranslate"><span class="pre">3_cam.py</span></code>
-- Muestra la imagen original y la corregida en tiempo real utilizando la calibración.</p></li>
-<li><p><strong>Detección de AprilTags</strong>
-- Archivo: <code class="docutils literal notranslate"><span class="pre">4_apriltag.py</span></code>
-- Usa <code class="docutils literal notranslate"><span class="pre">pupil_apriltags</span></code> para detectar tags y calcular sus poses.
-- Imprime la distancia entre el tag de referencia (ID 0) y los demás.</p></li>
-</ol>
-<p>Parámetros</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>Tablero de calibración: 10 x 7 esquinas internas</p></li>
-<li><p>Tamaño de cuadrado: 25 mm (0.025 m)</p></li>
-<li><p>Distancia y pose se muestran en milímetros</p></li>
-<li><p>Salida: <cite>camera_calibration.yaml</cite> (compatible con ROS)</p></li>
-</ul>
-</div></blockquote>
+<section id="scaras">
+<h2>Scaras<a class="headerlink" href="#scaras" title="Enlace permanente a este encabezado"></a></h2>
 </section>
-</section>
-<section id="deteccion-y-transformacion-de-apriltags">
-<h2>Detección y Transformación de AprilTags<a class="headerlink" href="#deteccion-y-transformacion-de-apriltags" title="Link to this heading"></a></h2>
-<p><strong>Codigo del proyecto</strong> <code class="docutils literal notranslate"><span class="pre">p1_cam.py</span></code></p>
-<p>Este nodo en ROS 2 tiene como objetivo detectar etiquetas AprilTags en una imagen, transformar su posición al sistema de referencia del tag con ID 0, y publicar sus coordenadas relativas en el topic <code class="docutils literal notranslate"><span class="pre">/apriltag_pixels</span></code>.</p>
-<section id="estructura-general">
-<h3>Estructura general<a class="headerlink" href="#estructura-general" title="Link to this heading"></a></h3>
-<p>El nodo <cite>apriltag_cam</cite> realiza los siguientes pasos:</p>
-<ol class="arabic simple">
-<li><p><strong>Carga de parámetros de calibración</strong> desde un archivo YAML.</p></li>
-<li><p><strong>Inicialización de la cámara y detector AprilTags</strong>.</p></li>
-<li><p><strong>Corrección de distorsión</strong> de la imagen mediante la matriz de calibración.</p></li>
-<li><p><strong>Detección de etiquetas</strong> y cálculo de su pose relativa al sistema de la cámara.</p></li>
-<li><p><strong>Transformación de coordenadas</strong> al sistema de referencia del tag 0.</p></li>
-<li><p><strong>Publicación</strong> de los datos transformados como mensajes <cite>AprilTagPixelArray</cite>.</p></li>
-</ol>
-</section>
-<section id="matematica-del-sistema">
-<h3>Matemática del sistema<a class="headerlink" href="#matematica-del-sistema" title="Link to this heading"></a></h3>
-<ol class="arabic simple">
-<li><p><strong>Calibración de la cámara</strong></p></li>
-</ol>
-<p>Se utiliza la matriz intrínseca <code class="docutils literal notranslate"><span class="pre">K</span></code> y los coeficientes de distorsión <code class="docutils literal notranslate"><span class="pre">dist</span></code> para corregir la imagen:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">newcameramtx</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">getOptimalNewCameraMatrix</span><span class="p">(</span><span class="n">K</span><span class="p">,</span> <span class="n">dist</span><span class="p">,</span> <span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">))</span>
-<span class="n">undistorted</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">undistort</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">dist</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">newcameramtx</span><span class="p">)</span>
-</pre></div>
-</div>
-<ol class="arabic simple" start="2">
-<li><p><strong>Transformación homogénea</strong></p></li>
-</ol>
-<p>Cada AprilTag detectado provee:</p>
-<ul class="simple">
-<li><p>Matriz de rotación <code class="docutils literal notranslate"><span class="pre">R_tag</span></code> (3x3)</p></li>
-<li><p>Vector de traslación <code class="docutils literal notranslate"><span class="pre">t_tag</span></code> (3x1)</p></li>
-</ul>
-<p>Estos se combinan para formar una matriz homogénea 4x4:</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}T = \begin{bmatrix} R &amp; t \\ 0\ 0\ 0 &amp; 1 \end{bmatrix}\end{split}\]</div>
-<ol class="arabic simple" start="3">
-<li><p><strong>Transformación relativa</strong></p></li>
-</ol>
-<p>Para transformar la posición de cada tag al sistema del tag 0:</p>
-<div class="math notranslate nohighlight">
-\[T_{\text{rel}} = T_0^{-1} \cdot T_{\text{tag}}\]</div>
-<p>De ahí se extrae la posición relativa:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">T_rel</span> <span class="o">=</span> <span class="n">T0_inv</span> <span class="o">@</span> <span class="n">T</span>
-<span class="n">t_rel</span> <span class="o">=</span> <span class="n">T_rel</span><span class="p">[:</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">*</span> <span class="mi">1000</span>  <span class="c1"># [mm]</span>
-</pre></div>
-</div>
-<p>Se invierte el eje Y para ROS (orientación hacia arriba):</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">msg</span><span class="o">.</span><span class="n">posx</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">t_rel</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">)</span>
-<span class="n">msg</span><span class="o">.</span><span class="n">posy</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="o">-</span><span class="n">t_rel</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">)</span>
-</pre></div>
-</div>
-<ol class="arabic simple" start="4">
-<li><p><strong>Orientación del tag 0</strong></p></li>
-</ol>
-<p>La orientación del tag 0 se expresa en ángulos de Euler para referencia espacial:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">euler</span> <span class="o">=</span> <span class="n">R</span><span class="o">.</span><span class="n">from_matrix</span><span class="p">(</span><span class="n">R0</span><span class="p">)</span><span class="o">.</span><span class="n">as_euler</span><span class="p">(</span><span class="s1">&#39;xyz&#39;</span><span class="p">,</span> <span class="n">degrees</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</pre></div>
-</div>
-<ol class="arabic simple" start="5">
-<li><p><strong>Publicación de mensajes</strong></p></li>
-</ol>
-<p>Se publica un mensaje tipo <code class="docutils literal notranslate"><span class="pre">AprilTagPixelArray</span></code> con múltiples objetos <code class="docutils literal notranslate"><span class="pre">AprilTagPixel</span></code>, cada uno conteniendo:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">id</span></code>: ID del tag detectado</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">posx</span></code> y <code class="docutils literal notranslate"><span class="pre">posy</span></code>: posición relativa respecto al tag 0 en metros (x hacia adelante, y hacia la izquierda)</p></li>
-</ul>
-<ol class="arabic simple" start="6">
-<li><p><strong>Visualización</strong></p></li>
-</ol>
-<p>La imagen corregida se muestra en una ventana con:</p>
-<ul class="simple">
-<li><p>Contornos de los tags</p></li>
-<li><p>Líneas entre tag 0 y los demás</p></li>
-<li><p>Texto con distancias relativas</p></li>
-</ul>
-<div class="admonition note">
-<p class="admonition-title">Nota</p>
-<p>Asegúrese de tener cargado un archivo YAML válido con la calibración de la cámara en la carpeta <code class="docutils literal notranslate"><span class="pre">config/</span></code> de su paquete.</p>
-</div>
-</section>
-<section id="codigos">
-<h3>Códigos<a class="headerlink" href="#codigos" title="Link to this heading"></a></h3>
-<div class="sphinx-tabs docutils container">
-<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-UHJvZ3JhbWEgMQ==" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-0-UHJvZ3JhbWEgMQ==" name="UHJvZ3JhbWEgMQ==" role="tab" tabindex="0">Programa 1</button><button aria-controls="panel-0-UHJvZ3JhbWEgMg==" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-0-UHJvZ3JhbWEgMg==" name="UHJvZ3JhbWEgMg==" role="tab" tabindex="-1">Programa 2</button><button aria-controls="panel-0-UHJvZ3JhbWEgMw==" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-0-UHJvZ3JhbWEgMw==" name="UHJvZ3JhbWEgMw==" role="tab" tabindex="-1">Programa 3</button><button aria-controls="panel-0-UHJvZ3JhbWEgNA==" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-0-UHJvZ3JhbWEgNA==" name="UHJvZ3JhbWEgNA==" role="tab" tabindex="-1">Programa 4</button><button aria-controls="panel-0-cDFfY2FtLnB5" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-0-cDFfY2FtLnB5" name="cDFfY2FtLnB5" role="tab" tabindex="-1">p1_cam.py</button></div><div aria-labelledby="tab-0-UHJvZ3JhbWEgMQ==" class="sphinx-tabs-panel group-tab" id="panel-0-UHJvZ3JhbWEgMQ==" name="UHJvZ3JhbWEgMQ==" role="tabpanel" tabindex="0"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">cv2</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-
-<span class="n">cap</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">VideoCapture</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-<span class="n">output_dir</span> <span class="o">=</span> <span class="s2">&quot;calib_imgs&quot;</span>
-<span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
-
-<span class="n">cv2</span><span class="o">.</span><span class="n">namedWindow</span><span class="p">(</span><span class="s2">&quot;Calibración&quot;</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">WINDOW_NORMAL</span><span class="p">)</span>  <span class="c1"># Habilita cambio de tamaño</span>
-<span class="n">cv2</span><span class="o">.</span><span class="n">resizeWindow</span><span class="p">(</span><span class="s2">&quot;Calibración&quot;</span><span class="p">,</span> <span class="mi">800</span><span class="p">,</span> <span class="mi">600</span><span class="p">)</span>           <span class="c1"># Establece el tamaño deseado</span>
-
-<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-    <span class="n">ret</span><span class="p">,</span> <span class="n">frame</span> <span class="o">=</span> <span class="n">cap</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">ret</span><span class="p">:</span>
-        <span class="k">break</span>
-    <span class="n">cv2</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="s2">&quot;Calibración&quot;</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
-    <span class="n">key</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">waitKey</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xFF</span>
-    <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="nb">ord</span><span class="p">(</span><span class="s1">&#39;c&#39;</span><span class="p">):</span>  <span class="c1"># presiona &#39;c&#39; para capturar</span>
-        <span class="n">fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;img_</span><span class="si">{</span><span class="n">count</span><span class="si">:</span><span class="s2">02d</span><span class="si">}</span><span class="s2">.jpg&quot;</span><span class="p">)</span>
-        <span class="n">cv2</span><span class="o">.</span><span class="n">imwrite</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Imagen guardada:&quot;</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span>
-        <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
-    <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="nb">ord</span><span class="p">(</span><span class="s1">&#39;q&#39;</span><span class="p">):</span>  <span class="c1"># presiona &#39;q&#39; para salir</span>
-        <span class="k">break</span>
-
-<span class="n">cap</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
-<span class="n">cv2</span><span class="o">.</span><span class="n">destroyAllWindows</span><span class="p">()</span>
-</pre></div>
-</div>
-</div><div aria-labelledby="tab-0-UHJvZ3JhbWEgMg==" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-0-UHJvZ3JhbWEgMg==" name="UHJvZ3JhbWEgMg==" role="tabpanel" tabindex="0"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Calibración (guardar archivo camera_calibration.yaml)</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">cv2</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">yaml</span>
-
-<span class="c1"># Parámetros del tablero</span>
-<span class="n">CHECKERBOARD</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span>  <span class="c1"># esquinas internas: columnas x filas (10x7 → 11x8 cuadrados)</span>
-<span class="n">SQUARE_SIZE</span> <span class="o">=</span> <span class="mf">0.025</span>  <span class="c1"># tamaño del cuadrado en metros</span>
-
-<span class="n">criteria</span> <span class="o">=</span> <span class="p">(</span><span class="n">cv2</span><span class="o">.</span><span class="n">TERM_CRITERIA_EPS</span> <span class="o">+</span> <span class="n">cv2</span><span class="o">.</span><span class="n">TERM_CRITERIA_MAX_ITER</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mf">0.001</span><span class="p">)</span>
-
-<span class="n">objp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">CHECKERBOARD</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">CHECKERBOARD</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">3</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
-<span class="n">objp</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mgrid</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">CHECKERBOARD</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">0</span><span class="p">:</span><span class="n">CHECKERBOARD</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-<span class="n">objp</span> <span class="o">*=</span> <span class="n">SQUARE_SIZE</span>
-
-<span class="n">objpoints</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="n">imgpoints</span> <span class="o">=</span> <span class="p">[]</span>
-
-<span class="n">img_dir</span> <span class="o">=</span> <span class="s2">&quot;calib_imgs&quot;</span>
-<span class="n">images</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">img_dir</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">img_dir</span><span class="p">)</span> <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">endswith</span><span class="p">((</span><span class="s2">&quot;.jpg&quot;</span><span class="p">,</span> <span class="s2">&quot;.png&quot;</span><span class="p">))]</span>
-
-<span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">images</span><span class="p">:</span>
-   <span class="n">img</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
-   <span class="n">gray</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">cvtColor</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">COLOR_BGR2GRAY</span><span class="p">)</span>
-   <span class="n">ret</span><span class="p">,</span> <span class="n">corners</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">findChessboardCorners</span><span class="p">(</span><span class="n">gray</span><span class="p">,</span> <span class="n">CHECKERBOARD</span><span class="p">,</span>
-                                             <span class="n">cv2</span><span class="o">.</span><span class="n">CALIB_CB_ADAPTIVE_THRESH</span> <span class="o">+</span>
-                                             <span class="n">cv2</span><span class="o">.</span><span class="n">CALIB_CB_NORMALIZE_IMAGE</span> <span class="o">+</span>
-                                             <span class="n">cv2</span><span class="o">.</span><span class="n">CALIB_CB_FAST_CHECK</span><span class="p">)</span>
-   <span class="k">if</span> <span class="n">ret</span><span class="p">:</span>
-      <span class="n">objpoints</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">objp</span><span class="p">)</span>
-      <span class="n">corners2</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">cornerSubPix</span><span class="p">(</span><span class="n">gray</span><span class="p">,</span> <span class="n">corners</span><span class="p">,</span> <span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">11</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">criteria</span><span class="p">)</span>
-      <span class="n">imgpoints</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">corners2</span><span class="p">)</span>
-      <span class="n">cv2</span><span class="o">.</span><span class="n">drawChessboardCorners</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">CHECKERBOARD</span><span class="p">,</span> <span class="n">corners2</span><span class="p">,</span> <span class="n">ret</span><span class="p">)</span>
-      <span class="n">cv2</span><span class="o">.</span><span class="n">namedWindow</span><span class="p">(</span><span class="s1">&#39;Corners&#39;</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">WINDOW_NORMAL</span><span class="p">)</span>
-      <span class="n">cv2</span><span class="o">.</span><span class="n">resizeWindow</span><span class="p">(</span><span class="s1">&#39;Corners&#39;</span><span class="p">,</span> <span class="mi">800</span><span class="p">,</span> <span class="mi">600</span><span class="p">)</span>
-      <span class="n">cv2</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="s1">&#39;Corners&#39;</span><span class="p">,</span> <span class="n">img</span><span class="p">)</span>
-      <span class="n">cv2</span><span class="o">.</span><span class="n">waitKey</span><span class="p">(</span><span class="mi">500</span><span class="p">)</span>
-
-<span class="n">cv2</span><span class="o">.</span><span class="n">destroyAllWindows</span><span class="p">()</span>
-
-<span class="n">ret</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">dist</span><span class="p">,</span> <span class="n">rvecs</span><span class="p">,</span> <span class="n">tvecs</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">calibrateCamera</span><span class="p">(</span><span class="n">objpoints</span><span class="p">,</span> <span class="n">imgpoints</span><span class="p">,</span> <span class="n">gray</span><span class="o">.</span><span class="n">shape</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-
-<span class="c1"># Guarda en formato YAML compatible con ROS</span>
-<span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
-   <span class="s1">&#39;image_width&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">gray</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
-   <span class="s1">&#39;image_height&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">gray</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
-   <span class="s1">&#39;camera_matrix&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;rows&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;cols&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="n">K</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">()},</span>
-   <span class="s1">&#39;distortion_model&#39;</span><span class="p">:</span> <span class="s1">&#39;plumb_bob&#39;</span><span class="p">,</span>
-   <span class="s1">&#39;distortion_coefficients&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;rows&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;cols&#39;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">dist</span><span class="o">.</span><span class="n">flatten</span><span class="p">()),</span> <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="n">dist</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">()},</span>
-<span class="p">}</span>
-
-<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;camera_calibration.yaml&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-   <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">default_flow_style</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Guardado como camera_calibration.yaml&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div><div aria-labelledby="tab-0-UHJvZ3JhbWEgMw==" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-0-UHJvZ3JhbWEgMw==" name="UHJvZ3JhbWEgMw==" role="tabpanel" tabindex="0"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Archivo para usar la calibración</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">cv2</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">yaml</span>
-
-<span class="c1"># Cargar parámetros desde el archivo YAML generado</span>
-<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;camera_calibration.yaml&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-   <span class="n">calib_data</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-
-<span class="n">K</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">calib_data</span><span class="p">[</span><span class="s2">&quot;camera_matrix&quot;</span><span class="p">][</span><span class="s2">&quot;data&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
-<span class="n">dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">calib_data</span><span class="p">[</span><span class="s2">&quot;distortion_coefficients&quot;</span><span class="p">][</span><span class="s2">&quot;data&quot;</span><span class="p">])</span>
-
-<span class="c1"># Captura de cámara</span>
-<span class="n">cap</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">VideoCapture</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-
-<span class="k">while</span> <span class="n">cap</span><span class="o">.</span><span class="n">isOpened</span><span class="p">():</span>
-   <span class="n">ret</span><span class="p">,</span> <span class="n">frame</span> <span class="o">=</span> <span class="n">cap</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-   <span class="k">if</span> <span class="ow">not</span> <span class="n">ret</span><span class="p">:</span>
-      <span class="k">break</span>
-
-   <span class="n">h</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span>
-   <span class="n">new_camera_mtx</span><span class="p">,</span> <span class="n">roi</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">getOptimalNewCameraMatrix</span><span class="p">(</span><span class="n">K</span><span class="p">,</span> <span class="n">dist</span><span class="p">,</span> <span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">))</span>
-
-   <span class="c1"># Corrección de distorsión</span>
-   <span class="n">undistorted</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">undistort</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">dist</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">new_camera_mtx</span><span class="p">)</span>
-
-   <span class="c1"># Mostrar ambas imágenes</span>
-   <span class="n">cv2</span><span class="o">.</span><span class="n">namedWindow</span><span class="p">(</span><span class="s2">&quot;Original&quot;</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">WINDOW_NORMAL</span><span class="p">)</span>
-   <span class="n">cv2</span><span class="o">.</span><span class="n">namedWindow</span><span class="p">(</span><span class="s2">&quot;Undistorted&quot;</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">WINDOW_NORMAL</span><span class="p">)</span>
-   <span class="n">cv2</span><span class="o">.</span><span class="n">resizeWindow</span><span class="p">(</span><span class="s2">&quot;Original&quot;</span><span class="p">,</span> <span class="mi">640</span><span class="p">,</span> <span class="mi">480</span><span class="p">)</span>
-   <span class="n">cv2</span><span class="o">.</span><span class="n">resizeWindow</span><span class="p">(</span><span class="s2">&quot;Undistorted&quot;</span><span class="p">,</span> <span class="mi">640</span><span class="p">,</span> <span class="mi">480</span><span class="p">)</span>
-   <span class="n">cv2</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="s2">&quot;Original&quot;</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
-   <span class="n">cv2</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="s2">&quot;Undistorted&quot;</span><span class="p">,</span> <span class="n">undistorted</span><span class="p">)</span>
-
-   <span class="k">if</span> <span class="n">cv2</span><span class="o">.</span><span class="n">waitKey</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xFF</span> <span class="o">==</span> <span class="nb">ord</span><span class="p">(</span><span class="s1">&#39;q&#39;</span><span class="p">):</span>
-      <span class="k">break</span>
-
-<span class="n">cap</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
-<span class="n">cv2</span><span class="o">.</span><span class="n">destroyAllWindows</span><span class="p">()</span>
-</pre></div>
-</div>
-</div><div aria-labelledby="tab-0-UHJvZ3JhbWEgNA==" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-0-UHJvZ3JhbWEgNA==" name="UHJvZ3JhbWEgNA==" role="tabpanel" tabindex="0"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">cv2</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">yaml</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
-
-<span class="c1"># --- Cargar parámetros de calibración desde YAML ---</span>
-<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;camera_calibration.yaml&quot;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-   <span class="n">calib_data</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-
-<span class="n">K</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">calib_data</span><span class="p">[</span><span class="s1">&#39;camera_matrix&#39;</span><span class="p">][</span><span class="s1">&#39;data&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
-<span class="n">dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">calib_data</span><span class="p">[</span><span class="s1">&#39;distortion_coefficients&#39;</span><span class="p">][</span><span class="s1">&#39;data&#39;</span><span class="p">])</span>
-
-<span class="c1"># --- Inicializar detección de AprilTags ---</span>
-<span class="k">try</span><span class="p">:</span>
-   <span class="kn">from</span><span class="w"> </span><span class="nn">pupil_apriltags</span><span class="w"> </span><span class="kn">import</span> <span class="n">Detector</span>
-   <span class="n">at_detector</span> <span class="o">=</span> <span class="n">Detector</span><span class="p">(</span><span class="n">families</span><span class="o">=</span><span class="s1">&#39;tag36h11&#39;</span><span class="p">)</span>
-<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-   <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="s2">&quot;Instala pupil_apriltags con: pip install pupil-apriltags&quot;</span><span class="p">)</span>
-
-<span class="c1"># --- Parámetros del tag ---</span>
-<span class="n">tag_size</span> <span class="o">=</span> <span class="mf">0.08</span>  <span class="c1"># Tamaño del tag en metros (100 mm)</span>
-
-<span class="c1"># --- Captura desde la cámara ---</span>
-<span class="n">cap</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">VideoCapture</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-<span class="n">cv2</span><span class="o">.</span><span class="n">namedWindow</span><span class="p">(</span><span class="s2">&quot;AprilTag Detection&quot;</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">WINDOW_NORMAL</span><span class="p">)</span>
-<span class="n">cv2</span><span class="o">.</span><span class="n">resizeWindow</span><span class="p">(</span><span class="s2">&quot;AprilTag Detection&quot;</span><span class="p">,</span> <span class="mi">800</span><span class="p">,</span> <span class="mi">600</span><span class="p">)</span>
-
-<span class="n">last_print_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-
-<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-   <span class="n">ret</span><span class="p">,</span> <span class="n">frame</span> <span class="o">=</span> <span class="n">cap</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-   <span class="k">if</span> <span class="ow">not</span> <span class="n">ret</span><span class="p">:</span>
-      <span class="k">break</span>
-
-   <span class="c1"># Corregir distorsión</span>
-   <span class="n">h</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span>
-   <span class="n">newcameramtx</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">getOptimalNewCameraMatrix</span><span class="p">(</span><span class="n">K</span><span class="p">,</span> <span class="n">dist</span><span class="p">,</span> <span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">))</span>
-   <span class="n">undistorted</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">undistort</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">dist</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">newcameramtx</span><span class="p">)</span>
-
-   <span class="c1"># Convertir a escala de grises</span>
-   <span class="n">gray</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">cvtColor</span><span class="p">(</span><span class="n">undistorted</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">COLOR_BGR2GRAY</span><span class="p">)</span>
-
-   <span class="c1"># Detección</span>
-   <span class="n">tags</span> <span class="o">=</span> <span class="n">at_detector</span><span class="o">.</span><span class="n">detect</span><span class="p">(</span>
-      <span class="n">gray</span><span class="p">,</span>
-      <span class="n">estimate_tag_pose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-      <span class="n">camera_params</span><span class="o">=</span><span class="p">(</span><span class="n">K</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">K</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">K</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">K</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]),</span>
-      <span class="n">tag_size</span><span class="o">=</span><span class="n">tag_size</span>
-   <span class="p">)</span>
-
-   <span class="n">tag_poses</span> <span class="o">=</span> <span class="p">{}</span>
-   <span class="n">tag_centers</span> <span class="o">=</span> <span class="p">{}</span>
-
-   <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">tags</span><span class="p">:</span>
-      <span class="nb">id</span> <span class="o">=</span> <span class="n">tag</span><span class="o">.</span><span class="n">tag_id</span>
-      <span class="n">corners</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">(</span><span class="n">tag</span><span class="o">.</span><span class="n">corners</span><span class="p">)</span>
-      <span class="n">center</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">corners</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
-
-      <span class="n">cv2</span><span class="o">.</span><span class="n">polylines</span><span class="p">(</span><span class="n">undistorted</span><span class="p">,</span> <span class="p">[</span><span class="n">corners</span><span class="p">],</span> <span class="kc">True</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
-      <span class="n">cv2</span><span class="o">.</span><span class="n">putText</span><span class="p">(</span><span class="n">undistorted</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;ID: </span><span class="si">{</span><span class="nb">id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">center</span><span class="p">),</span> <span class="n">cv2</span><span class="o">.</span><span class="n">FONT_HERSHEY_SIMPLEX</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
-
-      <span class="n">t</span> <span class="o">=</span> <span class="n">tag</span><span class="o">.</span><span class="n">pose_t</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span> <span class="o">*</span> <span class="mi">1000</span>  <span class="c1"># Convertir a mm</span>
-      <span class="n">tag_poses</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span> <span class="o">=</span> <span class="n">t</span>
-      <span class="n">tag_centers</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">center</span><span class="p">)</span>
-
-   <span class="k">if</span> <span class="mi">0</span> <span class="ow">in</span> <span class="n">tag_poses</span><span class="p">:</span>
-      <span class="n">ref</span> <span class="o">=</span> <span class="n">tag_poses</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-      <span class="n">ref_center</span> <span class="o">=</span> <span class="n">tag_centers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-      <span class="k">for</span> <span class="nb">id</span><span class="p">,</span> <span class="n">pos</span> <span class="ow">in</span> <span class="n">tag_poses</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="k">if</span> <span class="nb">id</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-               <span class="n">rel</span> <span class="o">=</span> <span class="n">pos</span> <span class="o">-</span> <span class="n">ref</span>
-               <span class="n">dist_mm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">rel</span><span class="p">)</span>
-               <span class="n">cv2</span><span class="o">.</span><span class="n">putText</span><span class="p">(</span><span class="n">undistorted</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;0-&gt;</span><span class="si">{</span><span class="nb">id</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">dist_mm</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> mm&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">30</span> <span class="o">+</span> <span class="mi">30</span> <span class="o">*</span> <span class="nb">id</span><span class="p">),</span>
-                           <span class="n">cv2</span><span class="o">.</span><span class="n">FONT_HERSHEY_SIMPLEX</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
-               <span class="k">if</span> <span class="nb">id</span> <span class="ow">in</span> <span class="n">tag_centers</span><span class="p">:</span>
-                  <span class="n">cv2</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="n">undistorted</span><span class="p">,</span> <span class="n">ref_center</span><span class="p">,</span> <span class="n">tag_centers</span><span class="p">[</span><span class="nb">id</span><span class="p">],</span> <span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
-
-      <span class="c1"># Imprimir en terminal cada segundo</span>
-      <span class="k">if</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">last_print_time</span> <span class="o">&gt;=</span> <span class="mf">1.0</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Posiciones relativas (en mm) con respecto al tag 0:&quot;</span><span class="p">)</span>
-            <span class="k">for</span> <span class="nb">id</span><span class="p">,</span> <span class="n">pos</span> <span class="ow">in</span> <span class="n">tag_poses</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-               <span class="k">if</span> <span class="nb">id</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-                  <span class="n">rel</span> <span class="o">=</span> <span class="n">pos</span> <span class="o">-</span> <span class="n">ref</span>
-                  <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Tag </span><span class="si">{</span><span class="nb">id</span><span class="si">}</span><span class="s2">: ΔX=</span><span class="si">{</span><span class="n">rel</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">, ΔY=</span><span class="si">{</span><span class="n">rel</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">, ΔZ=</span><span class="si">{</span><span class="n">rel</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="n">last_print_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-
-   <span class="n">cv2</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="s2">&quot;AprilTag Detection&quot;</span><span class="p">,</span> <span class="n">undistorted</span><span class="p">)</span>
-   <span class="k">if</span> <span class="n">cv2</span><span class="o">.</span><span class="n">waitKey</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xFF</span> <span class="o">==</span> <span class="nb">ord</span><span class="p">(</span><span class="s1">&#39;q&#39;</span><span class="p">):</span>
-      <span class="k">break</span>
-
-<span class="n">cap</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
-<span class="n">cv2</span><span class="o">.</span><span class="n">destroyAllWindows</span><span class="p">()</span>
-</pre></div>
-</div>
-</div><div aria-labelledby="tab-0-cDFfY2FtLnB5" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-0-cDFfY2FtLnB5" name="cDFfY2FtLnB5" role="tabpanel" tabindex="0"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">cv2</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pupil_apriltags</span><span class="w"> </span><span class="kn">import</span> <span class="n">Detector</span>
-
-<span class="c1"># Transformaciones de la camara</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.spatial.transform</span><span class="w"> </span><span class="kn">import</span> <span class="n">Rotation</span> <span class="k">as</span> <span class="n">R</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">yaml</span>
-
-<span class="c1"># Manejo de ROS2</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">rclpy</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">rclpy.node</span><span class="w"> </span><span class="kn">import</span> <span class="n">Node</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">avig_msg.msg</span><span class="w"> </span><span class="kn">import</span> <span class="n">AprilTagPixel</span><span class="p">,</span><span class="n">AprilTagPixelArray</span>
-
-<span class="c1"># Rutas Absolutas del paquete</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">ament_index_python.packages</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_package_share_directory</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-
-<span class="k">class</span><span class="w"> </span><span class="nc">AprilTagPixelPublisher</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
-   <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-      <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s1">&#39;apriltag_cam&#39;</span><span class="p">)</span>
-
-      <span class="bp">self</span><span class="o">.</span><span class="n">publisher_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_publisher</span><span class="p">(</span><span class="n">AprilTagPixelArray</span><span class="p">,</span> <span class="s1">&#39;/apriltag_pixels&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-
-      <span class="c1"># Obtener ruta absoluta al paquete</span>
-      <span class="n">package_path</span> <span class="o">=</span> <span class="n">get_package_share_directory</span><span class="p">(</span><span class="s1">&#39;mi_pkg_python&#39;</span><span class="p">)</span>
-
-      <span class="c1"># Ruta completa al archivo de calibración</span>
-      <span class="n">yaml_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">package_path</span><span class="p">,</span> <span class="s1">&#39;config&#39;</span><span class="p">,</span> <span class="s1">&#39;camera_calibration.yaml&#39;</span><span class="p">)</span>
-
-      <span class="c1"># Cargar el YAML</span>
-      <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">yaml_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">calib_data</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-
-      <span class="bp">self</span><span class="o">.</span><span class="n">K</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">calib_data</span><span class="p">[</span><span class="s1">&#39;camera_matrix&#39;</span><span class="p">][</span><span class="s1">&#39;data&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">calib_data</span><span class="p">[</span><span class="s1">&#39;distortion_coefficients&#39;</span><span class="p">][</span><span class="s1">&#39;data&#39;</span><span class="p">])</span>
-
-      <span class="c1"># --- Parámetros del tag ---</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">tag_size</span> <span class="o">=</span> <span class="mf">0.08</span>  <span class="c1"># Tamaño del tag en metros (100 mm)</span>
-
-      <span class="bp">self</span><span class="o">.</span><span class="n">cap</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">VideoCapture</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-
-      <span class="c1"># Seteo de la ventana de IMSHOW</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">cap</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">cv2</span><span class="o">.</span><span class="n">CAP_PROP_FRAME_WIDTH</span><span class="p">,</span> <span class="mi">640</span><span class="p">)</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">cap</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">cv2</span><span class="o">.</span><span class="n">CAP_PROP_FRAME_HEIGHT</span><span class="p">,</span> <span class="mi">480</span><span class="p">)</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">cap</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">cv2</span><span class="o">.</span><span class="n">CAP_PROP_FPS</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
-
-      <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">cap</span><span class="o">.</span><span class="n">isOpened</span><span class="p">():</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;No se pudo acceder a la cámara.&quot;</span><span class="p">)</span>
-            <span class="n">exit</span><span class="p">()</span>
-
-      <span class="bp">self</span><span class="o">.</span><span class="n">at_detector</span> <span class="o">=</span> <span class="n">Detector</span><span class="p">(</span><span class="n">families</span><span class="o">=</span><span class="s1">&#39;tag36h11&#39;</span><span class="p">,</span> <span class="n">nthreads</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
-
-      <span class="c1"># Crear ventana redimensionable (solo si se usa visualización)</span>
-      <span class="n">cv2</span><span class="o">.</span><span class="n">namedWindow</span><span class="p">(</span><span class="s2">&quot;AprilTag View&quot;</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">WINDOW_NORMAL</span><span class="p">)</span>
-      <span class="n">cv2</span><span class="o">.</span><span class="n">resizeWindow</span><span class="p">(</span><span class="s2">&quot;AprilTag View&quot;</span><span class="p">,</span> <span class="mi">800</span><span class="p">,</span> <span class="mi">600</span><span class="p">)</span>
-
-      <span class="bp">self</span><span class="o">.</span><span class="n">timer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_timer</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="mf">30.0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">timer_callback</span><span class="p">)</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Nodo AprilTag CAM iniciado.&quot;</span><span class="p">)</span>
-
-   <span class="k">def</span><span class="w"> </span><span class="nf">timer_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-      <span class="n">ret</span><span class="p">,</span> <span class="n">frame</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cap</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-      <span class="k">if</span> <span class="ow">not</span> <span class="n">ret</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot; No se pudo leer el frame.&quot;</span><span class="p">)</span>
-            <span class="k">return</span>
-
-      <span class="c1"># Corregir distorsión</span>
-      <span class="n">h</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span>
-      <span class="n">newcameramtx</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">getOptimalNewCameraMatrix</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">K</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dist</span><span class="p">,</span> <span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">))</span>
-      <span class="n">undistorted</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">undistort</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">K</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dist</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">newcameramtx</span><span class="p">)</span>
-
-      <span class="c1"># Convertir a escala de grises</span>
-      <span class="n">gray</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">cvtColor</span><span class="p">(</span><span class="n">undistorted</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">COLOR_BGR2GRAY</span><span class="p">)</span>
-
-      <span class="c1"># Detección</span>
-      <span class="n">tags</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">at_detector</span><span class="o">.</span><span class="n">detect</span><span class="p">(</span>
-            <span class="n">gray</span><span class="p">,</span>
-            <span class="n">estimate_tag_pose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">camera_params</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">K</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">K</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">K</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">K</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]),</span>
-            <span class="n">tag_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tag_size</span>
-      <span class="p">)</span>
-
-      <span class="n">tag_poses</span> <span class="o">=</span> <span class="p">{}</span>
-      <span class="n">tag_centers</span> <span class="o">=</span> <span class="p">{}</span>
-      <span class="n">tag_by_id</span> <span class="o">=</span> <span class="p">{}</span>
-
-      <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">tags</span><span class="p">:</span>
-            <span class="nb">id</span> <span class="o">=</span> <span class="n">tag</span><span class="o">.</span><span class="n">tag_id</span>
-            <span class="n">corners</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">(</span><span class="n">tag</span><span class="o">.</span><span class="n">corners</span><span class="p">)</span>
-            <span class="n">center</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">corners</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
-
-            <span class="n">cv2</span><span class="o">.</span><span class="n">polylines</span><span class="p">(</span><span class="n">undistorted</span><span class="p">,</span> <span class="p">[</span><span class="n">corners</span><span class="p">],</span> <span class="kc">True</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
-            <span class="n">cv2</span><span class="o">.</span><span class="n">putText</span><span class="p">(</span><span class="n">undistorted</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;ID: </span><span class="si">{</span><span class="nb">id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">center</span><span class="p">),</span> <span class="n">cv2</span><span class="o">.</span><span class="n">FONT_HERSHEY_SIMPLEX</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
-
-            <span class="n">t</span> <span class="o">=</span> <span class="n">tag</span><span class="o">.</span><span class="n">pose_t</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span> <span class="o">*</span> <span class="mi">1000</span>  <span class="c1"># Convertir a mm</span>
-            <span class="n">tag_poses</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span> <span class="o">=</span> <span class="n">t</span>
-            <span class="n">tag_centers</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">center</span><span class="p">)</span>
-            <span class="n">tag_by_id</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span> <span class="o">=</span> <span class="n">tag</span>
-
-      <span class="n">msg_arreglo</span> <span class="o">=</span> <span class="n">AprilTagPixelArray</span><span class="p">()</span>
-
-      <span class="c1"># --- Transformación al marco del tag 0 ---</span>
-
-      <span class="k">if</span> <span class="mi">0</span> <span class="ow">in</span> <span class="n">tag_by_id</span><span class="p">:</span>
-            <span class="c1"># Obtener transformación del tag 0</span>
-            <span class="n">ref_tag</span> <span class="o">=</span> <span class="n">tag_by_id</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="n">R0</span> <span class="o">=</span> <span class="n">ref_tag</span><span class="o">.</span><span class="n">pose_R</span>
-            <span class="n">t0</span> <span class="o">=</span> <span class="n">ref_tag</span><span class="o">.</span><span class="n">pose_t</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-            <span class="n">T0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">R0</span><span class="p">,</span> <span class="n">t0</span><span class="p">])</span>
-            <span class="n">T0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">T0</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]])</span>
-            <span class="n">T0_inv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">T0</span><span class="p">)</span>
-
-            <span class="c1"># Mostrar orientación del tag 0 (ángulos Euler)</span>
-            <span class="n">r_obj</span> <span class="o">=</span> <span class="n">R</span><span class="o">.</span><span class="n">from_matrix</span><span class="p">(</span><span class="n">R0</span><span class="p">)</span>
-            <span class="n">euler</span> <span class="o">=</span> <span class="n">r_obj</span><span class="o">.</span><span class="n">as_euler</span><span class="p">(</span><span class="s1">&#39;xyz&#39;</span><span class="p">,</span> <span class="n">degrees</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Orientación Tag 0 (Euler): Roll=</span><span class="si">{</span><span class="n">euler</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1">°, Pitch=</span><span class="si">{</span><span class="n">euler</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1">°, Yaw=</span><span class="si">{</span><span class="n">euler</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-
-            <span class="c1"># Calcular transformaciones relativas corregidas [mm]</span>
-
-            <span class="k">for</span> <span class="nb">id</span><span class="p">,</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">tag_by_id</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-               <span class="k">if</span> <span class="nb">id</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                  <span class="n">msg_0</span> <span class="o">=</span> <span class="n">AprilTagPixel</span><span class="p">()</span>
-                  <span class="n">msg_0</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="mi">0</span>
-                  <span class="n">msg_0</span><span class="o">.</span><span class="n">posx</span> <span class="o">=</span> <span class="mf">0.0</span>
-                  <span class="n">msg_0</span><span class="o">.</span><span class="n">posy</span> <span class="o">=</span> <span class="mf">0.0</span>
-                  <span class="k">continue</span>
-
-               <span class="n">R_tag</span> <span class="o">=</span> <span class="n">tag</span><span class="o">.</span><span class="n">pose_R</span>
-               <span class="n">t_tag</span> <span class="o">=</span> <span class="n">tag</span><span class="o">.</span><span class="n">pose_t</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-               <span class="n">T</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">R_tag</span><span class="p">,</span> <span class="n">t_tag</span><span class="p">])</span>
-               <span class="n">T</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">T</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]])</span>
-
-               <span class="n">T_rel</span> <span class="o">=</span> <span class="n">T0_inv</span> <span class="o">@</span> <span class="n">T</span>
-               <span class="n">t_rel</span> <span class="o">=</span> <span class="n">T_rel</span><span class="p">[:</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">*</span> <span class="mi">1000</span>  <span class="c1"># en mm</span>
-
-               <span class="c1"># creacion del tipo de mensaje AprilTagPixel()</span>
-               <span class="n">msg</span> <span class="o">=</span> <span class="n">AprilTagPixel</span><span class="p">()</span>
-               <span class="n">msg</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="nb">id</span>
-               <span class="n">msg</span><span class="o">.</span><span class="n">posx</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">t_rel</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mi">1000</span><span class="p">)</span>
-               <span class="n">msg</span><span class="o">.</span><span class="n">posy</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="o">-</span><span class="n">t_rel</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="mi">1000</span><span class="p">)</span>
-               <span class="n">msg_arreglo</span><span class="o">.</span><span class="n">tags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
-
-               <span class="k">if</span> <span class="nb">id</span> <span class="ow">in</span> <span class="n">tag_centers</span> <span class="ow">and</span> <span class="mi">0</span> <span class="ow">in</span> <span class="n">tag_centers</span><span class="p">:</span>
-                  <span class="n">cv2</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="n">undistorted</span><span class="p">,</span> <span class="n">tag_centers</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">tag_centers</span><span class="p">[</span><span class="nb">id</span><span class="p">],</span> <span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
-                  <span class="n">cv2</span><span class="o">.</span><span class="n">putText</span><span class="p">(</span><span class="n">undistorted</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;0-&gt;</span><span class="si">{</span><span class="nb">id</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">t_rel</span><span class="p">[:</span><span class="mi">2</span><span class="p">])</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> mm&quot;</span><span class="p">,</span>
-                              <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">30</span> <span class="o">+</span> <span class="mi">30</span> <span class="o">*</span> <span class="nb">id</span><span class="p">),</span> <span class="n">cv2</span><span class="o">.</span><span class="n">FONT_HERSHEY_SIMPLEX</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
-
-      <span class="bp">self</span><span class="o">.</span><span class="n">publisher_data</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">msg_arreglo</span><span class="p">)</span>
-      <span class="c1"># Visualizacion</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">visualizar_detecciones</span><span class="p">(</span><span class="n">undistorted</span><span class="p">)</span>
-
-   <span class="k">def</span><span class="w"> </span><span class="nf">visualizar_detecciones</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frame</span><span class="p">):</span>
-      <span class="n">cv2</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="s2">&quot;AprilTag View&quot;</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
-      <span class="k">if</span> <span class="n">cv2</span><span class="o">.</span><span class="n">waitKey</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xFF</span> <span class="o">==</span> <span class="nb">ord</span><span class="p">(</span><span class="s1">&#39;q&#39;</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot; &#39;q&#39; presionado. Saliendo.&quot;</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">cap</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
-            <span class="n">cv2</span><span class="o">.</span><span class="n">destroyAllWindows</span><span class="p">()</span>
-            <span class="n">rclpy</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
-
-   <span class="k">def</span><span class="w"> </span><span class="nf">destroy_node</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">cap</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
-      <span class="n">cv2</span><span class="o">.</span><span class="n">destroyAllWindows</span><span class="p">()</span>
-      <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">destroy_node</span><span class="p">()</span>
-
-<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-   <span class="n">rclpy</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">)</span>
-   <span class="n">node</span> <span class="o">=</span> <span class="n">AprilTagPixelPublisher</span><span class="p">()</span>
-   <span class="k">try</span><span class="p">:</span>
-      <span class="n">rclpy</span><span class="o">.</span><span class="n">spin</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
-   <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
-      <span class="n">node</span><span class="o">.</span><span class="n">destroy_node</span><span class="p">()</span>
-      <span class="n">rclpy</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
-
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
-   <span class="n">main</span><span class="p">()</span>
-</pre></div>
-</div>
-</div></div>
-</section>
+<section id="maquinas-de-estado">
+<h2>Máquinas de estado<a class="headerlink" href="#maquinas-de-estado" title="Enlace permanente a este encabezado"></a></h2>
 </section>
 <section id="publicacion-de-objetos-simulados">
-<h2>Publicación de objetos simulados<a class="headerlink" href="#publicacion-de-objetos-simulados" title="Link to this heading"></a></h2>
+<h2>Publicación de objetos simulados<a class="headerlink" href="#publicacion-de-objetos-simulados" title="Enlace permanente a este encabezado"></a></h2>
 <p>Los objetos que se visualicen a través de la cámara serán digitalizados y simulados en RVIZ2.</p>
 <p>Dependiendo del ID que tenga el tag, se realiza un cambio de color para distinguir la familia de tags relacionada con el tag_id 1 y el tag_id 2.</p>
 <p><strong>Código del proyecto:</strong> <code class="docutils literal notranslate"><span class="pre">p1_pub_obj.py</span></code></p>
@@ -825,7 +249,7 @@
 </div>
 </section>
 <section id="modificacion-de-servicios">
-<h2>Modificación de servicios<a class="headerlink" href="#modificacion-de-servicios" title="Link to this heading"></a></h2>
+<h2>Modificación de servicios<a class="headerlink" href="#modificacion-de-servicios" title="Enlace permanente a este encabezado"></a></h2>
 <p>Para solucionar el problema de generar una heurística que permita la toma decisiones con respecto a que tag debe clasificar primero el sistema. Se crea un nuevo
 archivo srv <code class="docutils literal notranslate"><span class="pre">HeuristicaP</span></code> dentro del paquete <code class="docutils literal notranslate"><span class="pre">avig_msg</span></code>, teniendo de requermiento y respuesta un <code class="docutils literal notranslate"><span class="pre">AprilTagPixelArray</span></code>.</p>
 <p>Dado que en la sección de tutoriales se creó una solución para este problema, unicamente es necesario cambiar la respuesta del servidor en base al nuevo tipo de
@@ -892,9 +316,9 @@ archivo srv</p>
 </div>
 </section>
 <section id="cinematica-inversa">
-<h2>Cinemática Inversa<a class="headerlink" href="#cinematica-inversa" title="Link to this heading"></a></h2>
+<h2>Cinemática Inversa<a class="headerlink" href="#cinematica-inversa" title="Enlace permanente a este encabezado"></a></h2>
 <section id="modelo-geometrico">
-<h3>Modelo Geométrico<a class="headerlink" href="#modelo-geometrico" title="Link to this heading"></a></h3>
+<h3>Modelo Geométrico<a class="headerlink" href="#modelo-geometrico" title="Enlace permanente a este encabezado"></a></h3>
 <p>Se considera un manipulador plano con dos eslabones de longitud:</p>
 <ul class="simple">
 <li><p><span class="math notranslate nohighlight">\(l_1\)</span>: longitud del brazo</p></li>
@@ -912,7 +336,7 @@ archivo srv</p>
 </ul>
 </section>
 <section id="formulacion">
-<h3>Formulación<a class="headerlink" href="#formulacion" title="Link to this heading"></a></h3>
+<h3>Formulación<a class="headerlink" href="#formulacion" title="Enlace permanente a este encabezado"></a></h3>
 <p>Dado un punto deseado en coordenadas globales:</p>
 <div class="math notranslate nohighlight">
 \[(x_a, y_a)\]</div>
@@ -932,14 +356,14 @@ y_d = y_a - dy\end{split}\]</div>
 \[q_1 = \arctan2(y_d, x_d) - \arctan2(l_2 \sin(q_2), l_1 + l_2 \cos(q_2))\]</div>
 </section>
 <section id="restricciones">
-<h3>Restricciones<a class="headerlink" href="#restricciones" title="Link to this heading"></a></h3>
+<h3>Restricciones<a class="headerlink" href="#restricciones" title="Enlace permanente a este encabezado"></a></h3>
 <ul class="simple">
 <li><p>El valor absoluto de <span class="math notranslate nohighlight">\(D\)</span> debe ser menor o igual a 1 para garantizar solución real.</p></li>
 <li><p>Si <span class="math notranslate nohighlight">\(|D| &gt; 1\)</span>, el punto está fuera del alcance del robot.</p></li>
 </ul>
 </section>
 <section id="ejemplo-en-codigo">
-<h3>Ejemplo en Código<a class="headerlink" href="#ejemplo-en-codigo" title="Link to this heading"></a></h3>
+<h3>Ejemplo en Código<a class="headerlink" href="#ejemplo-en-codigo" title="Enlace permanente a este encabezado"></a></h3>
 <p>Con el fin de automatizar el proceso de carga del desplazamiento del origen del URDF del robot SCARA creado, con respecto al april-tag 0, y de los eslabones correspondientes a q1 y q2,
 se implementa un algoritmo que a través del uso de TF2 carga automaticamente estos valores al lanzarse el launcher con el URDF y visualizador RVIZ.</p>
 <p><strong>Código del proyecto</strong> <code class="docutils literal notranslate"><span class="pre">p1_ci.py</span></code></p>
@@ -1032,7 +456,7 @@ se implementa un algoritmo que a través del uso de TF2 carga automaticamente es
 </section>
 </section>
 <section id="conexion-ros2-esp32">
-<h2>Conexión ROS2 - ESP32<a class="headerlink" href="#conexion-ros2-esp32" title="Link to this heading"></a></h2>
+<h2>Conexión ROS2 - ESP32<a class="headerlink" href="#conexion-ros2-esp32" title="Enlace permanente a este encabezado"></a></h2>
 <p>Utilizando el archivo base de urdf-mqtt.py, se realizan las modificaciones necesarias para suscribirse a un topic, que publique los angulos que debe moverse cada juntas
 para alcanzar los diferentes objetos en el espacio de trabajo.</p>
 <p><strong>Código del proyecto</strong> <code class="docutils literal notranslate"><span class="pre">p1_puente.py</span></code></p>
@@ -1187,7 +611,7 @@ para alcanzar los diferentes objetos en el espacio de trabajo.</p>
 </div>
 </section>
 <section id="modificacion-de-archivos-launch">
-<h2>Modificacion de archivos launch<a class="headerlink" href="#modificacion-de-archivos-launch" title="Link to this heading"></a></h2>
+<h2>Modificacion de archivos launch<a class="headerlink" href="#modificacion-de-archivos-launch" title="Enlace permanente a este encabezado"></a></h2>
 <p>En el archivo launcher es necesario eliminar el slider creado para la manipulación del URDF, dado a que este ahora se moverá en base al
 algoritmo de control del sistema creado.</p>
 <p><strong>Código del proyecto</strong> <code class="docutils literal notranslate"><span class="pre">p1.launch.py</span></code></p>
@@ -1323,7 +747,7 @@ algoritmo de control del sistema creado.</p>
 </div>
 </section>
 <section id="algoritmo-de-control-de-proceso">
-<h2>Algoritmo de control de proceso<a class="headerlink" href="#algoritmo-de-control-de-proceso" title="Link to this heading"></a></h2>
+<h2>Algoritmo de control de proceso<a class="headerlink" href="#algoritmo-de-control-de-proceso" title="Enlace permanente a este encabezado"></a></h2>
 <p>Para realizar el ejercicio de clasificación de objetos es necesario aplicar un algoritmo que permita serilizar el proceso que
 tendra que hacer el robot.</p>
 <p><strong>Código del proyecto</strong> <code class="docutils literal notranslate"><span class="pre">p1_coordinador.py</span></code></p>
@@ -1465,13 +889,276 @@ tendra que hacer el robot.</p>
 </div>
 </section>
 </section>
+<section id="objetivo">
+<h1>Objetivo<a class="headerlink" href="#objetivo" title="Enlace permanente a este encabezado"></a></h1>
+<p>Este documento resume una arquitectura recomendada (nivel profesional/industrial) para integrar:</p>
+<ul class="simple">
+<li><p><strong>Edge computing</strong> (cómputo en el robot)</p></li>
+<li><p><strong>ROS 2</strong> como middleware</p></li>
+<li><p><strong>SLAM 3D</strong> (mapeo y localización en 3D)</p></li>
+<li><p>Navegación y control (opcional, pero común en robots móviles)</p></li>
+</ul>
+<p>La idea principal es diseñar un sistema robusto que soporte:</p>
+<ul class="simple">
+<li><p>Alto ancho de banda de sensores (LiDAR/Depth)</p></li>
+<li><p>Cómputo pesado (odometría + SLAM)</p></li>
+<li><p>Baja latencia en control</p></li>
+<li><p>Escalabilidad (monitorización, logging y gemelo digital)</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="que-se-ejecuta-en-el-edge-y-que-se-ejecuta-fuera">
+<h1>1. ¿Qué se ejecuta en el Edge y qué se ejecuta fuera?<a class="headerlink" href="#que-se-ejecuta-en-el-edge-y-que-se-ejecuta-fuera" title="Enlace permanente a este encabezado"></a></h1>
+<section id="en-el-edge-robot">
+<h2>En el Edge (robot)<a class="headerlink" href="#en-el-edge-robot" title="Enlace permanente a este encabezado"></a></h2>
+<p>En el robot se debe ejecutar todo lo que es <strong>crítico para operación en tiempo real</strong>:</p>
+<ul class="simple">
+<li><p>Drivers de sensores: LiDAR, cámara depth, IMU, encoders</p></li>
+<li><p>Sincronización y estampado temporal (timestamps coherentes)</p></li>
+<li><p>Preprocesamiento de datos (filtros, downsample, deskew)</p></li>
+<li><p>Odometría (wheel/visual/LiDAR)</p></li>
+<li><p><strong>SLAM 3D</strong> (pose + mapa, loop closure si aplica)</p></li>
+<li><p>Navegación local (evitación reactiva / control local)</p></li>
+<li><p>Control (<code class="docutils literal notranslate"><span class="pre">ros2_control</span></code> / drivers CAN / PWM / Ethernet)</p></li>
+</ul>
+</section>
+<section id="fuera-del-edge-estacion-base-servidor">
+<h2>Fuera del Edge (estación/base/servidor)<a class="headerlink" href="#fuera-del-edge-estacion-base-servidor" title="Enlace permanente a este encabezado"></a></h2>
+<p>Fuera del robot se deja lo que no es crítico o puede ser pesado:</p>
+<ul class="simple">
+<li><p>Visualización (RViz2, dashboards web)</p></li>
+<li><p>Grabación masiva de datos (rosbag continuo a NAS)</p></li>
+<li><p>Analítica y mantenimiento predictivo</p></li>
+<li><p>Map merging (multi-robot) / optimizaciones batch</p></li>
+<li><p>Gemelo digital / simulación (Isaac Sim, etc.)</p></li>
+</ul>
+</section>
+<section id="regla-de-oro">
+<h2>Regla de oro<a class="headerlink" href="#regla-de-oro" title="Enlace permanente a este encabezado"></a></h2>
+<p><strong>Todo lo que requiere respuesta inmediata debe vivir en el Edge.</strong></p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="requisitos-de-hardware-para-slam-3d-por-clases">
+<h1>2. Requisitos de hardware para SLAM 3D (por clases)<a class="headerlink" href="#requisitos-de-hardware-para-slam-3d-por-clases" title="Enlace permanente a este encabezado"></a></h1>
+<p>El hardware depende principalmente del sensor y del stack SLAM elegido.</p>
+<section id="a-slam-3d-basado-en-lidar-robusto-en-industria">
+<h2>A) SLAM 3D basado en LiDAR (robusto en industria)<a class="headerlink" href="#a-slam-3d-basado-en-lidar-robusto-en-industria" title="Enlace permanente a este encabezado"></a></h2>
+<ul class="simple">
+<li><p>En general exige <strong>CPU fuerte</strong> (procesamiento geométrico y registro)</p></li>
+<li><p>GPU opcional dependiendo del pipeline</p></li>
+<li><p>RAM moderada/alta (mapa y buffers)</p></li>
+</ul>
+<p>Recomendación típica:</p>
+<ul class="simple">
+<li><p>CPU: 6–12 cores con buen rendimiento por núcleo</p></li>
+<li><p>RAM: 16–32 GB</p></li>
+<li><p>SSD NVMe: 256 GB–1 TB (mapas + rosbags)</p></li>
+<li><p>Red: 1 GbE mínimo (2.5/10 GbE si hay múltiples sensores o alta tasa)</p></li>
+</ul>
+</section>
+<section id="b-slam-3d-basado-en-camara-depth-estereo-visual-rgb-d">
+<h2>B) SLAM 3D basado en cámara depth / estéreo (visual / RGB-D)<a class="headerlink" href="#b-slam-3d-basado-en-camara-depth-estereo-visual-rgb-d" title="Enlace permanente a este encabezado"></a></h2>
+<ul class="simple">
+<li><p><strong>GPU ayuda mucho</strong> (especialmente con pipelines acelerados)</p></li>
+<li><p>Sensible a iluminación y texturas</p></li>
+<li><p>Requiere buena sincronización IMU–cámara</p></li>
+</ul>
+<p>Recomendación típica:</p>
+<ul class="simple">
+<li><p>CPU: 6–12 cores</p></li>
+<li><p>GPU: NVIDIA (si se busca aceleración / Isaac ROS)</p></li>
+<li><p>RAM: 16–32 GB</p></li>
+<li><p>SSD NVMe: recomendado</p></li>
+</ul>
+</section>
+<section id="c-slam-3d-percepcion-avanzada-navegacion-completa">
+<h2>C) SLAM 3D + Percepción avanzada + Navegación completa<a class="headerlink" href="#c-slam-3d-percepcion-avanzada-navegacion-completa" title="Enlace permanente a este encabezado"></a></h2>
+<p>Cuando se ejecuta SLAM + percepción + detección + navegación:</p>
+<ul class="simple">
+<li><p>CPU fuerte + GPU potente + RAM alta</p></li>
+<li><p>Recomendado usar mini-PC industrial o plataforma NVIDIA con NVMe</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="arquitectura-ros-2-recomendada-bloques">
+<h1>3. Arquitectura ROS 2 recomendada (bloques)<a class="headerlink" href="#arquitectura-ros-2-recomendada-bloques" title="Enlace permanente a este encabezado"></a></h1>
+<section id="bloques-minimos-pipeline-estandar">
+<h2>Bloques mínimos (pipeline estándar)<a class="headerlink" href="#bloques-minimos-pipeline-estandar" title="Enlace permanente a este encabezado"></a></h2>
+<ol class="arabic simple">
+<li><p><strong>Sensor Layer</strong>
+- Drivers: LiDAR / Depth / IMU / encoders</p></li>
+<li><p><strong>Time &amp; Sync Layer</strong>
+- timestamps consistentes
+- TF bien definido (<code class="docutils literal notranslate"><span class="pre">map</span></code>, <code class="docutils literal notranslate"><span class="pre">odom</span></code>, <code class="docutils literal notranslate"><span class="pre">base_link</span></code>)</p></li>
+<li><p><strong>Preprocessing</strong>
+- VoxelGrid / downsample
+- Crop ROI (recortar volumen útil)
+- Deskew (LiDAR + IMU) si aplica
+- (Opcional) quitar plano (mesa/suelo) y filtrar ruido</p></li>
+<li><p><strong>Odometry</strong>
+- Wheel + IMU con EKF
+- Visual odom o LiDAR odom según el caso</p></li>
+<li><p><strong>SLAM 3D</strong>
+- Estimación de pose global
+- Pose-graph / loop closure (según implementación)
+- Mapa 3D (nubes/voxels)</p></li>
+<li><p><strong>Navigation (si robot móvil)</strong>
+- Planner global + control local (Nav2)
+- Evitación de obstáculos (2D/3D)</p></li>
+<li><p><strong>Control</strong>
+- <code class="docutils literal notranslate"><span class="pre">ros2_control</span></code> y hardware interfaces</p></li>
+</ol>
+</section>
+<section id="recomendacion-industrial">
+<h2>Recomendación industrial<a class="headerlink" href="#recomendacion-industrial" title="Enlace permanente a este encabezado"></a></h2>
+<ul class="simple">
+<li><p>Separar por contenedores (Docker) o usar composable nodes por rendimiento</p></li>
+<li><p>Usar QoS correcto según tipo de dato (sensores vs control)</p></li>
+<li><p>Aislar CPU y prioridades si se requiere determinismo</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="slam-3d-en-ros-2-opciones-practicas">
+<h1>4. SLAM 3D en ROS 2 (opciones prácticas)<a class="headerlink" href="#slam-3d-en-ros-2-opciones-practicas" title="Enlace permanente a este encabezado"></a></h1>
+<p>La elección depende del sensor y del objetivo.</p>
+<section id="opcion-1-rtab-map-rgb-d-integracion-flexible">
+<h2>Opción 1: RTAB-Map (RGB-D / integración flexible)<a class="headerlink" href="#opcion-1-rtab-map-rgb-d-integracion-flexible" title="Enlace permanente a este encabezado"></a></h2>
+<ul class="simple">
+<li><p>Muy usado en robótica aplicada</p></li>
+<li><p>Loop closure y mapeo</p></li>
+<li><p>Puede producir mapa 2D a partir de 3D para navegación (según configuración)</p></li>
+</ul>
+<p>Ideal si:
+- Se busca un stack flexible “todo en uno”
+- Se usa cámara depth y un odom decente</p>
+</section>
+<section id="opcion-2-slam-basado-en-lidar-robusto-para-industria">
+<h2>Opción 2: SLAM basado en LiDAR (robusto para industria)<a class="headerlink" href="#opcion-2-slam-basado-en-lidar-robusto-para-industria" title="Enlace permanente a este encabezado"></a></h2>
+<p>Para entornos con poca luz, polvo o grandes espacios, LiDAR suele ser mejor.
+En ROS 2, la selección concreta varía por hardware y disponibilidad.</p>
+<p>Ideal si:
+- Entorno industrial
+- Necesidad de robustez en condiciones complejas</p>
+</section>
+<section id="opcion-3-isaac-ros-si-la-plataforma-es-nvidia">
+<h2>Opción 3: Isaac ROS (si la plataforma es NVIDIA)<a class="headerlink" href="#opcion-3-isaac-ros-si-la-plataforma-es-nvidia" title="Enlace permanente a este encabezado"></a></h2>
+<ul class="simple">
+<li><p>Pipeline acelerado en GPU para percepción y odometría visual (según módulos)</p></li>
+<li><p>Muy eficiente en FPS y latencia con cámaras</p></li>
+</ul>
+<p>Ideal si:
+- Edge basado en NVIDIA
+- Se busca alto rendimiento con visión</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="nav2-slam-3d-como-se-integran-en-la-practica">
+<h1>5. Nav2 + SLAM 3D: cómo se integran en la práctica<a class="headerlink" href="#nav2-slam-3d-como-se-integran-en-la-practica" title="Enlace permanente a este encabezado"></a></h1>
+<p>Aunque SLAM sea 3D, en robot móvil la navegación normalmente usa costmaps 2D.</p>
+<p>Enfoque típico:</p>
+<ul class="simple">
+<li><p>SLAM 3D produce pose y mapa (3D)</p></li>
+<li><p>Se genera o mantiene un <strong>mapa 2D</strong> (ocupación) para Nav2</p></li>
+<li><p>Obstáculos dinámicos se actualizan desde:
+- LiDAR/Depth proyectados a 2D
+- voxel layers (según configuración)</p></li>
+</ul>
+<section id="recomendacion-practica">
+<h2>Recomendación práctica<a class="headerlink" href="#recomendacion-practica" title="Enlace permanente a este encabezado"></a></h2>
+<p>Mantener:</p>
+<ul class="simple">
+<li><p><strong>Mapa 2D</strong> para planificación global (estable y eficiente)</p></li>
+<li><p><strong>Percepción 3D local</strong> para obstáculos dinámicos y seguridad</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="puntos-criticos-que-suelen-fallar-en-slam-3d-y-mitigacion">
+<h1>6. Puntos críticos que suelen fallar en SLAM 3D (y mitigación)<a class="headerlink" href="#puntos-criticos-que-suelen-fallar-en-slam-3d-y-mitigacion" title="Enlace permanente a este encabezado"></a></h1>
+<section id="tiempo-mal-sincronizado">
+<h2>1) Tiempo mal sincronizado<a class="headerlink" href="#tiempo-mal-sincronizado" title="Enlace permanente a este encabezado"></a></h2>
+<p>Síntomas:
+- Drift elevado
+- mapas “gelatinosos”
+- desalineación de nubes</p>
+<p>Mitigación:
+- Asegurar timestamps coherentes
+- Verificar sincronización IMU–cámara–LiDAR
+- Revisar latencias y buffers</p>
+</section>
+<section id="tf-inconsistente">
+<h2>2) TF inconsistente<a class="headerlink" href="#tf-inconsistente" title="Enlace permanente a este encabezado"></a></h2>
+<p>Mitigación:
+- Definir claramente frames: <code class="docutils literal notranslate"><span class="pre">map</span></code>, <code class="docutils literal notranslate"><span class="pre">odom</span></code>, <code class="docutils literal notranslate"><span class="pre">base_link</span></code>, <code class="docutils literal notranslate"><span class="pre">sensor_link</span></code>
+- Evitar transforms duplicadas o contradictorias</p>
+</section>
+<section id="exceso-de-datos-saturacion-de-cpu-red-memoria">
+<h2>3) Exceso de datos (saturación de CPU/red/memoria)<a class="headerlink" href="#exceso-de-datos-saturacion-de-cpu-red-memoria" title="Enlace permanente a este encabezado"></a></h2>
+<p>Mitigación:
+- VoxelGrid / downsample
+- Crop ROI
+- Ajustar tasas de publicación (Hz)
+- Filtrar ruido y puntos innecesarios</p>
+</section>
+<section id="qos-incorrecto-en-ros-2">
+<h2>4) QoS incorrecto en ROS 2<a class="headerlink" href="#qos-incorrecto-en-ros-2" title="Enlace permanente a este encabezado"></a></h2>
+<p>Mitigación:
+- Sensores: típicamente <code class="docutils literal notranslate"><span class="pre">best_effort</span></code> (según caso)
+- Control y estado: <code class="docutils literal notranslate"><span class="pre">reliable</span></code>
+- Ajustar profundidad de colas y durabilidad según uso</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="arquitectura-recomendada-resumen-industrial">
+<h1>7. Arquitectura recomendada (resumen “industrial”)<a class="headerlink" href="#arquitectura-recomendada-resumen-industrial" title="Enlace permanente a este encabezado"></a></h1>
+<section id="edge-robot">
+<h2>Edge (robot)<a class="headerlink" href="#edge-robot" title="Enlace permanente a este encabezado"></a></h2>
+<ul class="simple">
+<li><p>Drivers (LiDAR/Depth/IMU/encoders)</p></li>
+<li><p>TF + sincronización</p></li>
+<li><p>EKF (wheel + IMU)</p></li>
+<li><p>Preprocesamiento de nubes</p></li>
+<li><p>Odometry</p></li>
+<li><p><strong>SLAM 3D</strong></p></li>
+<li><p>Nav2 (control local / evitación) si aplica</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ros2_control</span></code> / drivers motores</p></li>
+</ul>
+</section>
+<section id="base-station-servidor">
+<h2>Base station / servidor<a class="headerlink" href="#base-station-servidor" title="Enlace permanente a este encabezado"></a></h2>
+<ul class="simple">
+<li><p>RViz2 / dashboards</p></li>
+<li><p>logging y análisis</p></li>
+<li><p>gestión de mapas</p></li>
+<li><p>gemelo digital y simulación (opcional)</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="conclusion">
+<h1>Conclusión<a class="headerlink" href="#conclusion" title="Enlace permanente a este encabezado"></a></h1>
+<p>La combinación <strong>Edge + ROS 2 + SLAM 3D</strong> se diseña como un sistema distribuido:</p>
+<ul class="simple">
+<li><p>El Edge ejecuta lo crítico (sensores, odom, SLAM, control)</p></li>
+<li><p>El servidor ejecuta visualización, análisis y funciones pesadas no críticas</p></li>
+</ul>
+<p>Una implementación profesional depende de:</p>
+<ul class="simple">
+<li><p>Hardware apropiado para el sensor principal (LiDAR vs cámara depth)</p></li>
+<li><p>TF y tiempo correctamente sincronizados</p></li>
+<li><p>Preprocesamiento para evitar saturación</p></li>
+<li><p>QoS correcto en ROS 2</p></li>
+<li><p>Integración de SLAM 3D con navegación (usualmente costmap 2D + percepción 3D local)</p></li>
+</ul>
+</section>
 
 
            </div>
           </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Pie de página">
-        <a href="../tema_4/gemelo.html" class="btn btn-neutral float-left" title="Gemelo Digital" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Anterior</a>
-    </div>
+          <footer>
 
   <hr/>
 
