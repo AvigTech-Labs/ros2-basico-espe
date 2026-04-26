@@ -6,11 +6,6 @@ Actividad
 
 Diseñar y simular un sistema de clasificación de objetos basados en ROS2, utilizando 2 robots Scaras.
 
-Arquitectura planteada
-~~~~~~~~~~~~~~~~~~~~~~
-
-Se plantea el uso de 
-
 Archivos Xacro
 --------------
 
@@ -212,19 +207,3 @@ Errores comunes
 - Compartir ``/joint_states`` entre robots
 - Confiar solo en namespaces sin prefijar links/joints
 
-Scaras
-------
-
-Para el siguiente proyecto se utilizan los sigueintes modelos de robots 
-Scara de 4 GDL.
-
-Máquinas de estado
-------------------
-
-Una forma de procesar rutinas es con máquinas de estado.
-
-
-Modificación de servicios
--------------------------
-
-66
