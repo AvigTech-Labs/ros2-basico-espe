@@ -1,7 +1,8 @@
-Archivos URDF
-=============
+Gemelo Digital
+==============
 
-Prueba de actualizacion
+Archivos URDF
+-------------
 
 Para crear archivos URDF en base a diseños personalidados de robots con
 solidworks, es necesario descargar la extensión URDF.
@@ -50,8 +51,6 @@ configuración.
 
    sudo apt install ros-humble-joint-state-publisher-gui
 
---------------
-
 2. Copiar archivos al paquete
 
 Dentro del paquete ``mi_pkg_python``, se debe crear los directorios:
@@ -78,8 +77,6 @@ Dentro del paquete ``mi_pkg_python``, se debe crear los directorios:
 nota: Es importante revisar la correcta escritura de los diferentes
 archivos.
 
---------------
-
 3. Verifica y edita las rutas en el URDF
 
 Dentro de ``ensamblaje.urdf``, es necesario revisar que las rutas a las
@@ -96,7 +93,6 @@ En este punto es necesario revisar que los parámetros sean diferentes de
 
    <limit lower="-1.57" upper="1.57" effort="1.0" velocity="1.0" />
 
---------------
 
 4. Modificar ``setup.py`` para instalar los recursos
 
@@ -118,7 +114,6 @@ Dentro de ``setup.py``, realizar la modificación del bloque
        ('share/' + package_name + '/launch', ['launch/visualizar_rviz.launch.py']),
        ],
 
---------------
 
 5. Crear el archivo de lanzamiento
 
@@ -184,7 +179,6 @@ contenido:
   mediante sliders.
 - ``rviz2``: lanza la visualización.
 
---------------
 
 6. Compilar y lanzar
 
@@ -325,7 +319,6 @@ Dentro de la carpeta mqtt_python crear los archivos  ``0_urdf_sub.py`` y ``0_urd
 
 Agregar los programas en el setup.py para poder ejecutarlos con ROS2.
 
---------------
 
 tf2
 ~~~
@@ -350,7 +343,6 @@ pero se puede instalar instalarlo con:
   ``efector_link``, etc.)
 - Usa transformaciones 3D (posición + orientación con cuaterniones)
 
---------------
 
 **¿Quién publica los ``tf``?**
 
@@ -367,7 +359,6 @@ pero se puede instalar instalarlo con:
 | Nodos personalizados      | Transforms adicionales según necesidad      |
 +---------------------------+---------------------------------------------+
 
---------------
 
 **¿Cómo obtener la pose del efector?**
 
@@ -454,6 +445,525 @@ archivo package.xml y asegúrate de incluir:
 .. |alt text| image:: image-1.png
 .. |image1| image:: circuit_image-1.png
 
+
+Conexión URDF - Steppers
+------------------------
+
+La arquitectura propuesta contempla el uso de la herramienta de visualización RViz2, 
+mediante la cual se manipulan las juntas del robot definidas en un archivo URDF previamente diseñado. 
+Los valores de posición de cada junta generados durante el movimiento se envían a una ESP32, encargada 
+del control de posición de los actuadores a través de los drivers DM542T y A4988. La comunicación entre ROS 2 y la ESP32 se realiza mediante el protocolo MQTT, y la ejecución del movimiento en los motores paso a paso se gestiona utilizando la librería AccelStepper.
+
+Ajuste de velocidad 15 RPM para 3 juntas (NEMA23+PG47 y 2x NEMA17)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Como primer pase se realiza el calculo de ``setMaxSpeed()`` y ``setAcceleration()``
+en AccelStepper para que las 3 juntas giren a la misma velocidad angular
+en el eje final: 15 RPM.
+
+Se considera el sistema descrito previamente:
+
+- **Junta q1**: NEMA23 + driver DM542T + caja reductora PG47 ≈ 46.656:1
+  con configuración del driver a 400 pulse/rev (motor).
+- **Juntas q2 y q3**: NEMA17, con resolución usada
+  en el código: 0.9°/paso, equivalente a 400 pasos/vuelta.
+
+.. important::
+
+   AccelStepper usa unidades:
+   - ``setMaxSpeed(steps_per_second)``
+   - ``setAcceleration(steps_per_second_squared)``
+
+1. Datos del sistema (pasos por vuelta del eje final)
+
+*Junta q1 (NEMA23 + PG47)*
+
+Configuración:
+
+- Pulsos por vuelta del motor (por microstepping del driver): :math:`N_{motor}=400`
+- Relación reductora: :math:`R=46.656`
+
+Pulsos por vuelta del eje de salida:
+
+.. math::
+
+   N_{q1} = N_{motor}\cdot R = 400 \cdot 46.656 = 18662.4 \;\approx\; 18662
+
+se obtiene ``gradosPorPaso = 0.01929°``
+
+*Juntas q2 y q3 (NEMA17 directos)*
+
+Considerando la configuración del driver a4988 de 400 pul/rev se obtiene ``gradosPorPaso = 0.9°``
+
+2. Conversión general RPM → steps/s
+
+Para cualquier junta con :math:`N` pasos/vuelta en el eje final, si se desea una
+velocidad :math:`RPM`, la velocidad en pasos/segundo es:
+
+.. math::
+
+   v_{steps} = \frac{RPM \cdot N}{60}
+
+3. setMaxSpeed para 15 RPM
+
+Junta q1 (NEMA23 + PG47)
+
+.. math::
+
+   v_{q1} = \frac{15 \cdot 18662.4}{60} = 4665.6 \;\approx\; 4666 \; \text{steps/s}
+
+**Resultado recomendado:**
+
+.. code-block:: cpp
+
+   motor1.setMaxSpeed(4666);
+
+Juntas q2 y q3 (NEMA17)
+
+.. math::
+
+   v_{q2} = v_{q3} = \frac{15 \cdot 400}{60} = 100 \;\text{steps/s}
+
+**Resultado recomendado:**
+
+.. code-block:: cpp
+
+   motor2.setMaxSpeed(100);
+   motor3.setMaxSpeed(100);
+
+4. Conversión general aceleración (RPM/s) → steps/s²
+
+La aceleración en AccelStepper también se define en pasos por segundo cuadrado.
+
+Si quieres que todas las juntas tengan aceleración similar en el eje final,
+elige una aceleración en RPM por segundo (:math:`RPM/s`) y conviértela:
+
+.. math::
+
+   a_{steps} = \frac{(RPM/s)\cdot N}{60}
+
+5. setAcceleration recomendado (rampa de 1 segundo)
+
+Una elección práctica para "aceleración similar" es:
+
+- Llegar de 0 a 15 RPM en ~1 segundo
+
+Eso equivale a:
+
+.. math::
+
+   (RPM/s) = 15
+
+5.1 Junta q1 (NEMA23 + PG47)
+
+.. math::
+
+   a_{q1} = \frac{15 \cdot 18662.4}{60} = 4665.6 \;\approx\; 4666 \;\text{steps/s}^2
+
+.. code-block:: cpp
+
+   motor1.setAcceleration(4666);
+
+5.2 Juntas q2 y q3 (NEMA17)
+
+.. math::
+
+   a_{q2} = a_{q3} = \frac{15 \cdot 400}{60} = 100 \;\text{steps/s}^2
+
+.. code-block:: cpp
+
+   motor2.setAcceleration(100);
+   motor3.setAcceleration(100);
+
+6. Bloque de configuración completo (15 RPM, rampa 1 s)
+
+.. code-block:: cpp
+
+   // --- Pasos por vuelta del eje final ---
+   const float stepsPerRev_q1 = 400.0f * 46.656f; // 18662.4
+   const float stepsPerRev_q2 = 400.0f;           // si 0.9°/paso
+   const float stepsPerRev_q3 = 400.0f;
+
+   // --- Objetivo ---
+   const float rpm_target = 15.0f;
+
+   // --- Velocidad steps/s ---
+   const float v1 = (rpm_target * stepsPerRev_q1) / 60.0f;  // ~4665.6
+   const float v2 = (rpm_target * stepsPerRev_q2) / 60.0f;  // 100
+   const float v3 = (rpm_target * stepsPerRev_q3) / 60.0f;  // 100
+
+   motor1.setMaxSpeed(v1);
+   motor2.setMaxSpeed(v2);
+   motor3.setMaxSpeed(v3);
+
+   // --- Aceleración: llegar a 15 RPM en ~1s (15 RPM/s) ---
+   const float rpm_per_s = 15.0f;
+
+   const float a1 = (rpm_per_s * stepsPerRev_q1) / 60.0f;   // ~4665.6
+   const float a2 = (rpm_per_s * stepsPerRev_q2) / 60.0f;   // 100
+   const float a3 = (rpm_per_s * stepsPerRev_q3) / 60.0f;   // 100
+
+   motor1.setAcceleration(a1);
+   motor2.setAcceleration(a2);
+   motor3.setAcceleration(a3);
+
+   // Recomendado para DM542T (pulso seguro)
+   motor1.setMinPulseWidth(5);
+
+7. Notas prácticas (muy importantes)
+
+- Aunque las ecuaciones igualan velocidad y aceleración en el eje final, la
+  sensación real puede variar por:
+  - carga/inercia distinta en cada junta
+  - fricción y backlash de la reductora
+  - límites de torque y alimentación
+
+- Si alguna junta pierde pasos o vibra, baja primero ``setAcceleration()``
+  (la aceleración suele ser la causa principal).
+
+- Si q2 y q3 no están realmente a 0.9°/paso (microstepping distinto),
+  debes recalcular :math:`N_{q2}` y :math:`N_{q3}`.
+
+Codigos control - MQTT:  
+~~~~~~~~~~~~~~~~~~~~~~~
+- ``control_stepper.py`` Envia un mensaje JSON con el delta del angulo que debe mover la junta *q1 o q2*.
+- ``ESP32`` Recibe los mensajes y realiza el movimiento del stepper de cada junta de forma relativa.
+
+.. tabs::
+
+   .. group-tab:: python
+
+      Dentro de la carpeta ``mqtt_python`` crear el archivo control_stepper.py
+
+      .. code:: python
+
+         import paho.mqtt.client as mqtt
+         import json
+         import time
+
+         # Configuración del broker
+         BROKER            = "192.168.100.178" # Ip del computador o localhost
+         TOPIC_SUB_SEN     = "ra/sensores"
+         TOPIC_SUB_EST     = "ra/estados"
+         TOPIC_PUB         = "ra/juntas"
+         CLIENT_ID         = "cliente_rm1"
+
+         # Callback cuando se conecta al broker
+         def on_connect(client, userdata, flags, rc, properties=None):
+            if rc == 0:
+               print("Conectado al broker MQTT")
+               client.subscribe(TOPIC_SUB_SEN)
+               client.subscribe(TOPIC_SUB_EST)
+
+            else:
+               print(f"Error de conexión: código {rc}")
+
+         # Callback al recibir un mensaje
+         def on_message(client, userdata, msg):
+            try:
+               mensaje = msg.payload.decode("utf-8")
+               data = json.loads(mensaje)
+               if msg.topic == TOPIC_SUB_SEN:
+                     print("Mensaje recido del Equipo2 Ultrasónico:", data["ultra"])
+               
+               if msg.topic == TOPIC_SUB_EST:
+                     print("Mensaje recido del Equipo2 Estado:", data["Estado"])
+
+            except Exception as e:
+               print("Error procesando mensaje:", e)
+
+         client = mqtt.Client(client_id=CLIENT_ID, protocol=mqtt.MQTTv311)
+
+         # Asociar funciones de callback
+         client.on_connect = on_connect
+         client.on_message = on_message
+
+         # Conexión al broker
+         client.connect(BROKER)
+
+         # Iniciar loop en segundo plano
+         client.loop_start()
+
+         # Envío continuo de mensajes cada segundo
+         try:
+            while True:
+               payload = {
+                     "q1": 80,
+                     "q2": 80,
+                     "avanzar": 1
+                     }
+               mensaje = json.dumps(payload)
+               client.publish(TOPIC_PUB, mensaje)
+               #print("Publicado en datos_1:", payload)
+               time.sleep(5)
+
+         except KeyboardInterrupt:
+            print("\n Finalizando conexión MQTT...")
+
+         finally:
+            client.loop_stop()
+            client.disconnect()
+            print(" Desconectado correctamente.")
+
+   .. group-tab:: Esp32 MQTT
+
+      Pestaña 1 del codigo de la ESP32.
+
+      .. code:: cpp
+
+         #include <PubSubClient.h>
+         #include <WiFi.h>
+         #include <ArduinoJson.h>
+         #include <AccelStepper.h>
+
+         // Pines motores paso a paso
+         #define STEP2 18
+         #define DIR2  19
+         #define STEP3 22
+         #define DIR3  23
+
+         // Pines Driver
+         static const int PIN_STEP = 25;  // -> PUL+
+         static const int PIN_DIR  = 27;  // -> DIR+
+
+         // --------------------
+         // Config según tu DIP: 400 pulse/rev (del motor)
+         // Reductora: PG47  46.656:1
+         // --------------------
+
+         static const long PULSES_PER_REV_MOTOR = 400;
+         static const float GEAR_RATIO = 46.656f;
+
+         static const long PULSES_PER_REV_OUT = (long)(PULSES_PER_REV_MOTOR * GEAR_RATIO);
+
+         // Convierte grados del eje de salida a pulsos
+         long outDegreesToPulses(float deg_out) {
+         float pulses = (deg_out / 360.0f) * (float)PULSES_PER_REV_OUT;
+         return lroundf(pulses);
+         }
+
+         AccelStepper motor1(AccelStepper::DRIVER, PIN_STEP, PIN_DIR);
+         AccelStepper motor2(AccelStepper::DRIVER, STEP2, DIR2);  // Q1
+         AccelStepper motor3(AccelStepper::DRIVER, STEP3, DIR3);  // Q2
+
+
+         float gradosPorPaso = 0.9;
+
+         // Variable de Control Alarmar
+         int activar  = 0;
+         int estado   = 0;
+         int ultra    = 0;
+
+         // GPIO de salidad Digital
+         int pin_led   = 2;
+
+         //  Credenciales Wifi
+         const char* ssid = "CARMEN GONZALEZ_";
+         const char* password = "123wa321vg";
+
+         // Credenciales MQTT
+         const char* mqtt_broker = "192.168.100.76";
+         const int mqtt_port     = 1883;
+         const char* cliente     = "rm1_esp32";
+
+         // Temas MQTT Publicar
+         const char* tema_sub     = "ra/juntas";
+         const char* tema_pub_est = "ra/estados";
+         const char* tema_pub_sen = "ra/sensores";
+
+         // Variables de control de tiempo
+         unsigned long lastTime = 0;
+
+         // Creacion del objeto cliente
+         WiFiClient espClient;
+         PubSubClient client(espClient);
+
+         // Tamaño de mensaje JSON
+         const size_t capacidad_json = JSON_OBJECT_SIZE(30);
+
+
+         void setup() {
+         // Setup Serial
+         Serial.begin(115200);
+         // Setup Wifi
+         setup_wifi();
+         // Setup MQTT
+         conexion();
+         // Manejo del rele
+         pinMode(pin_led, OUTPUT);
+
+         // NEMA 23
+         // AccelStepper
+         motor1.setMaxSpeed(4665.6);       // pulsos/seg (ojo: a mayor, más exigente)
+         motor1.setAcceleration(3110);   // pulsos/seg^2
+         motor1.setMinPulseWidth(5);     // us (seguro para DM542T)
+
+         // NEMA 17
+         motor2.setMaxSpeed(99.9);     
+         motor2.setAcceleration(66.7);
+         motor2.setPinsInverted(true, false, false); //
+         motor3.setMaxSpeed(200);
+         motor3.setAcceleration(100);
+
+         // Referencia inicial (si estás arrancando desde "cero")
+         motor1.setCurrentPosition(0);
+         motor2.setCurrentPosition(0);
+         motor3.setCurrentPosition(0);
+         }
+
+         void loop() {
+         Loop_MQTT();
+         motor1.run();
+         motor2.run();
+         motor3.run();
+
+         if (millis() - lastTime >= 100){
+            estado = 1;
+            ultra = ultra+1;
+            envioDatos(tema_pub_est, estado, ultra);
+            envioDatos(tema_pub_sen, estado, ultra);
+            lastTime = millis();
+         }
+         if (activar == 1){
+            digitalWrite(pin_led, HIGH);  // Enciende el LED
+
+            }
+         else {
+            digitalWrite(pin_led, LOW);  // Enciende el LED
+         }
+
+         }
+
+
+   .. group-tab:: conf_mqtt
+   
+      Pestaña 2 del codigo de la ESP32
+
+      .. code:: cpp
+
+         void setup_wifi() {
+         // Conexión Wifi
+         delay(10);
+         Serial.println();
+         Serial.print("Conectando a ");
+         Serial.println(ssid);
+         WiFi.begin(ssid, password);
+         while (WiFi.status() != WL_CONNECTED) {
+            delay(500);
+            Serial.print(".");
+         }
+         Serial.println("");
+         Serial.print("WiFi conectado - Dirección IP del ESP: ");
+         Serial.println(WiFi.localIP());
+         }
+
+         void reconnect() {
+         // Control de conexión MQTT
+         while (!client.connected()) {
+            Serial.print("Intentando conexión MQTT...");
+            if (client.connect(cliente)) {
+               Serial.println("Conectado");
+               // Suscripción a TEMAS
+               client.subscribe(tema_sub, 1);
+            } else {
+               Serial.print("Falló, rc=");
+               Serial.print(client.state());
+               Serial.println("Intentando de nuevo en 2 segundos");
+               delay(2000);
+            }
+         }
+         }
+
+         void conexion() {
+         // Conexión MQTT
+         client.setServer(mqtt_broker, mqtt_port);
+         client.setCallback(callback);
+         }
+
+         void Loop_MQTT() {
+         // Manejo MQTT
+         if (!client.connected()) {
+            reconnect();
+         }
+         client.loop();
+         }
+
+         void envioDatos(const char* mqtt_topic_publicar, int estado, int ultra) {
+         DynamicJsonDocument mensaje(256);
+
+         if (mqtt_topic_publicar == tema_pub_est) {
+            mensaje["estado"]   = estado;
+            String mensaje_json;
+            serializeJson(mensaje, mensaje_json);
+            client.publish(mqtt_topic_publicar, mensaje_json.c_str(), 1);
+         }
+
+         if (mqtt_topic_publicar == tema_pub_sen) {
+            mensaje["ultra"]   = ultra;
+            String mensaje_json;
+            serializeJson(mensaje, mensaje_json);
+            client.publish(mqtt_topic_publicar, mensaje_json.c_str(), false);
+         }
+
+
+         }
+
+         void callback(char* topic, byte* payload, unsigned int length) {
+         StaticJsonDocument<capacidad_json> doc;
+         char buffer[length + 1];
+         memcpy(buffer, payload, length);
+         buffer[length] = '\0';  // Asegura que el buffer tenga fin de cadena
+
+         DeserializationError error = deserializeJson(doc, buffer);
+
+         if (error) {
+            Serial.print("Error al deserializar JSON: ");
+            Serial.println(error.c_str());
+            return;
+         }
+
+         String topico(topic);
+         if (topico == "ra/juntas") {
+            if (doc.containsKey("q1") && doc.containsKey("q2") && doc.containsKey("q3")) {
+               float q1 = doc["q1"]; // NEMA 23
+               float q2 = doc["q2"]; // NEMA 17
+               float q3 = doc["q3"]; // NEMA 17
+
+               long pasos1 = outDegreesToPulses(q1);
+               int pasos2 = round(q2 / gradosPorPaso);
+               int pasos3 = round(q3 / gradosPorPaso);
+
+               Serial.print("Recibido q1: ");
+               Serial.print(q1);
+               Serial.print(" → pasos: ");
+               Serial.print(pasos1);
+
+
+               Serial.print("Recibido q2: ");
+               Serial.print(q2);
+               Serial.print(" → pasos: ");
+               Serial.print(pasos2);
+
+               Serial.print(" Recibido q3: ");
+               Serial.print(q3);
+               Serial.print(" → pasos: ");
+               Serial.println(pasos3);
+               
+               // movimiento q1
+               motor1.move(pasos1);
+               // Movimiento NEMA Q2 y Q3
+               motor2.move(pasos2);
+               motor3.move(pasos3);
+            }
+
+            if (doc.containsKey("avanzar")) {
+               activar = doc["avanzar"];
+            }
+         }
+         }
+
+
+
 ROS2 y el control de stepper
 ----------------------------
 
@@ -521,8 +1031,8 @@ Dentro de la carpeta ``mqtt_python``, crear el archivo ``urdf_mqtt```.
                    self.real_q2, q2_mov = self.mover_a_angulo_discreto(meta,self.real_q2)
 
            payload = {
-                       "arti_q1": q1_mov,
-                       "arti_q2": q2_mov
+                       "q1": q1_mov,
+                       "q2": q2_mov
                      }
            msg_mqtt = json.dumps(payload)
            self.mqtt_client.publish(self.topic_pub, msg_mqtt)

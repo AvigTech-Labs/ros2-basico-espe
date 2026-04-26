@@ -1,0 +1,15 @@
+/* Solo afecta a tablas con la clase 'fit-table' */
+table.docutils.fit-table {
+  table-layout: fixed;   /* reparte el ancho según :widths: */
+  width: 100%;
+}
+table.docutils.fit-table td,
+table.docutils.fit-table th {
+  white-space: normal !important;    /* permite saltos de línea */
+  word-break: break-word;            /* corta palabras largas si hace falta */
+  overflow-wrap: anywhere;           /* asegura el wrap */
+}
+table.docutils.fit-table p {         /* quita márgenes extras dentro de celdas */
+  margin: 0;
+}
+

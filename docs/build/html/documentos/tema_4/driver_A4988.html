@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Gemelo Digital &mdash; documentación de ros2_espe - 0.1</title>
+  <title>Driver A4988 &mdash; documentación de ros2_espe - 0.1</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -26,7 +26,7 @@
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Índice" href="../../genindex.html" />
     <link rel="search" title="Búsqueda" href="../../search.html" />
-    <link rel="next" title="Ejercicio práctico" href="../tema_5/proyecto.html" />
+    <link rel="next" title="Archivos URDF" href="visualizacion_datos.html" />
     <link rel="prev" title="Driver Industrial DM542T" href="driver_DM542T.html" /> 
 </head>
 
@@ -57,18 +57,14 @@
 <li class="toctree-l1"><a class="reference internal" href="../tema_2/conceptos_basicos.html">Conceptos Básicos</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tema_2/tutoriales.html">Tutoriales</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tema_3/dispositivos.html">Conexión con dispositivos</a></li>
-<li class="toctree-l1"><a class="reference internal" href="visualizacion_datos.html">Archivos URDF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="driver_DM542T.html">Driver Industrial DM542T</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Gemelo Digital</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#urfd-y-esp32">URFD y ESP32</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#control-de-motor-paso-a-paso-nema-17-con-esp32-y-a4988">Control de Motor Paso a Paso NEMA 17 con ESP32 y A4988</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#control-de-motores-paso-a-paso-con-accelstepper-y-esp32">Control de Motores Paso a Paso con <code class="docutils literal notranslate"><span class="pre">AccelStepper</span></code> y ESP32</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#control-de-motores-con-mqtt">Control de Motores con MQTT</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Driver A4988</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#control-de-motor-paso-a-paso-nema-17-con-esp32-y-a4988">Control de Motor Paso a Paso NEMA 17 con ESP32 y A4988</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#control-de-motores-paso-a-paso-con-accelstepper-y-esp32">Control de Motores Paso a Paso con <code class="docutils literal notranslate"><span class="pre">AccelStepper</span></code> y ESP32</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#control-de-motores-con-mqtt">Control de Motores con MQTT</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#ros2-y-el-control-de-stepper">ROS2 y el control de stepper</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="visualizacion_datos.html">Archivos URDF</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Proyecto Aplicado</span></p>
 <ul>
@@ -89,7 +85,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Gemelo Digital</li>
+      <li class="breadcrumb-item active">Driver A4988</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -98,13 +94,10 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="gemelo-digital">
-<h1>Gemelo Digital<a class="headerlink" href="#gemelo-digital" title="Link to this heading"></a></h1>
-<p>Para trabajara en el gemelo difital se plantea el uso de una ESP32 para el control de motores a paso Nema 17 y el archivo URDF del robot generado previamente.</p>
-<section id="urfd-y-esp32">
-<h2>URFD y ESP32<a class="headerlink" href="#urfd-y-esp32" title="Link to this heading"></a></h2>
+  <section id="driver-a4988">
+<h1>Driver A4988<a class="headerlink" href="#driver-a4988" title="Link to this heading"></a></h1>
 <section id="control-de-motor-paso-a-paso-nema-17-con-esp32-y-a4988">
-<h3>Control de Motor Paso a Paso NEMA 17 con ESP32 y A4988<a class="headerlink" href="#control-de-motor-paso-a-paso-nema-17-con-esp32-y-a4988" title="Link to this heading"></a></h3>
+<h2>Control de Motor Paso a Paso NEMA 17 con ESP32 y A4988<a class="headerlink" href="#control-de-motor-paso-a-paso-nema-17-con-esp32-y-a4988" title="Link to this heading"></a></h2>
 <ol class="arabic simple">
 <li><p>Especificaciones Generales</p></li>
 </ol>
@@ -223,7 +216,7 @@ límite de voltaje al 70%.</p>
 </div>
 </section>
 <section id="control-de-motores-paso-a-paso-con-accelstepper-y-esp32">
-<h3>Control de Motores Paso a Paso con <code class="docutils literal notranslate"><span class="pre">AccelStepper</span></code> y ESP32<a class="headerlink" href="#control-de-motores-paso-a-paso-con-accelstepper-y-esp32" title="Link to this heading"></a></h3>
+<h2>Control de Motores Paso a Paso con <code class="docutils literal notranslate"><span class="pre">AccelStepper</span></code> y ESP32<a class="headerlink" href="#control-de-motores-paso-a-paso-con-accelstepper-y-esp32" title="Link to this heading"></a></h2>
 <p><strong>¿Qué es AccelStepper?</strong></p>
 <p><code class="docutils literal notranslate"><span class="pre">AccelStepper</span></code> es una librería avanzada para controlar motores paso a
 paso de forma más eficiente y profesional. Fue creada para reemplazar el
@@ -308,7 +301,7 @@ suavemente</p></td>
 </div>
 </section>
 <section id="control-de-motores-con-mqtt">
-<h3>Control de Motores con MQTT<a class="headerlink" href="#control-de-motores-con-mqtt" title="Link to this heading"></a></h3>
+<h2>Control de Motores con MQTT<a class="headerlink" href="#control-de-motores-con-mqtt" title="Link to this heading"></a></h2>
 <p>El control de los ángulos que deben girar los stepper se realiza a través del envío de un diccionario con las claves de las juntas usando MQTT y JSON.</p>
 <p>El código se datalla a continuación:</p>
 <ul class="simple">
@@ -511,7 +504,7 @@ suavemente</p></td>
 <span class="p">}</span>
 </pre></div>
 </div>
-</div><div aria-labelledby="tab-0-Y29uZl9tcXR0" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-0-Y29uZl9tcXR0" name="Y29uZl9tcXR0" role="tabpanel" tabindex="0"><p>Pesataña 2 del codigo de la ESP32</p>
+</div><div aria-labelledby="tab-0-Y29uZl9tcXR0" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-0-Y29uZl9tcXR0" name="Y29uZl9tcXR0" role="tabpanel" tabindex="0"><p>Pestaña 2 del codigo de la ESP32</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">setup_wifi</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="c1">// Conexión Wifi</span>
 <span class="n">delay</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
@@ -637,158 +630,13 @@ suavemente</p></td>
 </div></div>
 </section>
 </section>
-<section id="ros2-y-el-control-de-stepper">
-<h2>ROS2 y el control de stepper<a class="headerlink" href="#ros2-y-el-control-de-stepper" title="Link to this heading"></a></h2>
-<p>Con el fin de poder reflejar los movimientos del robot Simulado en RVIZ2 y del
-robot real, se aplica la combinación de los códigos de <code class="docutils literal notranslate"><span class="pre">mqtt_bridge</span></code> y
-<code class="docutils literal notranslate"><span class="pre">urdf_sub</span></code>.</p>
-<p>Dentro de la carpeta <code class="docutils literal notranslate"><span class="pre">mqtt_python</span></code>, crear el archivo <code class="docutils literal notranslate"><span class="pre">urdf_mqtt`</span></code>.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">rclpy</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">rclpy.node</span><span class="w"> </span><span class="kn">import</span> <span class="n">Node</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">rclpy.duration</span><span class="w"> </span><span class="kn">import</span> <span class="n">Duration</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">std_msgs.msg</span><span class="w"> </span><span class="kn">import</span> <span class="n">Float32</span><span class="p">,</span> <span class="n">Int32</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">sensor_msgs.msg</span><span class="w"> </span><span class="kn">import</span> <span class="n">JointState</span>
-
-<span class="kn">import</span><span class="w"> </span><span class="nn">paho.mqtt.client</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mqtt</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
-
-<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
-
-<span class="k">class</span><span class="w"> </span><span class="nc">MQTTBridge</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s1">&#39;mqtt_bridge&#39;</span><span class="p">)</span>
-
-        <span class="c1"># Angulos del robot</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">real_q1</span> <span class="o">=</span> <span class="mf">0.0</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">real_q2</span> <span class="o">=</span> <span class="mf">0.0</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">real_q3</span> <span class="o">=</span> <span class="mf">0.0</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">pub</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_publisher</span><span class="p">(</span> <span class="n">Float32</span><span class="p">,</span> <span class="s1">&#39;sensor_bateria&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">subscription</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_subscription</span><span class="p">(</span>
-            <span class="n">JointState</span><span class="p">,</span>
-            <span class="s1">&#39;/joint_states&#39;</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">listener_ros</span><span class="p">,</span> <span class="mi">1</span>
-            <span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">last_data</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">active</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># control de publicación activa</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">last_mqtt_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_clock</span><span class="p">()</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">timer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_timer</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">publish_sensor_data</span><span class="p">)</span>       <span class="c1"># Publicador (10 Hz)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">timer_watchdog</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_timer</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_timeout</span><span class="p">)</span>    <span class="c1"># Verificador de tiempo</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">topic_sub</span> <span class="o">=</span> <span class="s2">&quot;ra/sensores&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">topic_pub</span> <span class="o">=</span> <span class="s2">&quot;ra/juntas&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">mqtt_client</span> <span class="o">=</span> <span class="n">mqtt</span><span class="o">.</span><span class="n">Client</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">mqtt_client</span><span class="o">.</span><span class="n">on_connect</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">on_connect</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">mqtt_client</span><span class="o">.</span><span class="n">on_message</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">on_message</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">mqtt_client</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;192.168.100.178&quot;</span><span class="p">,</span> <span class="mi">1883</span><span class="p">,</span> <span class="mi">60</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">mqtt_client</span><span class="o">.</span><span class="n">loop_start</span><span class="p">()</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">listener_ros</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
-        <span class="n">q1_mov</span> <span class="o">=</span> <span class="mf">0.0</span>
-        <span class="n">q2_mov</span> <span class="o">=</span> <span class="mf">0.0</span>
-        <span class="n">q3_mov</span> <span class="o">=</span> <span class="mf">0.0</span>
-        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">name</span><span class="p">):</span>
-            <span class="c1"># Resolucion del stepper 0.9</span>
-            <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;brazo_joint&quot;</span><span class="p">:</span>
-                <span class="n">meta</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">position</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span><span class="mi">4</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">real_q1</span><span class="p">,</span> <span class="n">q1_mov</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mover_a_angulo_discreto</span><span class="p">(</span><span class="n">meta</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">real_q1</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;antebrazo_joint&quot;</span><span class="p">:</span>
-                <span class="n">meta</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">position</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span><span class="mi">4</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">real_q2</span><span class="p">,</span> <span class="n">q2_mov</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mover_a_angulo_discreto</span><span class="p">(</span><span class="n">meta</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">real_q2</span><span class="p">)</span>
-
-        <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
-                    <span class="s2">&quot;arti_q1&quot;</span><span class="p">:</span> <span class="n">q1_mov</span><span class="p">,</span>
-                    <span class="s2">&quot;arti_q2&quot;</span><span class="p">:</span> <span class="n">q2_mov</span>
-                  <span class="p">}</span>
-        <span class="n">msg_mqtt</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">mqtt_client</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">topic_pub</span><span class="p">,</span> <span class="n">msg_mqtt</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Mensaje Enviado&quot;</span><span class="p">)</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">mover_a_angulo_discreto</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">angulo_objetivo</span><span class="p">,</span> <span class="n">angulo_actual</span><span class="p">,</span> <span class="n">paso</span><span class="o">=</span><span class="mf">0.9</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Calcula el desplazamiento al múltiplo de &#39;paso&#39; más cercano al ángulo objetivo.</span>
-<span class="sd">        Retorna:</span>
-<span class="sd">            - el nuevo ángulo corregido (múltiplo de paso)</span>
-<span class="sd">            - el desplazamiento angular necesario desde el ángulo actual</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="c1"># Calcula desplazamiento</span>
-        <span class="n">desplazamiento</span> <span class="o">=</span> <span class="n">angulo_objetivo</span> <span class="o">-</span> <span class="n">angulo_actual</span>
-
-        <span class="c1"># Redondea el ángulo objetivo al múltiplo más cercano</span>
-        <span class="n">desplazamiento_valido</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">desplazamiento</span> <span class="o">/</span> <span class="n">paso</span><span class="p">)</span> <span class="o">*</span> <span class="n">paso</span>
-
-        <span class="n">meta_ajustada</span> <span class="o">=</span> <span class="n">angulo_actual</span> <span class="o">+</span> <span class="n">desplazamiento_valido</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[INFO] Objetivo :</span><span class="si">{</span><span class="n">angulo_objetivo</span><span class="si">}</span><span class="s2">°&quot;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[INFO] Objetivo ajustado: </span><span class="si">{</span><span class="n">meta_ajustada</span><span class="si">}</span><span class="s2">° (múltiplo de </span><span class="si">{</span><span class="n">paso</span><span class="si">}</span><span class="s2">°)&quot;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[INFO] Desplazamiento desde actual: </span><span class="si">{</span><span class="n">desplazamiento_valido</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">°&quot;</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="nb">round</span><span class="p">(</span><span class="n">meta_ajustada</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span> <span class="nb">round</span><span class="p">(</span><span class="n">desplazamiento_valido</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
-
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">on_connect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">userdata</span><span class="p">,</span> <span class="n">flags</span><span class="p">,</span> <span class="n">rc</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">rc</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Conectado al broker MQTT&quot;</span><span class="p">)</span>
-            <span class="n">client</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">topic_sub</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error de conexión: código </span><span class="si">{</span><span class="n">rc</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">on_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">userdata</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">mensaje</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">payload</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
-            <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">mensaje</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">msg</span><span class="o">.</span><span class="n">topic</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">topic_sub</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">last_data</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;bateria&quot;</span><span class="p">])</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">last_mqtt_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_clock</span><span class="p">()</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>  <span class="c1"># Actualiza tiempo del último dato</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">active</span> <span class="o">=</span> <span class="kc">True</span>
-        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error procesando mensaje:&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">publish_sensor_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">active</span><span class="p">:</span>
-            <span class="n">ros_msg</span> <span class="o">=</span> <span class="n">Float32</span><span class="p">()</span>
-            <span class="n">ros_msg</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_data</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">pub</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">ros_msg</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ROS2 publicó: </span><span class="si">{</span><span class="n">ros_msg</span><span class="o">.</span><span class="n">data</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">check_timeout</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">now</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_clock</span><span class="p">()</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">now</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_mqtt_time</span> <span class="o">&gt;</span> <span class="n">Duration</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mf">2.0</span><span class="p">):</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">active</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;No se reciben datos desde MQTT. Se detiene la publicación.&quot;</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">active</span> <span class="o">=</span> <span class="kc">False</span>
-
-<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="n">rclpy</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">)</span>
-    <span class="n">node</span> <span class="o">=</span> <span class="n">MQTTBridge</span><span class="p">()</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">rclpy</span><span class="o">.</span><span class="n">spin</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
-    <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
-        <span class="k">pass</span>
-    <span class="n">rclpy</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
-</pre></div>
-</div>
-<p>Registrar el codigo en el <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> y compilar</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>~/ros2_ws
-colcon<span class="w"> </span>build<span class="w"> </span>--packages-select<span class="w"> </span>mi_pkg_python
-</pre></div>
-</div>
-<p>Para ejecutar el programa lanzar los archivos:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>launch<span class="w"> </span>mi_pkg_python<span class="w"> </span>visualizar_rviz.launch.py
-ros2<span class="w"> </span>run<span class="w"> </span>mi_pkg_python<span class="w"> </span>urdf_mqtt
-</pre></div>
-</div>
-</section>
-</section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Pie de página">
         <a href="driver_DM542T.html" class="btn btn-neutral float-left" title="Driver Industrial DM542T" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Anterior</a>
-        <a href="../tema_5/proyecto.html" class="btn btn-neutral float-right" title="Ejercicio práctico" accesskey="n" rel="next">Siguiente <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="visualizacion_datos.html" class="btn btn-neutral float-right" title="Archivos URDF" accesskey="n" rel="next">Siguiente <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

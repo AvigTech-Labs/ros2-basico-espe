@@ -1,608 +1,19 @@
-Ejercicio práctico
-==================
+Ejercicio práctico 2
+====================
 
 Actividad
 ---------
 
-Diseñar y simular un sistema de clasificación de objetos basados en ROS2.
+Diseñar y simular un sistema de clasificación de objetos basados en ROS2, utilizando 2 robots Scaras.
 
-.. figure:: proyecto.png
-   :alt: Imagen
+Archivos Xacro
+--------------
 
-Para los siguientes programas es importante crear un directorio ``proyecto`` dentro del paquete ``mi_pkg_python``. 
+Scaras
+------
 
-
-Calibración de la cámara
-------------------------
-
-Instalación de paquetes
-~~~~~~~~~~~~~~~~~~~~~~~
-
-Librerías necesarias:
-
-- OpenCV 
-
-.. code:: bash
-
-   pip install opencv-python
-
-- PyYAML 
-
-.. code:: bash
-
-   pip install pyyaml
-
-- pupil-apriltags para detección de tags
-
-.. code:: bash
-
-   pip install pupil-apriltags
-
-- Codigos de ROS2 desarrollados en este repositorio.
-
-Algoritmo de calibración
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-Para calibrar una cámara se utiliza el algoritmo de ajuste de matriz intrínseca basado en un patrón de tablero de ajedrez. Este tipo de calibración permite corregir las distorsiones ópticas generadas por el lente, como la distorsión radial y tangencial, mejorando así la precisión en tareas de visión por computadora.
-
-Los requisitos para realizar la calibración son:
-
-Una estructura fija donde se monte la cámara.
-
-Un tablero de ajedrez de calibración impreso y plano.
-
-Para más detalles sobre el algoritmo utilizado, puedes consultar la documentación oficial de OpenCV:
-
-`opencv- colibración de cámara <https://docs.opencv.org/4.x/dc/dbb/tutorial_py_calibration.html>`__
-
-En este ejemplo se utiliza un tablero generado por el proyecto de Mark Hedley Jones, disponible en:
-
-`Tablero de Ajedrez <https://markhedleyjones.com/projects/calibration-checkerboard-collection>`__
-
-Además, se emplean AprilTags de 100 mm para pruebas adicionales de localización.
-
-1. **Captura de Imágenes del Tablero**
-   - Archivo: ``0_captura.py``
-   - Abre la cámara, muestra una vista previa y guarda imágenes al presionar ``c``.
-   - Las imágenes se guardan en la carpeta ``calib_imgs/``.
-
-2. **Calibración con Tablero de Ajedrez**
-   - Archivo: ``1_calib.py``
-   - Utiliza las imágenes para detectar esquinas de un tablero de 10x7.
-   - Genera un archivo ``camera_calibration.yaml`` con la matriz intrínseca y coeficientes de distorsión.
-
-3. **Visualización de Corrección**
-   - Archivo: ``3_cam.py``
-   - Muestra la imagen original y la corregida en tiempo real utilizando la calibración.
-
-4. **Detección de AprilTags**
-   - Archivo: ``4_apriltag.py``
-   - Usa ``pupil_apriltags`` para detectar tags y calcular sus poses.
-   - Imprime la distancia entre el tag de referencia (ID 0) y los demás.
-   
-Parámetros
-
-   - Tablero de calibración: 10 x 7 esquinas internas
-   - Tamaño de cuadrado: 25 mm (0.025 m)
-   - Distancia y pose se muestran en milímetros
-   - Salida: `camera_calibration.yaml` (compatible con ROS)
-
-
-Detección y Transformación de AprilTags
----------------------------------------
-
-**Codigo del proyecto** ``p1_cam.py``
-
-Este nodo en ROS 2 tiene como objetivo detectar etiquetas AprilTags en una imagen, transformar su posición al sistema de referencia del tag con ID 0, y publicar sus coordenadas relativas en el topic ``/apriltag_pixels``.
-
-Estructura general
-~~~~~~~~~~~~~~~~~~
-
-El nodo `apriltag_cam` realiza los siguientes pasos:
-
-1. **Carga de parámetros de calibración** desde un archivo YAML.
-2. **Inicialización de la cámara y detector AprilTags**.
-3. **Corrección de distorsión** de la imagen mediante la matriz de calibración.
-4. **Detección de etiquetas** y cálculo de su pose relativa al sistema de la cámara.
-5. **Transformación de coordenadas** al sistema de referencia del tag 0.
-6. **Publicación** de los datos transformados como mensajes `AprilTagPixelArray`.
-
-Matemática del sistema
-~~~~~~~~~~~~~~~~~~~~~~
-
-1. **Calibración de la cámara**
-
-Se utiliza la matriz intrínseca ``K`` y los coeficientes de distorsión ``dist`` para corregir la imagen:
-
-.. code-block:: python
-
-    newcameramtx, _ = cv2.getOptimalNewCameraMatrix(K, dist, (w, h), 1, (w, h))
-    undistorted = cv2.undistort(frame, K, dist, None, newcameramtx)
-
-2. **Transformación homogénea**
-
-Cada AprilTag detectado provee:
-
-- Matriz de rotación ``R_tag`` (3x3)
-- Vector de traslación ``t_tag`` (3x1)
-
-Estos se combinan para formar una matriz homogénea 4x4:
-
-.. math::
-
-    T = \begin{bmatrix} R & t \\ 0\ 0\ 0 & 1 \end{bmatrix}
-
-3. **Transformación relativa**
-
-Para transformar la posición de cada tag al sistema del tag 0:
-
-.. math::
-
-    T_{\text{rel}} = T_0^{-1} \cdot T_{\text{tag}}
-
-De ahí se extrae la posición relativa:
-
-.. code-block:: python
-
-    T_rel = T0_inv @ T
-    t_rel = T_rel[:3, 3] * 1000  # [mm]
-
-Se invierte el eje Y para ROS (orientación hacia arriba):
-
-.. code-block:: python
-
-    msg.posx = float(t_rel[0] / 1000)
-    msg.posy = float(-t_rel[1] / 1000)
-
-4. **Orientación del tag 0**
-
-La orientación del tag 0 se expresa en ángulos de Euler para referencia espacial:
-
-.. code-block:: python
-
-    euler = R.from_matrix(R0).as_euler('xyz', degrees=True)
-
-5. **Publicación de mensajes**
-
-
-Se publica un mensaje tipo ``AprilTagPixelArray`` con múltiples objetos ``AprilTagPixel``, cada uno conteniendo:
-
-- ``id``: ID del tag detectado
-- ``posx`` y ``posy``: posición relativa respecto al tag 0 en metros (x hacia adelante, y hacia la izquierda)
-
-6. **Visualización**
-
-La imagen corregida se muestra en una ventana con:
-
-- Contornos de los tags
-- Líneas entre tag 0 y los demás
-- Texto con distancias relativas
-
-
-.. note::
-   Asegúrese de tener cargado un archivo YAML válido con la calibración de la cámara en la carpeta ``config/`` de su paquete.
-
-
-Códigos
-~~~~~~~
-
-.. tabs::
-
-   .. group-tab:: Programa 1
-
-      .. code-block:: python
-
-         import cv2
-         import os
-
-         cap = cv2.VideoCapture(0)
-         output_dir = "calib_imgs"
-         os.makedirs(output_dir, exist_ok=True)
-         count = 0
-
-         cv2.namedWindow("Calibración", cv2.WINDOW_NORMAL)  # Habilita cambio de tamaño
-         cv2.resizeWindow("Calibración", 800, 600)           # Establece el tamaño deseado
-
-         while True:
-             ret, frame = cap.read()
-             if not ret:
-                 break
-             cv2.imshow("Calibración", frame) 
-             key = cv2.waitKey(1) & 0xFF
-             if key == ord('c'):  # presiona 'c' para capturar
-                 fname = os.path.join(output_dir, f"img_{count:02d}.jpg")
-                 cv2.imwrite(fname, frame)
-                 print("Imagen guardada:", fname)
-                 count += 1
-             elif key == ord('q'):  # presiona 'q' para salir
-                 break
-
-         cap.release()
-         cv2.destroyAllWindows()
-
-   .. group-tab:: Programa 2
-
-      .. code-block:: python
-
-         # Calibración (guardar archivo camera_calibration.yaml)
-         import cv2
-         import numpy as np
-         import os
-         import yaml
-
-         # Parámetros del tablero
-         CHECKERBOARD = (10, 7)  # esquinas internas: columnas x filas (10x7 → 11x8 cuadrados)
-         SQUARE_SIZE = 0.025  # tamaño del cuadrado en metros
-
-         criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 0.001)
-
-         objp = np.zeros((CHECKERBOARD[0] * CHECKERBOARD[1], 3), np.float32)
-         objp[:, :2] = np.mgrid[0:CHECKERBOARD[0], 0:CHECKERBOARD[1]].T.reshape(-1, 2)
-         objp *= SQUARE_SIZE
-
-         objpoints = []
-         imgpoints = []
-
-         img_dir = "calib_imgs"
-         images = [os.path.join(img_dir, f) for f in os.listdir(img_dir) if f.endswith((".jpg", ".png"))]
-
-         for fname in images:
-            img = cv2.imread(fname)
-            gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-            ret, corners = cv2.findChessboardCorners(gray, CHECKERBOARD,
-                                                      cv2.CALIB_CB_ADAPTIVE_THRESH +
-                                                      cv2.CALIB_CB_NORMALIZE_IMAGE +
-                                                      cv2.CALIB_CB_FAST_CHECK)
-            if ret:
-               objpoints.append(objp)
-               corners2 = cv2.cornerSubPix(gray, corners, (11, 11), (-1, -1), criteria)
-               imgpoints.append(corners2)
-               cv2.drawChessboardCorners(img, CHECKERBOARD, corners2, ret)
-               cv2.namedWindow('Corners', cv2.WINDOW_NORMAL)
-               cv2.resizeWindow('Corners', 800, 600)
-               cv2.imshow('Corners', img)
-               cv2.waitKey(500)
-
-         cv2.destroyAllWindows()
-
-         ret, K, dist, rvecs, tvecs = cv2.calibrateCamera(objpoints, imgpoints, gray.shape[::-1], None, None)
-
-         # Guarda en formato YAML compatible con ROS
-         data = {
-            'image_width': int(gray.shape[1]),
-            'image_height': int(gray.shape[0]),
-            'camera_matrix': {'rows': 3, 'cols': 3, 'data': K.flatten().tolist()},
-            'distortion_model': 'plumb_bob',
-            'distortion_coefficients': {'rows': 1, 'cols': len(dist.flatten()), 'data': dist.flatten().tolist()},
-         }
-
-         with open('camera_calibration.yaml', 'w') as f:
-            yaml.dump(data, f, default_flow_style=False)
-
-         print("Guardado como camera_calibration.yaml")
-
-
-   .. group-tab:: Programa 3
-
-      .. code-block:: python
-
-         # Archivo para usar la calibración
-         import cv2
-         import numpy as np
-         import yaml
-
-         # Cargar parámetros desde el archivo YAML generado
-         with open("camera_calibration.yaml") as f:
-            calib_data = yaml.safe_load(f)
-
-         K = np.array(calib_data["camera_matrix"]["data"]).reshape((3, 3))
-         dist = np.array(calib_data["distortion_coefficients"]["data"])
-
-         # Captura de cámara
-         cap = cv2.VideoCapture(0)
-
-         while cap.isOpened():
-            ret, frame = cap.read()
-            if not ret:
-               break
-
-            h, w = frame.shape[:2]
-            new_camera_mtx, roi = cv2.getOptimalNewCameraMatrix(K, dist, (w, h), 1, (w, h))
-
-            # Corrección de distorsión
-            undistorted = cv2.undistort(frame, K, dist, None, new_camera_mtx)
-
-            # Mostrar ambas imágenes
-            cv2.namedWindow("Original", cv2.WINDOW_NORMAL)
-            cv2.namedWindow("Undistorted", cv2.WINDOW_NORMAL)
-            cv2.resizeWindow("Original", 640, 480)
-            cv2.resizeWindow("Undistorted", 640, 480)
-            cv2.imshow("Original", frame)
-            cv2.imshow("Undistorted", undistorted)
-
-            if cv2.waitKey(1) & 0xFF == ord('q'):
-               break
-
-         cap.release()
-         cv2.destroyAllWindows()
-
-
-
-   .. group-tab:: Programa 4
-
-      .. code-block:: python
-
-         import cv2
-         import numpy as np
-         import yaml
-         import time
-
-         # --- Cargar parámetros de calibración desde YAML ---
-         with open("camera_calibration.yaml", 'r') as f:
-            calib_data = yaml.safe_load(f)
-
-         K = np.array(calib_data['camera_matrix']['data']).reshape(3, 3)
-         dist = np.array(calib_data['distortion_coefficients']['data'])
-
-         # --- Inicializar detección de AprilTags ---
-         try:
-            from pupil_apriltags import Detector
-            at_detector = Detector(families='tag36h11')
-         except ImportError:
-            raise ImportError("Instala pupil_apriltags con: pip install pupil-apriltags")
-
-         # --- Parámetros del tag ---
-         tag_size = 0.08  # Tamaño del tag en metros (100 mm)
-
-         # --- Captura desde la cámara ---
-         cap = cv2.VideoCapture(0)
-         cv2.namedWindow("AprilTag Detection", cv2.WINDOW_NORMAL)
-         cv2.resizeWindow("AprilTag Detection", 800, 600)
-
-         last_print_time = time.time()
-
-         while True:
-            ret, frame = cap.read()
-            if not ret:
-               break
-
-            # Corregir distorsión
-            h, w = frame.shape[:2]
-            newcameramtx, _ = cv2.getOptimalNewCameraMatrix(K, dist, (w, h), 1, (w, h))
-            undistorted = cv2.undistort(frame, K, dist, None, newcameramtx)
-
-            # Convertir a escala de grises
-            gray = cv2.cvtColor(undistorted, cv2.COLOR_BGR2GRAY)
-
-            # Detección
-            tags = at_detector.detect(
-               gray,
-               estimate_tag_pose=True,
-               camera_params=(K[0, 0], K[1, 1], K[0, 2], K[1, 2]),
-               tag_size=tag_size
-            )
-
-            tag_poses = {}
-            tag_centers = {}
-
-            for tag in tags:
-               id = tag.tag_id
-               corners = np.int32(tag.corners)
-               center = np.mean(corners, axis=0).astype(int)
-
-               cv2.polylines(undistorted, [corners], True, (0, 255, 0), 2)
-               cv2.putText(undistorted, f"ID: {id}", tuple(center), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 0, 0), 2)
-
-               t = tag.pose_t.flatten() * 1000  # Convertir a mm
-               tag_poses[id] = t
-               tag_centers[id] = tuple(center)
-
-            if 0 in tag_poses:
-               ref = tag_poses[0]
-               ref_center = tag_centers[0]
-               for id, pos in tag_poses.items():
-                     if id != 0:
-                        rel = pos - ref
-                        dist_mm = np.linalg.norm(rel)
-                        cv2.putText(undistorted, f"0->{id}: {dist_mm:.1f} mm", (10, 30 + 30 * id),
-                                    cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 255), 2)
-                        if id in tag_centers:
-                           cv2.line(undistorted, ref_center, tag_centers[id], (255, 0, 255), 2)
-
-               # Imprimir en terminal cada segundo
-               if time.time() - last_print_time >= 1.0:
-                     print("\nPosiciones relativas (en mm) con respecto al tag 0:")
-                     for id, pos in tag_poses.items():
-                        if id != 0:
-                           rel = pos - ref
-                           print(f"Tag {id}: ΔX={rel[0]:.1f}, ΔY={rel[1]:.1f}, ΔZ={rel[2]:.1f}")
-                     last_print_time = time.time()
-
-            cv2.imshow("AprilTag Detection", undistorted)
-            if cv2.waitKey(1) & 0xFF == ord('q'):
-               break
-
-         cap.release()
-         cv2.destroyAllWindows()
-
-   .. group-tab:: p1_cam.py
-
-      .. code-block:: python
-
-         import cv2
-         from pupil_apriltags import Detector
-
-         # Transformaciones de la camara
-         from scipy.spatial.transform import Rotation as R
-         import numpy as np
-         import yaml
-
-         # Manejo de ROS2
-         import rclpy
-         from rclpy.node import Node
-         from avig_msg.msg import AprilTagPixel,AprilTagPixelArray
-
-         # Rutas Absolutas del paquete
-         from ament_index_python.packages import get_package_share_directory
-         import os
-
-         class AprilTagPixelPublisher(Node):
-            def __init__(self):
-               super().__init__('apriltag_cam')
-
-               self.publisher_data = self.create_publisher(AprilTagPixelArray, '/apriltag_pixels', 1)
-
-               # Obtener ruta absoluta al paquete
-               package_path = get_package_share_directory('mi_pkg_python')
-
-               # Ruta completa al archivo de calibración
-               yaml_file = os.path.join(package_path, 'config', 'camera_calibration.yaml')
-
-               # Cargar el YAML
-               with open(yaml_file, 'r') as f:
-                     calib_data = yaml.safe_load(f)
-
-               self.K = np.array(calib_data['camera_matrix']['data']).reshape(3, 3)
-               self.dist = np.array(calib_data['distortion_coefficients']['data'])
-
-               # --- Parámetros del tag ---
-               self.tag_size = 0.08  # Tamaño del tag en metros (100 mm)
-
-               self.cap = cv2.VideoCapture(0)
-
-               # Seteo de la ventana de IMSHOW
-               self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
-               self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
-               self.cap.set(cv2.CAP_PROP_FPS, 30)
-
-               if not self.cap.isOpened():
-                     self.get_logger().error("No se pudo acceder a la cámara.")
-                     exit()
-
-               self.at_detector = Detector(families='tag36h11', nthreads=4)
-
-               # Crear ventana redimensionable (solo si se usa visualización)
-               cv2.namedWindow("AprilTag View", cv2.WINDOW_NORMAL)
-               cv2.resizeWindow("AprilTag View", 800, 600)
-
-               self.timer = self.create_timer(1.0 / 30.0, self.timer_callback)
-               self.get_logger().info("Nodo AprilTag CAM iniciado.")
-
-            def timer_callback(self):
-               ret, frame = self.cap.read()
-               if not ret:
-                     self.get_logger().warn(" No se pudo leer el frame.")
-                     return
-               
-               # Corregir distorsión
-               h, w = frame.shape[:2]
-               newcameramtx, _ = cv2.getOptimalNewCameraMatrix(self.K, self.dist, (w, h), 1, (w, h))
-               undistorted = cv2.undistort(frame, self.K, self.dist, None, newcameramtx)
-
-               # Convertir a escala de grises
-               gray = cv2.cvtColor(undistorted, cv2.COLOR_BGR2GRAY)
-
-               # Detección
-               tags = self.at_detector.detect(
-                     gray,
-                     estimate_tag_pose=True,
-                     camera_params=(self.K[0, 0], self.K[1, 1], self.K[0, 2], self.K[1, 2]),
-                     tag_size=self.tag_size
-               )
-
-               tag_poses = {}
-               tag_centers = {}
-               tag_by_id = {}
-
-               for tag in tags:
-                     id = tag.tag_id
-                     corners = np.int32(tag.corners)
-                     center = np.mean(corners, axis=0).astype(int)
-
-                     cv2.polylines(undistorted, [corners], True, (0, 255, 0), 2)
-                     cv2.putText(undistorted, f"ID: {id}", tuple(center), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 0, 0), 2)
-
-                     t = tag.pose_t.flatten() * 1000  # Convertir a mm
-                     tag_poses[id] = t
-                     tag_centers[id] = tuple(center)
-                     tag_by_id[id] = tag
-               
-               msg_arreglo = AprilTagPixelArray()
-
-               # --- Transformación al marco del tag 0 ---
-
-               if 0 in tag_by_id:
-                     # Obtener transformación del tag 0
-                     ref_tag = tag_by_id[0]
-                     R0 = ref_tag.pose_R
-                     t0 = ref_tag.pose_t.reshape(3, 1)
-                     T0 = np.hstack([R0, t0])
-                     T0 = np.vstack([T0, [0, 0, 0, 1]])
-                     T0_inv = np.linalg.inv(T0)
-
-                     # Mostrar orientación del tag 0 (ángulos Euler)
-                     r_obj = R.from_matrix(R0)
-                     euler = r_obj.as_euler('xyz', degrees=True)
-                     self.get_logger().info(f'Orientación Tag 0 (Euler): Roll={euler[0]:.1f}°, Pitch={euler[1]:.1f}°, Yaw={euler[2]:.1f}')
-                                 
-                     # Calcular transformaciones relativas corregidas [mm]
-                     
-                     for id, tag in tag_by_id.items():
-                        if id == 0:
-                           msg_0 = AprilTagPixel()
-                           msg_0.id = 0
-                           msg_0.posx = 0.0
-                           msg_0.posy = 0.0
-                           continue
-
-                        R_tag = tag.pose_R
-                        t_tag = tag.pose_t.reshape(3, 1)
-                        T = np.hstack([R_tag, t_tag])
-                        T = np.vstack([T, [0, 0, 0, 1]])
-
-                        T_rel = T0_inv @ T
-                        t_rel = T_rel[:3, 3] * 1000  # en mm
-                        
-                        # creacion del tipo de mensaje AprilTagPixel()
-                        msg = AprilTagPixel()
-                        msg.id = id
-                        msg.posx = float(t_rel[0]/1000)
-                        msg.posy = float(-t_rel[1]/1000)
-                        msg_arreglo.tags.append(msg)
-
-                        if id in tag_centers and 0 in tag_centers:
-                           cv2.line(undistorted, tag_centers[0], tag_centers[id], (255, 0, 255), 2)
-                           cv2.putText(undistorted, f"0->{id}: {np.linalg.norm(t_rel[:2]):.1f} mm",
-                                       (10, 30 + 30 * id), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 255), 2)
-               
-               self.publisher_data.publish(msg_arreglo)        
-               # Visualizacion
-               self.visualizar_detecciones(undistorted)
-
-            def visualizar_detecciones(self, frame):
-               cv2.imshow("AprilTag View", frame)
-               if cv2.waitKey(1) & 0xFF == ord('q'):
-                     self.get_logger().info(" 'q' presionado. Saliendo.")
-                     self.cap.release()
-                     cv2.destroyAllWindows()
-                     rclpy.shutdown()
-
-            def destroy_node(self):
-               self.cap.release()
-               cv2.destroyAllWindows()
-               super().destroy_node()
-
-         def main(args=None):
-            rclpy.init(args=args)
-            node = AprilTagPixelPublisher()
-            try:
-               rclpy.spin(node)
-            except KeyboardInterrupt:
-               node.destroy_node()
-               rclpy.shutdown()
-
-         if __name__ == '__main__':
-            main()
+Máquinas de estado
+------------------
 
 
 Publicación de objetos simulados
@@ -1432,3 +843,292 @@ tendra que hacer el robot.
 
    if __name__ == '__main__':
       main()
+
+
+=========================================
+Edge Computing + ROS 2 + SLAM 3D
+=========================================
+
+Objetivo
+========
+
+Este documento resume una arquitectura recomendada (nivel profesional/industrial) para integrar:
+
+- **Edge computing** (cómputo en el robot)
+- **ROS 2** como middleware
+- **SLAM 3D** (mapeo y localización en 3D)
+- Navegación y control (opcional, pero común en robots móviles)
+
+La idea principal es diseñar un sistema robusto que soporte:
+
+- Alto ancho de banda de sensores (LiDAR/Depth)
+- Cómputo pesado (odometría + SLAM)
+- Baja latencia en control
+- Escalabilidad (monitorización, logging y gemelo digital)
+
+--------------------------------------------------------------------
+
+1. ¿Qué se ejecuta en el Edge y qué se ejecuta fuera?
+=====================================================
+
+En el Edge (robot)
+------------------
+
+En el robot se debe ejecutar todo lo que es **crítico para operación en tiempo real**:
+
+- Drivers de sensores: LiDAR, cámara depth, IMU, encoders
+- Sincronización y estampado temporal (timestamps coherentes)
+- Preprocesamiento de datos (filtros, downsample, deskew)
+- Odometría (wheel/visual/LiDAR)
+- **SLAM 3D** (pose + mapa, loop closure si aplica)
+- Navegación local (evitación reactiva / control local)
+- Control (``ros2_control`` / drivers CAN / PWM / Ethernet)
+
+Fuera del Edge (estación/base/servidor)
+---------------------------------------
+
+Fuera del robot se deja lo que no es crítico o puede ser pesado:
+
+- Visualización (RViz2, dashboards web)
+- Grabación masiva de datos (rosbag continuo a NAS)
+- Analítica y mantenimiento predictivo
+- Map merging (multi-robot) / optimizaciones batch
+- Gemelo digital / simulación (Isaac Sim, etc.)
+
+Regla de oro
+------------
+
+**Todo lo que requiere respuesta inmediata debe vivir en el Edge.**
+
+--------------------------------------------------------------------
+
+2. Requisitos de hardware para SLAM 3D (por clases)
+===================================================
+
+El hardware depende principalmente del sensor y del stack SLAM elegido.
+
+A) SLAM 3D basado en LiDAR (robusto en industria)
+-------------------------------------------------
+
+- En general exige **CPU fuerte** (procesamiento geométrico y registro)
+- GPU opcional dependiendo del pipeline
+- RAM moderada/alta (mapa y buffers)
+
+Recomendación típica:
+
+- CPU: 6–12 cores con buen rendimiento por núcleo
+- RAM: 16–32 GB
+- SSD NVMe: 256 GB–1 TB (mapas + rosbags)
+- Red: 1 GbE mínimo (2.5/10 GbE si hay múltiples sensores o alta tasa)
+
+B) SLAM 3D basado en cámara depth / estéreo (visual / RGB-D)
+------------------------------------------------------------
+
+- **GPU ayuda mucho** (especialmente con pipelines acelerados)
+- Sensible a iluminación y texturas
+- Requiere buena sincronización IMU–cámara
+
+Recomendación típica:
+
+- CPU: 6–12 cores
+- GPU: NVIDIA (si se busca aceleración / Isaac ROS)
+- RAM: 16–32 GB
+- SSD NVMe: recomendado
+
+C) SLAM 3D + Percepción avanzada + Navegación completa
+------------------------------------------------------
+
+Cuando se ejecuta SLAM + percepción + detección + navegación:
+
+- CPU fuerte + GPU potente + RAM alta
+- Recomendado usar mini-PC industrial o plataforma NVIDIA con NVMe
+
+--------------------------------------------------------------------
+
+3. Arquitectura ROS 2 recomendada (bloques)
+===========================================
+
+Bloques mínimos (pipeline estándar)
+-----------------------------------
+
+1. **Sensor Layer**
+   - Drivers: LiDAR / Depth / IMU / encoders
+
+2. **Time & Sync Layer**
+   - timestamps consistentes
+   - TF bien definido (``map``, ``odom``, ``base_link``)
+
+3. **Preprocessing**
+   - VoxelGrid / downsample
+   - Crop ROI (recortar volumen útil)
+   - Deskew (LiDAR + IMU) si aplica
+   - (Opcional) quitar plano (mesa/suelo) y filtrar ruido
+
+4. **Odometry**
+   - Wheel + IMU con EKF
+   - Visual odom o LiDAR odom según el caso
+
+5. **SLAM 3D**
+   - Estimación de pose global
+   - Pose-graph / loop closure (según implementación)
+   - Mapa 3D (nubes/voxels)
+
+6. **Navigation (si robot móvil)**
+   - Planner global + control local (Nav2)
+   - Evitación de obstáculos (2D/3D)
+
+7. **Control**
+   - ``ros2_control`` y hardware interfaces
+
+Recomendación industrial
+------------------------
+
+- Separar por contenedores (Docker) o usar composable nodes por rendimiento
+- Usar QoS correcto según tipo de dato (sensores vs control)
+- Aislar CPU y prioridades si se requiere determinismo
+
+--------------------------------------------------------------------
+
+4. SLAM 3D en ROS 2 (opciones prácticas)
+=======================================
+
+La elección depende del sensor y del objetivo.
+
+Opción 1: RTAB-Map (RGB-D / integración flexible)
+-------------------------------------------------
+
+- Muy usado en robótica aplicada
+- Loop closure y mapeo
+- Puede producir mapa 2D a partir de 3D para navegación (según configuración)
+
+Ideal si:
+- Se busca un stack flexible “todo en uno”
+- Se usa cámara depth y un odom decente
+
+Opción 2: SLAM basado en LiDAR (robusto para industria)
+-------------------------------------------------------
+
+Para entornos con poca luz, polvo o grandes espacios, LiDAR suele ser mejor.
+En ROS 2, la selección concreta varía por hardware y disponibilidad.
+
+Ideal si:
+- Entorno industrial
+- Necesidad de robustez en condiciones complejas
+
+Opción 3: Isaac ROS (si la plataforma es NVIDIA)
+------------------------------------------------
+
+- Pipeline acelerado en GPU para percepción y odometría visual (según módulos)
+- Muy eficiente en FPS y latencia con cámaras
+
+Ideal si:
+- Edge basado en NVIDIA
+- Se busca alto rendimiento con visión
+
+--------------------------------------------------------------------
+
+5. Nav2 + SLAM 3D: cómo se integran en la práctica
+==================================================
+
+Aunque SLAM sea 3D, en robot móvil la navegación normalmente usa costmaps 2D.
+
+Enfoque típico:
+
+- SLAM 3D produce pose y mapa (3D)
+- Se genera o mantiene un **mapa 2D** (ocupación) para Nav2
+- Obstáculos dinámicos se actualizan desde:
+  - LiDAR/Depth proyectados a 2D
+  - voxel layers (según configuración)
+
+Recomendación práctica
+----------------------
+
+Mantener:
+
+- **Mapa 2D** para planificación global (estable y eficiente)
+- **Percepción 3D local** para obstáculos dinámicos y seguridad
+
+--------------------------------------------------------------------
+
+6. Puntos críticos que suelen fallar en SLAM 3D (y mitigación)
+=============================================================
+
+1) Tiempo mal sincronizado
+--------------------------
+
+Síntomas:
+- Drift elevado
+- mapas “gelatinosos”
+- desalineación de nubes
+
+Mitigación:
+- Asegurar timestamps coherentes
+- Verificar sincronización IMU–cámara–LiDAR
+- Revisar latencias y buffers
+
+2) TF inconsistente
+-------------------
+
+Mitigación:
+- Definir claramente frames: ``map``, ``odom``, ``base_link``, ``sensor_link``
+- Evitar transforms duplicadas o contradictorias
+
+3) Exceso de datos (saturación de CPU/red/memoria)
+--------------------------------------------------
+
+Mitigación:
+- VoxelGrid / downsample
+- Crop ROI
+- Ajustar tasas de publicación (Hz)
+- Filtrar ruido y puntos innecesarios
+
+4) QoS incorrecto en ROS 2
+--------------------------
+
+Mitigación:
+- Sensores: típicamente ``best_effort`` (según caso)
+- Control y estado: ``reliable``
+- Ajustar profundidad de colas y durabilidad según uso
+
+--------------------------------------------------------------------
+
+7. Arquitectura recomendada (resumen “industrial”)
+==================================================
+
+Edge (robot)
+------------
+
+- Drivers (LiDAR/Depth/IMU/encoders)
+- TF + sincronización
+- EKF (wheel + IMU)
+- Preprocesamiento de nubes
+- Odometry
+- **SLAM 3D**
+- Nav2 (control local / evitación) si aplica
+- ``ros2_control`` / drivers motores
+
+Base station / servidor
+-----------------------
+
+- RViz2 / dashboards
+- logging y análisis
+- gestión de mapas
+- gemelo digital y simulación (opcional)
+
+--------------------------------------------------------------------
+
+Conclusión
+==========
+
+La combinación **Edge + ROS 2 + SLAM 3D** se diseña como un sistema distribuido:
+
+- El Edge ejecuta lo crítico (sensores, odom, SLAM, control)
+- El servidor ejecuta visualización, análisis y funciones pesadas no críticas
+
+Una implementación profesional depende de:
+
+- Hardware apropiado para el sensor principal (LiDAR vs cámara depth)
+- TF y tiempo correctamente sincronizados
+- Preprocesamiento para evitar saturación
+- QoS correcto en ROS 2
+- Integración de SLAM 3D con navegación (usualmente costmap 2D + percepción 3D local)

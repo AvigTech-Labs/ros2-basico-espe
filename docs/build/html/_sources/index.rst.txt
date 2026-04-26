@@ -22,13 +22,13 @@ Contenido
    documentos/tema_2/conceptos_basicos
    documentos/tema_2/tutoriales
    documentos/tema_3/dispositivos
-   documentos/tema_4/visualizacion_datos
-   documentos/tema_4/driver_gemelo
-   documentos/tema_4/gemelo
+   documentos/tema_4/drivers
+   documentos/tema_4/gemelo_digital
    
 
 .. toctree::
    :maxdepth: 2
    :caption: Proyecto Aplicado
 
-   documentos/tema_5/proyecto
+   documentos/tema_5/proyecto_1
+   documentos/tema_5/proyecto_2
