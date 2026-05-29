@@ -754,8 +754,8 @@ debes recalcular <span class="math notranslate nohighlight">\(N_{q2}\)</span> y 
 <span class="c1">// Pines motores paso a paso</span>
 <span class="cp">#define STEP2 18</span>
 <span class="cp">#define DIR2  19</span>
-<span class="cp">#define STEP3 22</span>
-<span class="cp">#define DIR3  23</span>
+<span class="cp">#define STEP3 23</span>
+<span class="cp">#define DIR3  22</span>
 
 <span class="c1">// Pines Driver</span>
 <span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">PIN_STEP</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">25</span><span class="p">;</span><span class="w">  </span><span class="c1">// -&gt; PUL+</span>
@@ -1004,8 +1004,11 @@ robot real, se aplica la combinación de los códigos de <code class="docutils l
 <p>Dentro de la carpeta <code class="docutils literal notranslate"><span class="pre">mqtt_python</span></code>, crear el archivo <code class="docutils literal notranslate"><span class="pre">urdf_mqtt`</span></code>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">rclpy</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">rclpy.node</span><span class="w"> </span><span class="kn">import</span> <span class="n">Node</span>
+
 <span class="kn">from</span><span class="w"> </span><span class="nn">rclpy.duration</span><span class="w"> </span><span class="kn">import</span> <span class="n">Duration</span>
+
 <span class="kn">from</span><span class="w"> </span><span class="nn">std_msgs.msg</span><span class="w"> </span><span class="kn">import</span> <span class="n">Float32</span><span class="p">,</span> <span class="n">Int32</span>
+
 <span class="kn">from</span><span class="w"> </span><span class="nn">sensor_msgs.msg</span><span class="w"> </span><span class="kn">import</span> <span class="n">JointState</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">paho.mqtt.client</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mqtt</span>
@@ -1014,119 +1017,120 @@ robot real, se aplica la combinación de los códigos de <code class="docutils l
 <span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">MQTTBridge</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s1">&#39;mqtt_bridge&#39;</span><span class="p">)</span>
+   <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s1">&#39;mqtt_bridge&#39;</span><span class="p">)</span>
 
-        <span class="c1"># Angulos del robot</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">real_q1</span> <span class="o">=</span> <span class="mf">0.0</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">real_q2</span> <span class="o">=</span> <span class="mf">0.0</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">real_q3</span> <span class="o">=</span> <span class="mf">0.0</span>
+      <span class="c1"># Angulos del robot</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">real_q1</span> <span class="o">=</span> <span class="mf">0.0</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">real_q2</span> <span class="o">=</span> <span class="mf">0.0</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">real_q3</span> <span class="o">=</span> <span class="mf">0.0</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">pub</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_publisher</span><span class="p">(</span> <span class="n">Float32</span><span class="p">,</span> <span class="s1">&#39;sensor_bateria&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">subscription</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_subscription</span><span class="p">(</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">pub</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_publisher</span><span class="p">(</span> <span class="n">Float32</span><span class="p">,</span> <span class="s1">&#39;sensor_bateria&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+      <span class="bp">self</span><span class="o">.</span><span class="n">subscription</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_subscription</span><span class="p">(</span>
             <span class="n">JointState</span><span class="p">,</span>
             <span class="s1">&#39;/joint_states&#39;</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">listener_ros</span><span class="p">,</span> <span class="mi">1</span>
             <span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">last_data</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">active</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># control de publicación activa</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">last_mqtt_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_clock</span><span class="p">()</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">last_data</span> <span class="o">=</span> <span class="kc">None</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">active</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># control de publicación activa</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">last_mqtt_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_clock</span><span class="p">()</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">timer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_timer</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">publish_sensor_data</span><span class="p">)</span>       <span class="c1"># Publicador (10 Hz)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">timer_watchdog</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_timer</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_timeout</span><span class="p">)</span>    <span class="c1"># Verificador de tiempo</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">timer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_timer</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">publish_sensor_data</span><span class="p">)</span>       <span class="c1"># Publicador (10 Hz)</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">timer_watchdog</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_timer</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_timeout</span><span class="p">)</span>    <span class="c1"># Verificador de tiempo</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">topic_sub</span> <span class="o">=</span> <span class="s2">&quot;ra/sensores&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">topic_pub</span> <span class="o">=</span> <span class="s2">&quot;ra/juntas&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">mqtt_client</span> <span class="o">=</span> <span class="n">mqtt</span><span class="o">.</span><span class="n">Client</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">mqtt_client</span><span class="o">.</span><span class="n">on_connect</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">on_connect</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">mqtt_client</span><span class="o">.</span><span class="n">on_message</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">on_message</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">mqtt_client</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;192.168.100.178&quot;</span><span class="p">,</span> <span class="mi">1883</span><span class="p">,</span> <span class="mi">60</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">mqtt_client</span><span class="o">.</span><span class="n">loop_start</span><span class="p">()</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">topic_sub</span> <span class="o">=</span> <span class="s2">&quot;ra/sensores&quot;</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">topic_pub</span> <span class="o">=</span> <span class="s2">&quot;ra/juntas&quot;</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">mqtt_client</span> <span class="o">=</span> <span class="n">mqtt</span><span class="o">.</span><span class="n">Client</span><span class="p">()</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">mqtt_client</span><span class="o">.</span><span class="n">on_connect</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">on_connect</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">mqtt_client</span><span class="o">.</span><span class="n">on_message</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">on_message</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">mqtt_client</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;192.168.100.224&quot;</span><span class="p">,</span> <span class="mi">1883</span><span class="p">,</span> <span class="mi">60</span><span class="p">)</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">mqtt_client</span><span class="o">.</span><span class="n">loop_start</span><span class="p">()</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">listener_ros</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
-        <span class="n">q1_mov</span> <span class="o">=</span> <span class="mf">0.0</span>
-        <span class="n">q2_mov</span> <span class="o">=</span> <span class="mf">0.0</span>
-        <span class="n">q3_mov</span> <span class="o">=</span> <span class="mf">0.0</span>
-        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">name</span><span class="p">):</span>
+   <span class="k">def</span><span class="w"> </span><span class="nf">listener_ros</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+      <span class="n">q1_mov</span> <span class="o">=</span> <span class="mf">0.0</span>
+      <span class="n">q2_mov</span> <span class="o">=</span> <span class="mf">0.0</span>
+      <span class="n">q3_mov</span> <span class="o">=</span> <span class="mf">0.0</span>
+      <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">name</span><span class="p">):</span>
             <span class="c1"># Resolucion del stepper 0.9</span>
             <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;brazo_joint&quot;</span><span class="p">:</span>
-                <span class="n">meta</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">position</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span><span class="mi">4</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">real_q1</span><span class="p">,</span> <span class="n">q1_mov</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mover_a_angulo_discreto</span><span class="p">(</span><span class="n">meta</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">real_q1</span><span class="p">)</span>
+               <span class="n">meta</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">position</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span><span class="mi">4</span><span class="p">)</span>
+               <span class="bp">self</span><span class="o">.</span><span class="n">real_q1</span><span class="p">,</span> <span class="n">q1_mov</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mover_a_angulo_discreto</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">meta</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">real_q1</span><span class="p">,</span> <span class="n">paso</span><span class="o">=</span><span class="mf">0.0192</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;antebrazo_joint&quot;</span><span class="p">:</span>
-                <span class="n">meta</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">position</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span><span class="mi">4</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">real_q2</span><span class="p">,</span> <span class="n">q2_mov</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mover_a_angulo_discreto</span><span class="p">(</span><span class="n">meta</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">real_q2</span><span class="p">)</span>
+               <span class="n">meta</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">position</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span><span class="mi">4</span><span class="p">)</span>
+               <span class="bp">self</span><span class="o">.</span><span class="n">real_q2</span><span class="p">,</span> <span class="n">q2_mov</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mover_a_angulo_discreto</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">meta</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">real_q2</span><span class="p">)</span>
 
-        <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
-                    <span class="s2">&quot;q1&quot;</span><span class="p">:</span> <span class="n">q1_mov</span><span class="p">,</span>
-                    <span class="s2">&quot;q2&quot;</span><span class="p">:</span> <span class="n">q2_mov</span>
-                  <span class="p">}</span>
-        <span class="n">msg_mqtt</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">mqtt_client</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">topic_pub</span><span class="p">,</span> <span class="n">msg_mqtt</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Mensaje Enviado&quot;</span><span class="p">)</span>
+      <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
+                  <span class="s2">&quot;q1&quot;</span><span class="p">:</span> <span class="n">q1_mov</span><span class="p">,</span>
+                  <span class="s2">&quot;q2&quot;</span><span class="p">:</span> <span class="n">q2_mov</span><span class="p">,</span>
+                  <span class="s2">&quot;q3&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+               <span class="p">}</span>
+      <span class="n">msg_mqtt</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">mqtt_client</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">topic_pub</span><span class="p">,</span> <span class="n">msg_mqtt</span><span class="p">)</span>
+      <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Mensaje Enviado&quot;</span><span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">mover_a_angulo_discreto</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">angulo_objetivo</span><span class="p">,</span> <span class="n">angulo_actual</span><span class="p">,</span> <span class="n">paso</span><span class="o">=</span><span class="mf">0.9</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Calcula el desplazamiento al múltiplo de &#39;paso&#39; más cercano al ángulo objetivo.</span>
-<span class="sd">        Retorna:</span>
+   <span class="k">def</span><span class="w"> </span><span class="nf">mover_a_angulo_discreto</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">junta</span><span class="p">,</span> <span class="n">angulo_objetivo</span><span class="p">,</span> <span class="n">angulo_actual</span><span class="p">,</span> <span class="n">paso</span><span class="o">=</span><span class="mf">0.9</span><span class="p">):</span>
+<span class="w">      </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">      Calcula el desplazamiento al múltiplo de &#39;paso&#39; más cercano al ángulo objetivo.</span>
+<span class="sd">      Retorna:</span>
 <span class="sd">            - el nuevo ángulo corregido (múltiplo de paso)</span>
 <span class="sd">            - el desplazamiento angular necesario desde el ángulo actual</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">      &quot;&quot;&quot;</span>
 
-        <span class="c1"># Calcula desplazamiento</span>
-        <span class="n">desplazamiento</span> <span class="o">=</span> <span class="n">angulo_objetivo</span> <span class="o">-</span> <span class="n">angulo_actual</span>
+      <span class="c1"># Calcula desplazamiento</span>
+      <span class="n">desplazamiento</span> <span class="o">=</span> <span class="n">angulo_objetivo</span> <span class="o">-</span> <span class="n">angulo_actual</span>
 
-        <span class="c1"># Redondea el ángulo objetivo al múltiplo más cercano</span>
-        <span class="n">desplazamiento_valido</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">desplazamiento</span> <span class="o">/</span> <span class="n">paso</span><span class="p">)</span> <span class="o">*</span> <span class="n">paso</span>
+      <span class="c1"># Redondea el ángulo objetivo al múltiplo más cercano</span>
+      <span class="n">desplazamiento_valido</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">desplazamiento</span> <span class="o">/</span> <span class="n">paso</span><span class="p">)</span> <span class="o">*</span> <span class="n">paso</span>
 
-        <span class="n">meta_ajustada</span> <span class="o">=</span> <span class="n">angulo_actual</span> <span class="o">+</span> <span class="n">desplazamiento_valido</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[INFO] Objetivo :</span><span class="si">{</span><span class="n">angulo_objetivo</span><span class="si">}</span><span class="s2">°&quot;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[INFO] Objetivo ajustado: </span><span class="si">{</span><span class="n">meta_ajustada</span><span class="si">}</span><span class="s2">° (múltiplo de </span><span class="si">{</span><span class="n">paso</span><span class="si">}</span><span class="s2">°)&quot;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[INFO] Desplazamiento desde actual: </span><span class="si">{</span><span class="n">desplazamiento_valido</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">°&quot;</span><span class="p">)</span>
+      <span class="n">meta_ajustada</span> <span class="o">=</span> <span class="n">angulo_actual</span> <span class="o">+</span> <span class="n">desplazamiento_valido</span>
 
-        <span class="k">return</span> <span class="nb">round</span><span class="p">(</span><span class="n">meta_ajustada</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span> <span class="nb">round</span><span class="p">(</span><span class="n">desplazamiento_valido</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">junta</span><span class="si">}</span><span class="s2"> Objetivo: </span><span class="si">{</span><span class="n">angulo_objetivo</span><span class="si">}</span><span class="s2"> Objetivo ajustado: </span><span class="si">{</span><span class="n">meta_ajustada</span><span class="si">}</span><span class="s2">° (múltiplo de </span><span class="si">{</span><span class="n">paso</span><span class="si">}</span><span class="s2"> Desplazamiento desde actual: </span><span class="si">{</span><span class="n">desplazamiento_valido</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+      <span class="k">return</span> <span class="nb">round</span><span class="p">(</span><span class="n">meta_ajustada</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span> <span class="nb">round</span><span class="p">(</span><span class="n">desplazamiento_valido</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
 
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">on_connect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">userdata</span><span class="p">,</span> <span class="n">flags</span><span class="p">,</span> <span class="n">rc</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">rc</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+   <span class="k">def</span><span class="w"> </span><span class="nf">on_connect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">userdata</span><span class="p">,</span> <span class="n">flags</span><span class="p">,</span> <span class="n">rc</span><span class="p">):</span>
+      <span class="k">if</span> <span class="n">rc</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Conectado al broker MQTT&quot;</span><span class="p">)</span>
             <span class="n">client</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">topic_sub</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
+      <span class="k">else</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error de conexión: código </span><span class="si">{</span><span class="n">rc</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">on_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">userdata</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
-        <span class="k">try</span><span class="p">:</span>
+   <span class="k">def</span><span class="w"> </span><span class="nf">on_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">userdata</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+      <span class="k">try</span><span class="p">:</span>
             <span class="n">mensaje</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">payload</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
             <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">mensaje</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">msg</span><span class="o">.</span><span class="n">topic</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">topic_sub</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">last_data</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;bateria&quot;</span><span class="p">])</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">last_mqtt_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_clock</span><span class="p">()</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>  <span class="c1"># Actualiza tiempo del último dato</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">active</span> <span class="o">=</span> <span class="kc">True</span>
-        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+               <span class="bp">self</span><span class="o">.</span><span class="n">last_data</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;ultra&quot;</span><span class="p">])</span>
+               <span class="bp">self</span><span class="o">.</span><span class="n">last_mqtt_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_clock</span><span class="p">()</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>  <span class="c1"># Actualiza tiempo del último dato</span>
+               <span class="bp">self</span><span class="o">.</span><span class="n">active</span> <span class="o">=</span> <span class="kc">True</span>
+      <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error procesando mensaje:&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">publish_sensor_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">active</span><span class="p">:</span>
+   <span class="k">def</span><span class="w"> </span><span class="nf">publish_sensor_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">active</span><span class="p">:</span>
             <span class="n">ros_msg</span> <span class="o">=</span> <span class="n">Float32</span><span class="p">()</span>
             <span class="n">ros_msg</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_data</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">pub</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">ros_msg</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ROS2 publicó: </span><span class="si">{</span><span class="n">ros_msg</span><span class="o">.</span><span class="n">data</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="c1">#self.get_logger().info(f&quot;ROS2 publicó: {ros_msg.data}&quot;)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">check_timeout</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">now</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_clock</span><span class="p">()</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">now</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_mqtt_time</span> <span class="o">&gt;</span> <span class="n">Duration</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mf">2.0</span><span class="p">):</span>
+   <span class="k">def</span><span class="w"> </span><span class="nf">check_timeout</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="n">now</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_clock</span><span class="p">()</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+      <span class="k">if</span> <span class="n">now</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_mqtt_time</span> <span class="o">&gt;</span> <span class="n">Duration</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mf">2.0</span><span class="p">):</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">active</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;No se reciben datos desde MQTT. Se detiene la publicación.&quot;</span><span class="p">)</span>
+               <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;No se reciben datos desde MQTT. Se detiene la publicación.&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">active</span> <span class="o">=</span> <span class="kc">False</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="n">rclpy</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">)</span>
-    <span class="n">node</span> <span class="o">=</span> <span class="n">MQTTBridge</span><span class="p">()</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">rclpy</span><span class="o">.</span><span class="n">spin</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
-    <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
-        <span class="k">pass</span>
-    <span class="n">rclpy</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
+   <span class="n">rclpy</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">)</span>
+   <span class="n">node</span> <span class="o">=</span> <span class="n">MQTTBridge</span><span class="p">()</span>
+   <span class="k">try</span><span class="p">:</span>
+      <span class="n">rclpy</span><span class="o">.</span><span class="n">spin</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+   <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
+      <span class="k">pass</span>
+   <span class="n">rclpy</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>Registrar el codigo en el <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> y compilar</p>
