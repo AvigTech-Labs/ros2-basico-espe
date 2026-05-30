@@ -1,0 +1,395 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
+     Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+<robot
+  name="CR10A_2">
+  <link
+    name="base_link">
+    <inertial>
+      <origin
+        xyz="-0.290785793012938 0.0336373240312891 0.794129560061461"
+        rpy="0 0 0" />
+      <mass
+        value="1.72869537787631" />
+      <inertia
+        ixx="0.00404941415696362"
+        ixy="6.55393997444572E-07"
+        ixz="2.51836388244275E-05"
+        iyy="0.00418206079476817"
+        iyz="-5.61841736104462E-07"
+        izz="0.00651775316369979" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://CR10A_2/meshes/base_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://CR10A_2/meshes/base_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <link
+    name="1_link">
+    <inertial>
+      <origin
+        xyz="0.0101030523614197 1.01453190531897E-06 0.0984642609975221"
+        rpy="0 0 0" />
+      <mass
+        value="4.10332083338183" />
+      <inertia
+        ixx="0.0183679987441499"
+        ixy="-1.73293051130684E-07"
+        ixz="0.000112646897841512"
+        iyy="0.0200486432101845"
+        iyz="7.22330705237499E-08"
+        izz="0.0140877685174107" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://CR10A_2/meshes/1_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://CR10A_2/meshes/1_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="1_joint"
+    type="revolute">
+    <origin
+      xyz="-0.29 0.033641 0.837"
+      rpy="0 0 -0.021802" />
+    <parent
+      link="base_link" />
+    <child
+      link="1_link" />
+    <axis
+      xyz="0 0 -1" />
+    <limit
+      lower="-1.15"
+      upper="1.15"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="2_link">
+    <inertial>
+      <origin
+        xyz="0.244121089707563 4.09251443470038E-07 0.0965697345968748"
+        rpy="0 0 0" />
+      <mass
+        value="11.2445859877789" />
+      <inertia
+        ixx="0.0339643708941649"
+        ixy="-1.65930622957405E-07"
+        ixz="9.40259741768579E-05"
+        iyy="0.118636916797871"
+        iyz="1.1830218217475E-07"
+        izz="0.11106738033107" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://CR10A_2/meshes/2_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://CR10A_2/meshes/2_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="2_joint"
+    type="revolute">
+    <origin
+      xyz="0.099097 0 0.095"
+      rpy="-1.5708 -1.57 -1.5708" />
+    <parent
+      link="1_link" />
+    <child
+      link="2_link" />
+    <axis
+      xyz="0 0 -1" />
+    <limit
+      lower="-1.15"
+      upper="1.15"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="3_link">
+    <inertial>
+      <origin
+        xyz="0.270557491027765 0.000353159553549531 0.0376939094961107"
+        rpy="0 0 0" />
+      <mass
+        value="5.03712891265186" />
+      <inertia
+        ixx="0.007761091795223"
+        ixy="-0.00016116596936149"
+        ixz="0.00240186228826323"
+        iyy="0.123921489408742"
+        iyz="1.93151865644578E-05"
+        izz="0.122208539368207" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://CR10A_2/meshes/3_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://CR10A_2/meshes/3_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="3_joint"
+    type="revolute">
+    <origin
+      xyz="0.602 0 0"
+      rpy="3.1416 0.021802 -1.5716" />
+    <parent
+      link="2_link" />
+    <child
+      link="3_link" />
+    <axis
+      xyz="0.0218 0 0.99976" />
+    <limit
+      lower="-1.15"
+      upper="1.15"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="4_link">
+    <inertial>
+      <origin
+        xyz="-0.00750070124706592 0.000855574672094628 0.0604134955253673"
+        rpy="0 0 0" />
+      <mass
+        value="1.15016551283085" />
+      <inertia
+        ixx="0.00145543559451451"
+        ixy="2.47003643733196E-05"
+        ixz="8.25165307886607E-05"
+        iyy="0.00282324817707806"
+        iyz="-3.61455672829152E-06"
+        izz="0.0026414908780408" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://CR10A_2/meshes/4_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://CR10A_2/meshes/4_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="4_joint"
+    type="revolute">
+    <origin
+      xyz="0.56749 0.0014746 -0.029378"
+      rpy="3.1416 0 3.1416" />
+    <parent
+      link="3_link" />
+    <child
+      link="4_link" />
+    <axis
+      xyz="0.021775 0.011631 0.9997" />
+    <limit
+      lower="-1.15"
+      upper="1.15"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="5_link">
+    <inertial>
+      <origin
+        xyz="-0.00656638821096855 -0.00217973818518218 -0.00729917920319567"
+        rpy="0 0 0" />
+      <mass
+        value="2.37557594377465" />
+      <inertia
+        ixx="0.00426904473012085"
+        ixy="0.000120199364203296"
+        ixz="5.019661353195E-05"
+        iyy="0.00613939735721636"
+        iyz="8.3038170715719E-05"
+        izz="0.0048698793855615" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://CR10A_2/meshes/5_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://CR10A_2/meshes/5_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="5_joint"
+    type="revolute">
+    <origin
+      xyz="0.064413 -0.00034116 0.064518"
+      rpy="1.5708 0 1.5708" />
+    <parent
+      link="4_link" />
+    <child
+      link="5_link" />
+    <axis
+      xyz="-0.017581 -0.021569 0.99961" />
+    <limit
+      lower="-1.15"
+      upper="1.15"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="6_Link">
+    <inertial>
+      <origin
+        xyz="0.0004715941287739 0.00124058701395285 -0.0204873640947927"
+        rpy="0 0 0" />
+      <mass
+        value="0.204969540341213" />
+      <inertia
+        ixx="0.000110677799570045"
+        ixy="7.51651338393634E-08"
+        ixz="-1.49640782096827E-06"
+        iyy="0.000110457208958578"
+        iyz="-5.75389955737758E-06"
+        izz="0.000204802508776206" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://CR10A_2/meshes/6_Link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://CR10A_2/meshes/6_Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="6_joint"
+    type="continuous">
+    <origin
+      xyz="0.10718 -0.0078039 0.058739"
+      rpy="0 1.5708 0" />
+    <parent
+      link="5_link" />
+    <child
+      link="6_Link" />
+    <axis
+      xyz="-0.016243 -0.060629 0.99803" />
+    <limit
+      lower="0"
+      upper="0"
+      effort="0"
+      velocity="0" />
+  </joint>
+</robot>
