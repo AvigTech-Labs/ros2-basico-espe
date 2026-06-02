@@ -10,6 +10,7 @@
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/tabs.css?v=a5c4661c" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=23a32747" />
 
   
@@ -21,6 +22,7 @@
       <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../../_static/copybutton.js?v=f281be69"></script>
       <script src="../../_static/translations.js?v=efdbd0b9"></script>
+      <script src="../../_static/tabs.js?v=3030b3cb"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Índice" href="../../genindex.html" />
     <link rel="search" title="Búsqueda" href="../../search.html" />
@@ -704,7 +706,316 @@ los links tienen nombres repetidos.</p>
 </section>
 <section id="aquitectura-esp32-y-gemelo-digital">
 <h2>Aquitectura ESP32 y Gemelo Digital<a class="headerlink" href="#aquitectura-esp32-y-gemelo-digital" title="Enlace permanente a este encabezado"></a></h2>
-<p>archivo</p>
+<p>Para realizar una arquitectura compatible con un gemelo digital con ROS2 y la ESP32 es necesario utilizar programas no bloqueantes.</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-RVNQMzJfY29udHJvbA==" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-0-RVNQMzJfY29udHJvbA==" name="RVNQMzJfY29udHJvbA==" role="tab" tabindex="0">ESP32_control</button><button aria-controls="panel-0-c3RlcHBlcl9jb250cm9s" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-0-c3RlcHBlcl9jb250cm9s" name="c3RlcHBlcl9jb250cm9s" role="tab" tabindex="-1">stepper_control</button><button aria-controls="panel-0-c3RlcHBlcl9jb250cm9s-1" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-0-c3RlcHBlcl9jb250cm9s-1" name="c3RlcHBlcl9jb250cm9s-1" role="tab" tabindex="-1">stepper_control</button></div><div aria-labelledby="tab-0-RVNQMzJfY29udHJvbA==" class="sphinx-tabs-panel group-tab" id="panel-0-RVNQMzJfY29udHJvbA==" name="RVNQMzJfY29udHJvbA==" role="tabpanel" tabindex="0"><p>Pestaña 1 del codigo de la ESP32.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;PubSubClient.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;WiFi.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;ArduinoJson.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;AccelStepper.h&gt;</span>
+
+<span class="c1">// Pines motores paso a paso</span>
+<span class="cp">#define STEP2 18</span>
+<span class="cp">#define DIR2  19</span>
+<span class="cp">#define STEP3 22</span>
+<span class="cp">#define DIR3  23</span>
+
+<span class="c1">// Pines Driver</span>
+<span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">PIN_STEP</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">25</span><span class="p">;</span><span class="w">  </span><span class="c1">// -&gt; PUL+</span>
+<span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">PIN_DIR</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="mi">27</span><span class="p">;</span><span class="w">  </span><span class="c1">// -&gt; DIR+</span>
+
+<span class="c1">// --------------------</span>
+<span class="c1">// Config según tu DIP: 400 pulse/rev (del motor)</span>
+<span class="c1">// Reductora: PG47  46.656:1</span>
+<span class="c1">// --------------------</span>
+
+<span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">PULSES_PER_REV_MOTOR</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">400</span><span class="p">;</span>
+<span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">GEAR_RATIO</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">46.656f</span><span class="p">;</span>
+
+<span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">PULSES_PER_REV_OUT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">long</span><span class="p">)(</span><span class="n">PULSES_PER_REV_MOTOR</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">GEAR_RATIO</span><span class="p">);</span>
+
+<span class="c1">// Convierte grados del eje de salida a pulsos</span>
+<span class="kt">long</span><span class="w"> </span><span class="nf">outDegreesToPulses</span><span class="p">(</span><span class="kt">float</span><span class="w"> </span><span class="n">deg_out</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="kt">float</span><span class="w"> </span><span class="n">pulses</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">deg_out</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mf">360.0f</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="kt">float</span><span class="p">)</span><span class="n">PULSES_PER_REV_OUT</span><span class="p">;</span>
+<span class="k">return</span><span class="w"> </span><span class="n">lroundf</span><span class="p">(</span><span class="n">pulses</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">AccelStepper</span><span class="w"> </span><span class="nf">motor1</span><span class="p">(</span><span class="n">AccelStepper</span><span class="o">::</span><span class="n">DRIVER</span><span class="p">,</span><span class="w"> </span><span class="n">PIN_STEP</span><span class="p">,</span><span class="w"> </span><span class="n">PIN_DIR</span><span class="p">);</span>
+<span class="n">AccelStepper</span><span class="w"> </span><span class="nf">motor2</span><span class="p">(</span><span class="n">AccelStepper</span><span class="o">::</span><span class="n">DRIVER</span><span class="p">,</span><span class="w"> </span><span class="n">STEP2</span><span class="p">,</span><span class="w"> </span><span class="n">DIR2</span><span class="p">);</span><span class="w">  </span><span class="c1">// Q1</span>
+<span class="n">AccelStepper</span><span class="w"> </span><span class="nf">motor3</span><span class="p">(</span><span class="n">AccelStepper</span><span class="o">::</span><span class="n">DRIVER</span><span class="p">,</span><span class="w"> </span><span class="n">STEP3</span><span class="p">,</span><span class="w"> </span><span class="n">DIR3</span><span class="p">);</span><span class="w">  </span><span class="c1">// Q2</span>
+
+
+<span class="kt">float</span><span class="w"> </span><span class="n">gradosPorPaso</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.9</span><span class="p">;</span>
+
+<span class="c1">// Variable de Control Stepper</span>
+<span class="kt">int</span><span class="w"> </span><span class="n">activar</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="kt">int</span><span class="w"> </span><span class="n">estado</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="kt">int</span><span class="w"> </span><span class="n">ultra</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="kt">float</span><span class="w"> </span><span class="n">q1_mov</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0</span><span class="p">;</span>
+<span class="kt">float</span><span class="w"> </span><span class="n">q2_mov</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0</span><span class="p">;</span>
+<span class="kt">float</span><span class="w"> </span><span class="n">q3_mov</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0</span><span class="p">;</span>
+
+<span class="c1">// Variables de control envio de mensajes</span>
+<span class="kt">bool</span><span class="w"> </span><span class="n">moving</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="kt">bool</span><span class="w"> </span><span class="n">sent_final</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="k">volatile</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">nuevoTarget</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="kt">long</span><span class="w"> </span><span class="n">target1</span><span class="p">;</span>
+<span class="kt">int</span><span class="w">  </span><span class="n">target2</span><span class="p">,</span><span class="w"> </span><span class="n">target3</span><span class="p">;</span>
+
+<span class="c1">// GPIO de salidad Digital</span>
+<span class="kt">int</span><span class="w"> </span><span class="n">pin_led</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+
+<span class="c1">//  Credenciales Wifi</span>
+<span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">ssid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;CARMEN GONZALEZ_&quot;</span><span class="p">;</span>
+<span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">password</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;123wa321vg&quot;</span><span class="p">;</span>
+
+<span class="c1">// Credenciales MQTT</span>
+<span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">mqtt_broker</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;192.168.100.208&quot;</span><span class="p">;</span>
+<span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">mqtt_port</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="mi">1883</span><span class="p">;</span>
+<span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">cliente</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;rm1_esp32&quot;</span><span class="p">;</span>
+
+<span class="c1">// Temas MQTT Publicar</span>
+<span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">tema_sub_juntas</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;ra_1/juntas&quot;</span><span class="p">;</span>
+<span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">tema_sub_efector</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;ra_1/efector&quot;</span><span class="p">;</span>
+<span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">tema_pub_sen</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;ra_1/sensores&quot;</span><span class="p">;</span>
+
+<span class="c1">// Variables de control de tiempo</span>
+<span class="kt">unsigned</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">lastTime</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+
+<span class="c1">// Creacion del objeto cliente</span>
+<span class="n">WiFiClient</span><span class="w"> </span><span class="n">espClient</span><span class="p">;</span>
+<span class="n">PubSubClient</span><span class="w"> </span><span class="nf">client</span><span class="p">(</span><span class="n">espClient</span><span class="p">);</span>
+
+<span class="c1">// Tamaño de mensaje JSON</span>
+<span class="k">const</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">capacidad_json</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">JSON_OBJECT_SIZE</span><span class="p">(</span><span class="mi">30</span><span class="p">);</span>
+
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">setup</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="c1">// Setup Serial</span>
+<span class="n">Serial</span><span class="p">.</span><span class="n">begin</span><span class="p">(</span><span class="mi">115200</span><span class="p">);</span>
+<span class="c1">// Setup Wifi</span>
+<span class="n">setup_wifi</span><span class="p">();</span>
+<span class="c1">// Setup MQTT</span>
+<span class="n">conexion</span><span class="p">();</span>
+<span class="c1">// Manejo del rele</span>
+<span class="n">pinMode</span><span class="p">(</span><span class="n">pin_led</span><span class="p">,</span><span class="w"> </span><span class="n">OUTPUT</span><span class="p">);</span>
+
+<span class="c1">// NEMA 23</span>
+<span class="c1">// AccelStepper</span>
+<span class="n">motor1</span><span class="p">.</span><span class="n">setMaxSpeed</span><span class="p">(</span><span class="mf">4665.6</span><span class="p">);</span><span class="w">       </span><span class="c1">// pulsos/seg (ojo: a mayor, más exigente)</span>
+<span class="n">motor1</span><span class="p">.</span><span class="n">setAcceleration</span><span class="p">(</span><span class="mi">3110</span><span class="p">);</span><span class="w">   </span><span class="c1">// pulsos/seg^2</span>
+<span class="n">motor1</span><span class="p">.</span><span class="n">setMinPulseWidth</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span><span class="w">     </span><span class="c1">// us (seguro para DM542T)</span>
+
+<span class="c1">// NEMA 17</span>
+<span class="n">motor2</span><span class="p">.</span><span class="n">setMaxSpeed</span><span class="p">(</span><span class="mf">99.9</span><span class="p">);</span>
+<span class="n">motor2</span><span class="p">.</span><span class="n">setAcceleration</span><span class="p">(</span><span class="mf">66.7</span><span class="p">);</span>
+<span class="n">motor2</span><span class="p">.</span><span class="n">setPinsInverted</span><span class="p">(</span><span class="nb">true</span><span class="p">,</span><span class="w"> </span><span class="nb">false</span><span class="p">,</span><span class="w"> </span><span class="nb">false</span><span class="p">);</span><span class="w"> </span><span class="c1">//</span>
+
+<span class="n">motor3</span><span class="p">.</span><span class="n">setMaxSpeed</span><span class="p">(</span><span class="mi">200</span><span class="p">);</span>
+<span class="n">motor3</span><span class="p">.</span><span class="n">setAcceleration</span><span class="p">(</span><span class="mi">100</span><span class="p">);</span>
+
+<span class="c1">// Referencia inicial (si estás arrancando desde &quot;cero&quot;)</span>
+<span class="n">motor1</span><span class="p">.</span><span class="n">setCurrentPosition</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="n">motor2</span><span class="p">.</span><span class="n">setCurrentPosition</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="n">motor3</span><span class="p">.</span><span class="n">setCurrentPosition</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">loop</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="n">Loop_MQTT</span><span class="p">();</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">nuevoTarget</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="n">nuevoTarget</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+
+<span class="w">   </span><span class="n">motor1</span><span class="p">.</span><span class="n">moveTo</span><span class="p">(</span><span class="n">target1</span><span class="p">);</span>
+<span class="w">   </span><span class="n">motor2</span><span class="p">.</span><span class="n">moveTo</span><span class="p">(</span><span class="n">target2</span><span class="p">);</span>
+<span class="w">   </span><span class="n">motor3</span><span class="p">.</span><span class="n">moveTo</span><span class="p">(</span><span class="n">target3</span><span class="p">);</span>
+
+<span class="w">   </span><span class="n">moving</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">   </span><span class="n">sent_final</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">motor1_q1</span><span class="p">.</span><span class="n">run</span><span class="p">();</span>
+<span class="n">motor1_q2</span><span class="p">.</span><span class="n">run</span><span class="p">();</span>
+<span class="n">motor3</span><span class="p">.</span><span class="n">run</span><span class="p">();</span>
+
+<span class="c1">// actualizacion de grados</span>
+<span class="n">q1_mov_1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">motor1</span><span class="p">.</span><span class="n">currentPosition</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">360.0f</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="p">(</span><span class="kt">float</span><span class="p">)</span><span class="n">PULSES_PER_REV_OUT</span><span class="p">;</span>
+<span class="n">q2_mov</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">motor2</span><span class="p">.</span><span class="n">currentPosition</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">gradosPorPaso</span><span class="p">;</span>
+<span class="n">q3_mov</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">motor3</span><span class="p">.</span><span class="n">currentPosition</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">gradosPorPaso</span><span class="p">;</span>
+
+<span class="c1">// Detectar si ya terminó el movimiento</span>
+<span class="kt">bool</span><span class="w"> </span><span class="n">stillMoving</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">anyMotorMoving</span><span class="p">();</span>
+
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">moving</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">stillMoving</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">sent_final</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="c1">// acaba de terminar</span>
+<span class="c1">// Enviar un último paquete final</span>
+<span class="n">estado</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="c1">// Estado DONE</span>
+<span class="n">envioDatos</span><span class="p">(</span><span class="n">tema_pub_sen</span><span class="p">,</span><span class="w"> </span><span class="n">estado</span><span class="p">,</span><span class="w"> </span><span class="n">ultra</span><span class="p">,</span><span class="w"> </span><span class="n">q1_mov</span><span class="p">,</span><span class="w"> </span><span class="n">q2_mov</span><span class="p">,</span><span class="w"> </span><span class="n">q3_mov</span><span class="p">);</span>
+<span class="n">sent_final</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="n">moving</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// Publicación periódica cada 100 ms SOLO si está moviendo</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">moving</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">millis</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">lastTime</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">100</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="n">estado</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w">  </span><span class="c1">// Estado MOVING</span>
+<span class="n">ultra</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ultra</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="n">envioDatos</span><span class="p">(</span><span class="n">tema_pub_sen</span><span class="p">,</span><span class="w"> </span><span class="n">estado</span><span class="p">,</span><span class="w"> </span><span class="n">ultra</span><span class="p">,</span><span class="w"> </span><span class="n">q1_mov</span><span class="p">,</span><span class="w"> </span><span class="n">q2_mov</span><span class="p">,</span><span class="w"> </span><span class="n">q3_mov</span><span class="p">);</span>
+
+<span class="n">lastTime</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">millis</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">activar</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">){</span>
+<span class="w">   </span><span class="n">digitalWrite</span><span class="p">(</span><span class="n">pin_led</span><span class="p">,</span><span class="w"> </span><span class="n">HIGH</span><span class="p">);</span><span class="w">  </span><span class="c1">// Enciende el actuador (LED)</span>
+<span class="w">   </span><span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;LED ACTIVADO&quot;</span><span class="p">);</span>
+
+<span class="w">   </span><span class="p">}</span>
+<span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="n">digitalWrite</span><span class="p">(</span><span class="n">pin_led</span><span class="p">,</span><span class="w"> </span><span class="n">LOW</span><span class="p">);</span><span class="w">  </span><span class="c1">// Apaga el efector (LED)</span>
+<span class="p">}</span>
+
+<span class="p">}</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-0-c3RlcHBlcl9jb250cm9s" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-0-c3RlcHBlcl9jb250cm9s" name="c3RlcHBlcl9jb250cm9s" role="tabpanel" tabindex="0"><p>Pestaña 2 del codigo de la ESP32</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">bool</span><span class="w"> </span><span class="nf">anyMotorMoving</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="k">return</span><span class="w"> </span><span class="p">(</span><span class="n">motor1</span><span class="p">.</span><span class="n">distanceToGo</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">||</span>
+<span class="w">         </span><span class="p">(</span><span class="n">motor2</span><span class="p">.</span><span class="n">distanceToGo</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">||</span>
+<span class="w">         </span><span class="p">(</span><span class="n">motor3</span><span class="p">.</span><span class="n">distanceToGo</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-0-c3RlcHBlcl9jb250cm9s-1" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-0-c3RlcHBlcl9jb250cm9s-1" name="c3RlcHBlcl9jb250cm9s-1" role="tabpanel" tabindex="0"><p>Pestaña 3 del codigo de la ESP32</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">setup_wifi</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="c1">// Conexión Wifi</span>
+<span class="n">delay</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+<span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">();</span>
+<span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;Conectando a &quot;</span><span class="p">);</span>
+<span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="n">ssid</span><span class="p">);</span>
+<span class="n">WiFi</span><span class="p">.</span><span class="n">begin</span><span class="p">(</span><span class="n">ssid</span><span class="p">,</span><span class="w"> </span><span class="n">password</span><span class="p">);</span>
+<span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">WiFi</span><span class="p">.</span><span class="n">status</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">WL_CONNECTED</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="n">delay</span><span class="p">(</span><span class="mi">500</span><span class="p">);</span>
+<span class="w">   </span><span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;.&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">);</span>
+<span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;WiFi conectado - Dirección IP del ESP: &quot;</span><span class="p">);</span>
+<span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="n">WiFi</span><span class="p">.</span><span class="n">localIP</span><span class="p">());</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">reconnect</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="c1">// Control de conexión MQTT</span>
+<span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">client</span><span class="p">.</span><span class="n">connected</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;Intentando conexión MQTT...&quot;</span><span class="p">);</span>
+<span class="w">   </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">client</span><span class="p">.</span><span class="n">connect</span><span class="p">(</span><span class="n">cliente</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="s">&quot;Conectado&quot;</span><span class="p">);</span>
+<span class="w">      </span><span class="c1">// Suscripción a TEMAS</span>
+<span class="w">      </span><span class="n">client</span><span class="p">.</span><span class="n">subscribe</span><span class="p">(</span><span class="n">tema_sub_juntas</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+<span class="w">      </span><span class="n">client</span><span class="p">.</span><span class="n">subscribe</span><span class="p">(</span><span class="n">tema_sub_efector</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+<span class="w">   </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;Falló, rc=&quot;</span><span class="p">);</span>
+<span class="w">      </span><span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="n">client</span><span class="p">.</span><span class="n">state</span><span class="p">());</span>
+<span class="w">      </span><span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="s">&quot;Intentando de nuevo en 2 segundos&quot;</span><span class="p">);</span>
+<span class="w">      </span><span class="n">delay</span><span class="p">(</span><span class="mi">2000</span><span class="p">);</span>
+<span class="w">   </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">conexion</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="c1">// Conexión MQTT</span>
+<span class="n">client</span><span class="p">.</span><span class="n">setServer</span><span class="p">(</span><span class="n">mqtt_broker</span><span class="p">,</span><span class="w"> </span><span class="n">mqtt_port</span><span class="p">);</span>
+<span class="n">client</span><span class="p">.</span><span class="n">setCallback</span><span class="p">(</span><span class="n">callback</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">Loop_MQTT</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="c1">// Manejo MQTT</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">client</span><span class="p">.</span><span class="n">connected</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="n">reconnect</span><span class="p">();</span>
+<span class="p">}</span>
+<span class="n">client</span><span class="p">.</span><span class="n">loop</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">envioDatos</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">mqtt_topic_publicar</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">estado</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">ultra</span><span class="p">,</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">q1</span><span class="p">,</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">q2</span><span class="p">,</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">q3</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">robot</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="n">DynamicJsonDocument</span><span class="w"> </span><span class="n">mensaje</span><span class="p">(</span><span class="mi">256</span><span class="p">);</span>
+
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">mqtt_topic_publicar</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">tema_pub_sen</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">   </span><span class="n">mensaje</span><span class="p">[</span><span class="s">&quot;robot&quot;</span><span class="p">]</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">robot</span><span class="p">;</span>
+<span class="w">   </span><span class="n">mensaje</span><span class="p">[</span><span class="s">&quot;ultra&quot;</span><span class="p">]</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">ultra</span><span class="p">;</span>
+<span class="w">   </span><span class="n">mensaje</span><span class="p">[</span><span class="s">&quot;q1_mov&quot;</span><span class="p">]</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">q1</span><span class="p">;</span>
+<span class="w">   </span><span class="n">mensaje</span><span class="p">[</span><span class="s">&quot;q2_mov&quot;</span><span class="p">]</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">q2</span><span class="p">;</span>
+<span class="w">   </span><span class="n">mensaje</span><span class="p">[</span><span class="s">&quot;q3_mov&quot;</span><span class="p">]</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">q3</span><span class="p">;</span>
+<span class="w">   </span><span class="n">mensaje</span><span class="p">[</span><span class="s">&quot;estado&quot;</span><span class="p">]</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">estado</span><span class="p">;</span>
+<span class="w">   </span><span class="n">String</span><span class="w"> </span><span class="n">mensaje_json</span><span class="p">;</span>
+<span class="w">   </span><span class="n">serializeJson</span><span class="p">(</span><span class="n">mensaje</span><span class="p">,</span><span class="w"> </span><span class="n">mensaje_json</span><span class="p">);</span>
+<span class="w">   </span><span class="n">client</span><span class="p">.</span><span class="n">publish</span><span class="p">(</span><span class="n">mqtt_topic_publicar</span><span class="p">,</span><span class="w"> </span><span class="n">mensaje_json</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span><span class="w"> </span><span class="nb">false</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">callback</span><span class="p">(</span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">topic</span><span class="p">,</span><span class="w"> </span><span class="n">byte</span><span class="o">*</span><span class="w"> </span><span class="n">payload</span><span class="p">,</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">length</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="n">StaticJsonDocument</span><span class="o">&lt;</span><span class="n">capacidad_json</span><span class="o">&gt;</span><span class="w"> </span><span class="n">doc</span><span class="p">;</span>
+<span class="kt">char</span><span class="w"> </span><span class="n">buffer</span><span class="p">[</span><span class="n">length</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">];</span>
+<span class="n">memcpy</span><span class="p">(</span><span class="n">buffer</span><span class="p">,</span><span class="w"> </span><span class="n">payload</span><span class="p">,</span><span class="w"> </span><span class="n">length</span><span class="p">);</span>
+<span class="n">buffer</span><span class="p">[</span><span class="n">length</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sc">&#39;\0&#39;</span><span class="p">;</span><span class="w">  </span><span class="c1">// Asegura que el buffer tenga fin de cadena</span>
+
+<span class="n">DeserializationError</span><span class="w"> </span><span class="n">error</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">deserializeJson</span><span class="p">(</span><span class="n">doc</span><span class="p">,</span><span class="w"> </span><span class="n">buffer</span><span class="p">);</span>
+
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;Error al deserializar JSON: &quot;</span><span class="p">);</span>
+<span class="w">   </span><span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="n">error</span><span class="p">.</span><span class="n">c_str</span><span class="p">());</span>
+<span class="w">   </span><span class="k">return</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">String</span><span class="w"> </span><span class="n">topico</span><span class="p">(</span><span class="n">topic</span><span class="p">);</span>
+
+<span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="n">topico</span><span class="p">);</span>
+
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">topico</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;ra_1/juntas&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">doc</span><span class="p">.</span><span class="n">containsKey</span><span class="p">(</span><span class="s">&quot;q1&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">doc</span><span class="p">.</span><span class="n">containsKey</span><span class="p">(</span><span class="s">&quot;q2&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">doc</span><span class="p">.</span><span class="n">containsKey</span><span class="p">(</span><span class="s">&quot;q3&quot;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="kt">float</span><span class="w"> </span><span class="n">q1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">doc</span><span class="p">[</span><span class="s">&quot;q1&quot;</span><span class="p">];</span><span class="w"> </span><span class="c1">// NEMA 23</span>
+<span class="w">      </span><span class="kt">float</span><span class="w"> </span><span class="n">q2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">doc</span><span class="p">[</span><span class="s">&quot;q2&quot;</span><span class="p">];</span><span class="w"> </span><span class="c1">// NEMA 17</span>
+<span class="w">      </span><span class="kt">float</span><span class="w"> </span><span class="n">q3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">doc</span><span class="p">[</span><span class="s">&quot;q3&quot;</span><span class="p">];</span><span class="w"> </span><span class="c1">// NEMA 17</span>
+
+<span class="w">      </span><span class="kt">long</span><span class="w"> </span><span class="n">pasos1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">outDegreesToPulses</span><span class="p">(</span><span class="n">q1</span><span class="p">);</span>
+<span class="w">      </span><span class="kt">int</span><span class="w"> </span><span class="n">pasos2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">round</span><span class="p">(</span><span class="n">q2</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">gradosPorPaso</span><span class="p">);</span>
+<span class="w">      </span><span class="kt">int</span><span class="w"> </span><span class="n">pasos3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">round</span><span class="p">(</span><span class="n">q3</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">gradosPorPaso</span><span class="p">);</span>
+
+<span class="w">      </span><span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;Recibido q1: &quot;</span><span class="p">);</span>
+<span class="w">      </span><span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="n">q1</span><span class="p">);</span>
+<span class="w">      </span><span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">&quot; → pasos: &quot;</span><span class="p">);</span>
+<span class="w">      </span><span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="n">pasos1</span><span class="p">);</span>
+
+
+<span class="w">      </span><span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;Recibido q2: &quot;</span><span class="p">);</span>
+<span class="w">      </span><span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="n">q2</span><span class="p">);</span>
+<span class="w">      </span><span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">&quot; → pasos: &quot;</span><span class="p">);</span>
+<span class="w">      </span><span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="n">pasos2</span><span class="p">);</span>
+
+<span class="w">      </span><span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">&quot; Recibido q3: &quot;</span><span class="p">);</span>
+<span class="w">      </span><span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="n">q3</span><span class="p">);</span>
+<span class="w">      </span><span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">&quot; → pasos: &quot;</span><span class="p">);</span>
+<span class="w">      </span><span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="n">pasos3</span><span class="p">);</span>
+
+<span class="w">      </span><span class="n">target1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pasos1</span><span class="p">;</span>
+<span class="w">      </span><span class="n">target2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pasos2</span><span class="p">;</span>
+<span class="w">      </span><span class="n">target3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pasos3</span><span class="p">;</span>
+
+<span class="w">      </span><span class="n">nuevoTarget</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span><span class="w">   </span><span class="c1">// &lt;-- SOLO esto</span>
+
+<span class="w">   </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">topico</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;ra_1/efector&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">doc</span><span class="p">.</span><span class="n">containsKey</span><span class="p">(</span><span class="s">&quot;efector&quot;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">activar</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">doc</span><span class="p">[</span><span class="s">&quot;efector&quot;</span><span class="p">];</span>
+<span class="w">      </span><span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">&quot; Valor efector recibido&quot;</span><span class="p">);</span>
+<span class="w">      </span><span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="n">activar</span><span class="p">);</span>
+<span class="w">   </span><span class="p">}</span>
+
+<span class="p">}</span>
+
+<span class="p">}</span>
+</pre></div>
+</div>
+</div></div>
 </section>
 </section>
 
