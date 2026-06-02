@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
+     Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+<robot
+  name="urdf_2">
+  <link
+    name="base_link">
+    <inertial>
+      <origin
+        xyz="0.122985978770505 0.00170462638094407 0.0433587448960147"
+        rpy="0 0 0" />
+      <mass
+        value="1.39504052645811" />
+      <inertia
+        ixx="0.00199983279616353"
+        ixy="-5.62345467617821E-07"
+        ixz="-0.000171505475604186"
+        iyy="0.00418198355186288"
+        iyz="-8.28558113844637E-07"
+        izz="0.00499893510879797" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://urdf_2/meshes/base_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://urdf_2/meshes/base_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <link
+    name="brazo_link">
+    <inertial>
+      <origin
+        xyz="0.0753094506753342 -1.04709665431024E-05 0.173042945912701"
+        rpy="0 0 0" />
+      <mass
+        value="0.464728606139161" />
+      <inertia
+        ixx="0.000184778705020802"
+        ixy="2.98483848319851E-09"
+        ixz="-8.98034695450042E-07"
+        iyy="0.00150375762423027"
+        iyz="-1.27623178759219E-08"
+        izz="0.00145708555193549" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://urdf_2/meshes/brazo_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://urdf_2/meshes/brazo_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="brazo_joint"
+    type="revolute">
+    <origin
+      xyz="0.2225 0 0"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="brazo_link" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-2.95"
+      upper="2.95"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="antebrazo_link">
+    <inertial>
+      <origin
+        xyz="0.120217132825741 0.00253204414843628 0.0138134925752733"
+        rpy="0 0 0" />
+      <mass
+        value="0.337833417763749" />
+      <inertia
+        ixx="9.43467400260195E-05"
+        ixy="-3.43784195903844E-06"
+        ixz="-4.69808398753309E-05"
+        iyy="0.00136135886292181"
+        iyz="-1.7571811510851E-06"
+        izz="0.00135870464166609" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://urdf_2/meshes/antebrazo_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://urdf_2/meshes/antebrazo_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="antebrazo_joint"
+    type="revolute">
+    <origin
+      xyz="0.20188 -0.00036684 0.15187"
+      rpy="0 0 0" />
+    <parent
+      link="brazo_link" />
+    <child
+      link="antebrazo_link" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-2.94"
+      upper="2.94"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="efector_link">
+    <inertial>
+      <origin
+        xyz="-0.000199408254429434 3.01101120966581E-05 -0.0920126337195022"
+        rpy="0 0 0" />
+      <mass
+        value="0.0645715511467495" />
+      <inertia
+        ixx="9.90251938365928E-05"
+        ixy="1.0267039223115E-11"
+        ixz="4.8234755973393E-07"
+        iyy="9.44222116975048E-05"
+        iyz="-1.02338899145191E-08"
+        izz="7.29772053845675E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://urdf_2/meshes/efector_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://urdf_2/meshes/efector_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="efector_joint"
+    type="prismatic">
+    <origin
+      xyz="0.20445 0.001 -0.13418"
+      rpy="3.1416 0 0" />
+    <parent
+      link="antebrazo_link" />
+    <child
+      link="efector_link" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-0.2"
+      upper="0"
+      effort="0"
+      velocity="0" />
+  </joint>
+</robot>
