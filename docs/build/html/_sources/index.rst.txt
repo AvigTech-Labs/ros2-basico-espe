@@ -23,6 +23,7 @@ Contenido
    documentos/tema_2/tutoriales
    documentos/tema_3/dispositivos
    documentos/tema_4/drivers
+   documentos/tema_4/modelo_digital
    documentos/tema_4/gemelo_digital
    
 
