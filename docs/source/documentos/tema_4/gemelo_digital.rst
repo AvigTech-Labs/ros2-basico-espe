@@ -99,6 +99,17 @@ Esto permite lanzar dos robots iguales sin conflictos de nombres.
 Conversión de URDF a XACRO
 --------------------------
 
+Para el siguiente ejemplo se usa el archivo urdf_2.zip, dentro del directorio mi_pkg_python crearemos
+el directorio urdf_2.
+
+.. code-block:: text
+
+   urdf_2
+       ├── meshes
+       └── urdf_2.urdf
+
+Resultado:
+
 Para convertir un archivo ``.urdf`` a ``.urdf.xacro`` se deben seguir varios
 pasos.
 
@@ -115,7 +126,7 @@ se puede crear una nueva versión:
 
 .. code-block:: text
 
-   ensamblaje.urdf.xacro
+   touch ensamblaje.urdf.xacro
 
 2. Agregar el espacio de nombres de XACRO
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -219,7 +230,7 @@ Ejemplo:
 
 .. code-block:: xml
 
-   <mesh filename="package://mi_pkg_python/urdf/meshes/base_link.STL"/>
+   <mesh filename="package://mi_pkg_python/urdf_2/meshes/base_link.STL"/>
 
 Esto puede mantenerse igual.
 
@@ -330,120 +341,121 @@ Ejemplo de archivo launch para lanzar dos robots iguales en RViz2:
 
    def generate_launch_description():
 
-       xacro_file = PathJoinSubstitution([
-           FindPackageShare("mi_pkg_python"),
-           "urdf",
-           "ensamblaje.urdf.xacro"
-       ])
+      xacro_file = PathJoinSubstitution([
+         FindPackageShare("mi_pkg_python"),
+         "urdf_2",
+         "ensamblaje.urdf.xacro"
+      ])
 
-       robot1_description = Command([
-           "ros2 run xacro xacro ",
-           xacro_file,
-           " prefix:=r1_"
-       ])
+      robot1_description = Command([
+         "ros2 run xacro xacro ",
+         xacro_file,
+         " prefix:=r1_"
+      ])
 
-       robot2_description = Command([
-           "ros2 run xacro xacro ",
-           xacro_file,
-           " prefix:=r2_"
-       ])
+      robot2_description = Command([
+         "ros2 run xacro xacro ",
+         xacro_file,
+         " prefix:=r2_"
+      ])
 
-       robot_state_publisher_r1 = Node(
-           package="robot_state_publisher",
-           executable="robot_state_publisher",
-           name="robot_state_publisher",
-           namespace="r1",
-           output="screen",
-           parameters=[
+      robot_state_publisher_r1 = Node(
+         package="robot_state_publisher",
+         executable="robot_state_publisher",
+         name="robot_state_publisher",
+         namespace="r1",
+         output="screen",
+         parameters=[
                {"robot_description": robot1_description},
                {"publish_robot_description": True}
-           ],
-           remappings=[
+         ],
+         remappings=[
                ("/joint_states", "joint_states"),
                ("/robot_description", "robot_description")
-           ]
-       )
+         ]
+      )
 
-       robot_state_publisher_r2 = Node(
-           package="robot_state_publisher",
-           executable="robot_state_publisher",
-           name="robot_state_publisher",
-           namespace="r2",
-           output="screen",
-           parameters=[
+      robot_state_publisher_r2 = Node(
+         package="robot_state_publisher",
+         executable="robot_state_publisher",
+         name="robot_state_publisher",
+         namespace="r2",
+         output="screen",
+         parameters=[
                {"robot_description": robot2_description},
                {"publish_robot_description": True}
-           ],
-           remappings=[
+         ],
+         remappings=[
                ("/joint_states", "joint_states"),
                ("/robot_description", "robot_description")
-           ]
-       )
+         ]
+      )
 
-       joint_state_publisher_r1 = Node(
-           package="joint_state_publisher_gui",
-           executable="joint_state_publisher_gui",
-           name="joint_state_publisher_gui",
-           namespace="r1",
-           output="screen",
-           remappings=[
+      joint_state_publisher_r1 = Node(
+         package="joint_state_publisher_gui",
+         executable="joint_state_publisher_gui",
+         name="joint_state_publisher_gui",
+         namespace="r1",
+         output="screen",
+         remappings=[
                ("/joint_states", "joint_states")
-           ]
-       )
+         ]
+      )
 
-       joint_state_publisher_r2 = Node(
-           package="joint_state_publisher_gui",
-           executable="joint_state_publisher_gui",
-           name="joint_state_publisher_gui",
-           namespace="r2",
-           output="screen",
-           remappings=[
+      joint_state_publisher_r2 = Node(
+         package="joint_state_publisher_gui",
+         executable="joint_state_publisher_gui",
+         name="joint_state_publisher_gui",
+         namespace="r2",
+         output="screen",
+         remappings=[
                ("/joint_states", "joint_states")
-           ]
-       )
+         ]
+      )
 
-       static_tf_r1 = Node(
-           package="tf2_ros",
-           executable="static_transform_publisher",
-           name="static_tf_r1",
-           output="screen",
-           arguments=[
+      static_tf_r1 = Node(
+         package="tf2_ros",
+         executable="static_transform_publisher",
+         name="static_tf_r1",
+         output="screen",
+         arguments=[
                "0", "0", "0",
                "0", "0", "0",
                "world",
                "r1_base_link"
-           ]
-       )
+         ]
+      )
 
-       static_tf_r2 = Node(
-           package="tf2_ros",
-           executable="static_transform_publisher",
-           name="static_tf_r2",
-           output="screen",
-           arguments=[
+      static_tf_r2 = Node(
+         package="tf2_ros",
+         executable="static_transform_publisher",
+         name="static_tf_r2",
+         output="screen",
+         arguments=[
                "1.0", "0", "0",
                "0", "0", "0",
                "world",
                "r2_base_link"
-           ]
-       )
+         ]
+      )
 
-       rviz2 = Node(
-           package="rviz2",
-           executable="rviz2",
-           name="rviz2",
-           output="screen"
-       )
+      rviz2 = Node(
+         package="rviz2",
+         executable="rviz2",
+         name="rviz2",
+         output="screen"
+      )
 
-       return LaunchDescription([
-           robot_state_publisher_r1,
-           robot_state_publisher_r2,
-           joint_state_publisher_r1,
-           joint_state_publisher_r2,
-           static_tf_r1,
-           static_tf_r2,
-           rviz2
-       ])
+      return LaunchDescription([
+         robot_state_publisher_r1,
+         robot_state_publisher_r2,
+         joint_state_publisher_r1,
+         joint_state_publisher_r2,
+         static_tf_r1,
+         static_tf_r2,
+         rviz2
+      ])
+
 
 Explicación del launch
 ----------------------
@@ -579,19 +591,28 @@ Ejemplo:
 .. code-block:: python
 
    data_files=[
-       ('share/ament_index/resource_index/packages', ['resource/' + package_name]),
-       ('share/' + package_name, ['package.xml']),
-       ('share/' + package_name + '/urdf', ['urdf/ensamblaje.urdf.xacro']),
-       ('share/' + package_name + '/urdf/meshes', [
-           'urdf/meshes/base_link.STL',
-           'urdf/meshes/brazo_link.STL',
-           'urdf/meshes/antebrazo_link.STL',
-           'urdf/meshes/efector_link.STL',
-       ]),
-       ('share/' + package_name + '/launch', [
-           'launch/proyecto_rviz2.launch.py'
-       ]),
-   ]
+      ('share/ament_index/resource_index/packages', ['resource/' + package_name]),
+      ('share/' + package_name, ['package.xml']),
+      ('share/' + package_name + '/urdf_1', ['urdf_1/ensamblaje.urdf']),
+      ('share/' + package_name + '/urdf_1/meshes', [
+         'urdf_1/meshes/base_link.STL',
+         'urdf_1/meshes/brazo_link.STL',
+         'urdf_1/meshes/antebrazo_link.STL',
+         'urdf_1/meshes/efector_link.STL',
+      ]),
+      ('share/' + package_name + '/urdf_2', ['urdf_2/ensamblaje.urdf.xacro']),
+      ('share/' + package_name + '/urdf_2/meshes', [
+         'urdf_2/meshes/base_link.STL',
+         'urdf_2/meshes/brazo_link.STL',
+         'urdf_2/meshes/antebrazo_link.STL',
+         'urdf_2/meshes/efector_link.STL',
+      ]),
+      ('share/' + package_name + '/launch', [
+         'launch/visualizar_rviz.launch.py',
+         'launch/visualizar_xacro.launch.py',
+         'launch/xacro_robots.launch.py'
+         ]),
+      ],
 
 Después de modificar ``setup.py`` o agregar archivos nuevos, se debe recompilar:
 
@@ -667,3 +688,6 @@ Solución:
 - Agregar ``${prefix}`` a todos los links y joints.
 - Verificar que existan ``r1_base_link`` y ``r2_base_link``.
 
+Aquitectura ESP32 y Gemelo Digital
+----------------------------------
+archivo
