@@ -77,6 +77,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#diccionarios-python">Diccionarios Python</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#bt-para-el-control">BT para el control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#bt-y-ros2">BT y ROS2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#comandos-para-el-control">Comandos para el control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#agregar-recuperacion-de-errores">Agregar recuperación de errores</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#agregar-reintentos">Agregar reintentos</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#agregar-condicion-de-pieza">Agregar condición de pieza</a></li>
@@ -1962,6 +1963,23 @@ sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> <
 </pre></div>
 </div>
 </div></div>
+</section>
+<section id="comandos-para-el-control">
+<h2>Comandos para el control<a class="headerlink" href="#comandos-para-el-control" title="Link to this heading"></a></h2>
+<p>Arranque del sistema:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>topic<span class="w"> </span>pub<span class="w"> </span>/task_request<span class="w"> </span>std_msgs/msg/String<span class="w"> </span><span class="s2">&quot;{data: &#39;sis_a 0B 7&#39;}&quot;</span><span class="w"> </span>-1
+</pre></div>
+</div>
+<p>Control del robot móvil:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>topic<span class="w"> </span>pub<span class="w"> </span>/rm_sis_a/motion_state<span class="w"> </span>std_msgs/msg/UInt8<span class="w"> </span><span class="s2">&quot;{data: 1}&quot;</span><span class="w"> </span>-1
+ros2<span class="w"> </span>topic<span class="w"> </span>pub<span class="w"> </span>/rm_sis_a/motion_state<span class="w"> </span>std_msgs/msg/UInt8<span class="w"> </span><span class="s2">&quot;{data: 0}&quot;</span><span class="w"> </span>-1
+</pre></div>
+</div>
+<p>Control del robot articular:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>topic<span class="w"> </span>pub<span class="w"> </span>/ra1/motion_state<span class="w"> </span>std_msgs/msg/UInt8<span class="w"> </span><span class="s2">&quot;{data: 1}&quot;</span><span class="w"> </span>-1
+ros2<span class="w"> </span>topic<span class="w"> </span>pub<span class="w"> </span>/ra1/motion_state<span class="w"> </span>std_msgs/msg/UInt8<span class="w"> </span><span class="s2">&quot;{data: 0}&quot;</span><span class="w"> </span>-1
+</pre></div>
+</div>
 </section>
 <section id="agregar-recuperacion-de-errores">
 <h2>Agregar recuperación de errores<a class="headerlink" href="#agregar-recuperacion-de-errores" title="Link to this heading"></a></h2>
