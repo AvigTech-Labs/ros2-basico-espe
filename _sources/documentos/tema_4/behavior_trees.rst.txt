@@ -1875,6 +1875,30 @@ Integración del proceso con BT y ROS2.
 					rviz2
 				])
 
+Comandos para el control
+------------------------
+
+Arranque del sistema:
+
+.. code:: bash
+
+	ros2 topic pub /task_request std_msgs/msg/String "{data: 'sis_a 0B 7'}" -1
+
+Control del robot móvil:
+
+.. code:: bash
+
+	ros2 topic pub /rm_sis_a/motion_state std_msgs/msg/UInt8 "{data: 1}" -1
+	ros2 topic pub /rm_sis_a/motion_state std_msgs/msg/UInt8 "{data: 0}" -1
+
+
+Control del robot articular:
+
+.. code:: bash
+
+	ros2 topic pub /ra1/motion_state std_msgs/msg/UInt8 "{data: 1}" -1
+	ros2 topic pub /ra1/motion_state std_msgs/msg/UInt8 "{data: 0}" -1
+
 Agregar recuperación de errores
 -------------------------------
 
